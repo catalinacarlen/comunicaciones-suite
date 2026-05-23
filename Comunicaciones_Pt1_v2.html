@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Introducción a las Comunicaciones — Resumen v2 (Completo)</title>
+  <style>
+  :root {
+    --primary: #1a3a6e;
+    --primary-light: #2855a8;
+    --accent: #d4521a;
+    --warm: #d4a017;
+    --bg: #fafbfd;
+    --text: #1f2937;
+  }
+  body {
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    max-width: 880px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: var(--text);
+    font-size: 15px;
+    background: var(--bg);
+  }
+  h1.title {
+    color: var(--primary);
+    text-align: center;
+    border-bottom: 3px double var(--primary);
+    padding-bottom: 12px;
+  }
+  h1[id^="capítulo"], h1[id^="apéndice"] {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white !important;
+    padding: 18px 24px;
+    border-radius: 8px;
+    border-bottom: none;
+    letter-spacing: 0.02em;
+    margin-top: 0;
+    box-shadow: 0 2px 8px rgba(26,58,110,0.15);
+  }
+  h1 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 6px;
+    margin-top: 1.8em;
+  }
+  h2 {
+    color: var(--primary-light);
+    border-bottom: 1px solid #d6dde8;
+    padding-bottom: 4px;
+    margin-top: 1.6em;
+  }
+  h2[id*="implicancias"], h2[id*="implicancia"] {
+    background: linear-gradient(90deg, #fff5ef 0%, transparent 100%);
+    border-left: 5px solid var(--accent);
+    border-bottom: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+  h3 {
+    color: #333;
+    margin-top: 1.3em;
+  }
+  h4 { color: #555; }
+  code {
+    background: #f4f4f4;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    color: #b8336a;
+  }
+  pre {
+    background: #f7f7f7;
+    border-left: 3px solid var(--primary);
+    padding: 10px 14px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  pre code { background: none; color: #333; padding: 0; }
+  blockquote {
+    background: linear-gradient(135deg, #fffbea 0%, #fff8e0 100%);
+    border-left: 4px solid var(--warm);
+    margin: 14px 0;
+    padding: 10px 18px;
+    color: #5a4a1f;
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote p { margin: 6px 0; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 14px 0;
+    font-size: 0.95em;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  th, td {
+    border: 1px solid #d6dde8;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #f4f7fb; }
+  tr:hover td { background: #e8eff8; }
+  hr {
+    border: none;
+    border-top: 1px solid #cdd6e0;
+    margin: 24px 0;
+  }
+  strong { color: var(--primary); }
+  a { color: var(--primary-light); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Sidebar TOC */
+  #TOC {
+    background: linear-gradient(135deg, #f0f5fc 0%, #f7faff 100%);
+    padding: 16px 22px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    margin: 18px 0 32px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  #TOC::before {
+    content: "📚 Tabla de contenidos";
+    display: block;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.05em;
+    margin-bottom: 8px;
+  }
+  #TOC ul { margin: 4px 0; padding-left: 20px; }
+  #TOC > ul { list-style: none; padding-left: 4px; }
+  #TOC > ul > li { font-weight: 600; margin: 6px 0; }
+  #TOC > ul > li > ul li { font-weight: normal; }
+
+  /* Synthesis blocks at chapter end */
+  .synthesis {
+    background: linear-gradient(135deg, #e8f0fb 0%, #f0f5fc 100%);
+    border-left: 5px solid var(--primary-light);
+    padding: 14px 20px;
+    margin: 26px 0 6px;
+    border-radius: 0 6px 6px 0;
+    box-shadow: 0 1px 3px rgba(40,85,168,0.08);
+  }
+  .synthesis::before {
+    content: "🧩 Síntesis del capítulo";
+    display: block;
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.95em;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .synthesis p { margin: 0; }
+
+  /* Lists */
+  ul, ol { margin: 8px 0 8px 24px; }
+  li { margin: 4px 0; }
+  ul ul, ol ol, ul ol, ol ul { margin-top: 4px; }
+
+  /* Page-break placeholder */
+  div[style*="page-break-before"] { display: block; height: 0; }
+
+  @media print {
+    body { max-width: none; margin: 0; padding: 0; font-size: 11pt; background: white; }
+    h2, h3 { page-break-after: avoid; }
+    pre, table, blockquote, .synthesis { page-break-inside: avoid; }
+    h1[id^="capítulo"], h1[id^="apéndice"] {
+      box-shadow: none;
+      background: var(--primary) !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+  <style>
+    body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; max-width: 860px; margin: 2em auto; padding: 0 1.5em; line-height: 1.55; color: #222; font-size: 15px; }
+    h1 { color: #1a3a6e; border-bottom: 2px solid #1a3a6e; padding-bottom: 6px; margin-top: 1.8em; }
+    h2 { color: #2855a8; border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-top: 1.6em; }
+    h3 { color: #333; margin-top: 1.3em; }
+    h4 { color: #555; }
+    code { background: #f4f4f4; padding: 1px 5px; border-radius: 3px; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; color: #b8336a; }
+    pre { background: #f7f7f7; border-left: 3px solid #1a3a6e; padding: 10px 14px; border-radius: 4px; overflow-x: auto; }
+    pre code { background: none; color: #333; padding: 0; }
+    blockquote { background: #fffbea; border-left: 4px solid #d4a017; margin: 12px 0; padding: 8px 16px; color: #555; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+    th, td { border: 1px solid #bbb; padding: 6px 10px; text-align: left; vertical-align: top; }
+    th { background: #1a3a6e; color: white; }
+    tr:nth-child(even) { background: #f7f9fc; }
+    hr { border: none; border-top: 1px solid #ccc; margin: 18px 0; }
+    strong { color: #1a3a6e; }
+    a { color: #2855a8; text-decoration: none; }
+    #TOC { background: #f4f7fb; padding: 14px 20px; border-radius: 6px; border-left: 4px solid #1a3a6e; margin: 16px 0 28px; }
+    #TOC ul { margin: 4px 0; padding-left: 20px; }
+    div[style*="page-break-before"] { display: block; height: 0; }
+    @media print {
+      body { max-width: none; margin: 0; padding: 0; font-size: 11pt; }
+      h2, h3 { page-break-after: avoid; }
+      pre, table, blockquote { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Introducción a las Comunicaciones — Resumen Completo v2</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#introducción-a-las-comunicaciones"
+id="toc-introducción-a-las-comunicaciones">Introducción a las
+Comunicaciones</a>
+<ul>
+<li><a href="#marco-mental-la-tríada-cia"
+id="toc-marco-mental-la-tríada-cia">0. Marco mental: la tríada
+CIA</a></li>
+</ul></li>
+<li><a href="#capítulo-1-conceptos-y-definiciones"
+id="toc-capítulo-1-conceptos-y-definiciones">CAPÍTULO 1 — CONCEPTOS Y
+DEFINICIONES</a>
+<ul>
+<li><a href="#glosario-base" id="toc-glosario-base">1.1 Glosario
+base</a></li>
+<li><a href="#componentes-de-una-red"
+id="toc-componentes-de-una-red">1.2 Componentes de una red</a></li>
+<li><a href="#tareas-de-un-sistema-de-comunicaciones"
+id="toc-tareas-de-un-sistema-de-comunicaciones">1.3 Tareas de un sistema
+de comunicaciones</a></li>
+</ul></li>
+<li><a href="#capítulo-2-procesamiento-de-la-señal"
+id="toc-capítulo-2-procesamiento-de-la-señal">CAPÍTULO 2 — PROCESAMIENTO
+DE LA SEÑAL</a>
+<ul>
+<li><a
+href="#cómo-viaja-la-información-desde-que-se-genera-hasta-el-destino"
+id="toc-cómo-viaja-la-información-desde-que-se-genera-hasta-el-destino">2.1
+¿Cómo viaja la información desde que se genera hasta el
+destino?</a></li>
+<li><a href="#implicancias-de-seguridad"
+id="toc-implicancias-de-seguridad">2.2 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-3-redes-de-datos-y-evolución"
+id="toc-capítulo-3-redes-de-datos-y-evolución">CAPÍTULO 3 — REDES DE
+DATOS Y EVOLUCIÓN</a>
+<ul>
+<li><a href="#qué-es-networking" id="toc-qué-es-networking">3.1 ¿Qué es
+networking?</a></li>
+<li><a href="#evolución-cronológica-de-las-redes"
+id="toc-evolución-cronológica-de-las-redes">3.2 Evolución cronológica de
+las redes</a></li>
+<li><a href="#qué-es-internet" id="toc-qué-es-internet">3.3 ¿Qué es
+Internet?</a></li>
+<li><a href="#organismos-de-estandarización"
+id="toc-organismos-de-estandarización">3.4 Organismos de
+estandarización</a></li>
+<li><a href="#implicancias-de-seguridad-1"
+id="toc-implicancias-de-seguridad-1">3.5 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-4-medios-físicos"
+id="toc-capítulo-4-medios-físicos">CAPÍTULO 4 — MEDIOS FÍSICOS</a>
+<ul>
+<li><a href="#cable-coaxial" id="toc-cable-coaxial">4.1 Cable
+Coaxial</a></li>
+<li><a href="#par-trenzado-pcm" id="toc-par-trenzado-pcm">4.2 Par
+trenzado (PCM)</a></li>
+<li><a href="#fibra-óptica" id="toc-fibra-óptica">4.3 Fibra
+óptica</a></li>
+<li><a href="#parámetros-del-cableado"
+id="toc-parámetros-del-cableado">4.4 Parámetros del cableado</a></li>
+<li><a href="#implicancias-de-seguridad-2"
+id="toc-implicancias-de-seguridad-2">4.5 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-5-topologías-y-tipos-de-transmisión"
+id="toc-capítulo-5-topologías-y-tipos-de-transmisión">CAPÍTULO 5 —
+TOPOLOGÍAS Y TIPOS DE TRANSMISIÓN</a>
+<ul>
+<li><a href="#topologías" id="toc-topologías">5.1 Topologías</a></li>
+<li><a href="#tipos-de-transmisión" id="toc-tipos-de-transmisión">5.2
+Tipos de transmisión</a></li>
+<li><a href="#tipos-de-conexión" id="toc-tipos-de-conexión">5.3 Tipos de
+conexión</a></li>
+</ul></li>
+<li><a href="#capítulo-6-clasificación-por-área-de-cobertura"
+id="toc-capítulo-6-clasificación-por-área-de-cobertura">CAPÍTULO 6 —
+CLASIFICACIÓN POR ÁREA DE COBERTURA</a>
+<ul>
+<li><a href="#modelo-jerárquico-de-tres-capas-diseño-de-lan"
+id="toc-modelo-jerárquico-de-tres-capas-diseño-de-lan">6.1 Modelo
+jerárquico de tres capas (diseño de LAN)</a></li>
+<li><a href="#implicancias-de-seguridad-3"
+id="toc-implicancias-de-seguridad-3">6.2 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-7-protocolos-y-modelo-osi"
+id="toc-capítulo-7-protocolos-y-modelo-osi">CAPÍTULO 7 — PROTOCOLOS Y
+MODELO OSI</a>
+<ul>
+<li><a href="#qué-es-un-protocolo" id="toc-qué-es-un-protocolo">7.1 ¿Qué
+es un protocolo?</a></li>
+<li><a href="#tareas-y-funciones-de-un-protocolo"
+id="toc-tareas-y-funciones-de-un-protocolo">7.2 Tareas y funciones de un
+protocolo</a></li>
+<li><a href="#modelo-osi-las-7-capas"
+id="toc-modelo-osi-las-7-capas">7.3 Modelo OSI — las 7 capas</a></li>
+<li><a href="#subcapas-de-enlace-capa-2-mac-y-llc"
+id="toc-subcapas-de-enlace-capa-2-mac-y-llc">7.4 Subcapas de Enlace
+(capa 2): MAC y LLC</a></li>
+<li><a href="#modelo-tcpip" id="toc-modelo-tcpip">7.5 Modelo
+TCP/IP</a></li>
+<li><a href="#encapsulación-de-datos"
+id="toc-encapsulación-de-datos">7.6 Encapsulación de datos</a></li>
+<li><a href="#implicancias-de-seguridad-por-capa"
+id="toc-implicancias-de-seguridad-por-capa">7.7 🛡️ Implicancias de
+seguridad por capa</a></li>
+</ul></li>
+<li><a href="#capítulo-8-conmutación-de-circuitos-y-paquetes"
+id="toc-capítulo-8-conmutación-de-circuitos-y-paquetes">CAPÍTULO 8 —
+CONMUTACIÓN DE CIRCUITOS Y PAQUETES</a>
+<ul>
+<li><a href="#qué-es-la-conmutación" id="toc-qué-es-la-conmutación">8.1
+¿Qué es la conmutación?</a></li>
+<li><a href="#conmutación-de-circuitos"
+id="toc-conmutación-de-circuitos">8.2 Conmutación de circuitos</a></li>
+<li><a href="#conmutación-de-paquetes"
+id="toc-conmutación-de-paquetes">8.3 Conmutación de paquetes</a></li>
+<li><a href="#técnicas-de-conmutación-de-paquetes"
+id="toc-técnicas-de-conmutación-de-paquetes">8.4 Técnicas de conmutación
+de paquetes</a></li>
+<li><a href="#estrategias-de-encaminamiento"
+id="toc-estrategias-de-encaminamiento">8.5 Estrategias de
+encaminamiento</a></li>
+<li><a href="#servicios-orientados-y-no-orientados-a-la-conexión"
+id="toc-servicios-orientados-y-no-orientados-a-la-conexión">8.6
+Servicios orientados y no orientados a la conexión</a></li>
+<li><a href="#implicancias-de-seguridad-4"
+id="toc-implicancias-de-seguridad-4">8.7 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-9-aloha-csma-y-ethernet"
+id="toc-capítulo-9-aloha-csma-y-ethernet">CAPÍTULO 9 — ALOHA, CSMA Y
+ETHERNET</a>
+<ul>
+<li><a href="#aloha-universidad-de-hawai-años-70"
+id="toc-aloha-universidad-de-hawai-años-70">9.1 Aloha (Universidad de
+Hawai, años 70)</a></li>
+<li><a href="#csma-carrier-sense-multiple-access"
+id="toc-csma-carrier-sense-multiple-access">9.2 CSMA — Carrier Sense
+Multiple Access</a></li>
+<li><a href="#csmacd-con-detección-de-colisión"
+id="toc-csmacd-con-detección-de-colisión">9.3 CSMA/CD — con detección de
+colisión</a></li>
+<li><a href="#ethernet-estandares" id="toc-ethernet-estandares">9.3 Estándares y componentes Ethernet</a></li>
+<li><a href="#ethernet-trama" id="toc-ethernet-trama">9.4 Estructura de la trama Ethernet (V2 vs 802.3)</a></li>
+<li><a href="#ethernet-duplex" id="toc-ethernet-duplex">9.5 Half duplex vs Full duplex</a></li>
+<li><a href="#redes-inalambricas-80211" id="toc-redes-inalambricas">9.6 Redes inalámbricas — IEEE 802.11 (Wi-Fi)</a></li>
+<li><a href="#implicancias-de-seguridad-de-ethernet"
+id="toc-implicancias-de-seguridad-de-ethernet">9.7 🛡️ Implicancias de
+seguridad de Ethernet</a></li>
+</ul></li>
+<li><a href="#capítulo-10-redes-inalámbricas-ieee-802.11-wifi"
+id="toc-capítulo-10-redes-inalámbricas-ieee-802.11-wifi">CAPÍTULO 10 —
+REDES INALÁMBRICAS: IEEE 802.11 (WiFi)</a>
+<ul>
+<li><a href="#generalidades" id="toc-generalidades">10.1
+Generalidades</a></li>
+<li><a href="#topologías-1" id="toc-topologías-1">10.2
+Topologías</a></li>
+<li><a href="#csmaca-collision-avoidance"
+id="toc-csmaca-collision-avoidance">10.3 CSMA/CA — Collision
+Avoidance</a></li>
+<li><a href="#servicios-y-seguridad-802.11"
+id="toc-servicios-y-seguridad-802.11">10.4 Servicios y seguridad
+802.11</a></li>
+<li><a href="#implicancias-de-seguridad-de-wifi"
+id="toc-implicancias-de-seguridad-de-wifi">10.5 🛡️ Implicancias de
+seguridad de WiFi</a></li>
+</ul></li>
+<li><a
+href="#capítulo-11-equipamiento-hub-bridge-switch-router-firewall"
+id="toc-capítulo-11-equipamiento-hub-bridge-switch-router-firewall">CAPÍTULO
+11 — EQUIPAMIENTO: HUB, BRIDGE, SWITCH, ROUTER, FIREWALL</a>
+<ul>
+<li><a href="#nic-network-interface-card"
+id="toc-nic-network-interface-card">11.1 NIC (Network Interface
+Card)</a></li>
+<li><a href="#repetidor" id="toc-repetidor">11.2 Repetidor</a></li>
+<li><a href="#hub" id="toc-hub">11.3 Hub</a></li>
+<li><a href="#bridge-puente" id="toc-bridge-puente">11.4 Bridge (puente)</a></li>
+<li><a href="#bridge-spanning-tree" id="toc-bridge-spanning-tree">11.4b Spanning Tree (IEEE 802.1D)</a></li>
+<li><a href="#switch" id="toc-switch">11.5 Switch</a></li>
+<li><a href="#router" id="toc-router">11.6 Router</a></li>
+<li><a href="#firewall" id="toc-firewall">11.7 Firewall</a></li>
+<li><a href="#tabla-comparativa" id="toc-tabla-comparativa">11.8 Tabla
+comparativa</a></li>
+<li><a href="#implicancias-de-seguridad-5"
+id="toc-implicancias-de-seguridad-5">11.9 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a href="#capítulo-12-control-de-flujo-y-control-de-errores"
+id="toc-capítulo-12-control-de-flujo-y-control-de-errores">CAPÍTULO 12 —
+CONTROL DE FLUJO Y CONTROL DE ERRORES</a>
+<ul>
+<li><a href="#marco-general" id="toc-marco-general">12.1 Marco
+general</a></li>
+<li><a href="#control-de-flujo" id="toc-control-de-flujo">12.2 Control
+de flujo</a></li>
+<li><a href="#control-de-errores" id="toc-control-de-errores">12.3
+Control de errores</a></li>
+<li><a href="#detección-de-errores" id="toc-detección-de-errores">12.4
+Detección de errores</a></li>
+<li><a href="#piggybacking" id="toc-piggybacking">12.2b Piggybacking</a></li>
+<li><a href="#mecanismos-arq" id="toc-mecanismos-arq">12.5 Mecanismos ARQ</a></li>
+<li><a href="#fec-principios" id="toc-fec-principios">12.5b FEC — Forward Error Correction</a></li>
+<li><a href="#conectando-con-lo-visto"
+id="toc-conectando-con-lo-visto">12.6 Conectando con lo visto</a></li>
+<li><a href="#implicancias-de-seguridad-6"
+id="toc-implicancias-de-seguridad-6">12.7 🛡️ Implicancias de
+seguridad</a></li>
+</ul></li>
+<li><a
+href="#apéndice-recursos-y-herramientas-de-ciberseguridad-que-van-a-aparecer"
+id="toc-apéndice-recursos-y-herramientas-de-ciberseguridad-que-van-a-aparecer">APÉNDICE
+— RECURSOS Y HERRAMIENTAS DE CIBERSEGURIDAD QUE VAN A APARECER</a></li>
+</ul>
+</nav>
+<h1 id="introducción-a-las-comunicaciones">Introducción a las
+Comunicaciones</h1>
+<blockquote>
+<p>Resumen integral orientado a la carrera de
+<strong>Ciberseguridad</strong>. Cada capítulo cierra con un bloque
+<strong>🛡️ Implicancias de seguridad</strong> que conecta los conceptos
+con ataques, defensas y herramientas que vas a usar más adelante.</p>
+<p><strong>v2 — Versión completa:</strong> incorpora contenido de todos los apuntes de clase (PPT portada azul): tecnologías de capa física, subcapa MAC dinámica completa, señalización en conmutación de circuitos, trama Ethernet V2 vs 802.3, EtherType, full duplex/half duplex, control de flujo PAUSE, dominio de colisión, árbol de expansión de bridges, piggybacking, ejemplo numérico de ventana deslizante y FEC con tabla de ejemplo.</p>
+</blockquote>
+<hr />
+<h2 id="marco-mental-la-tríada-cia">0. Marco mental: la tríada CIA</h2>
+<p>Antes de meternos en redes, conviene fijar el lente con el que un
+profesional de ciberseguridad lee todo lo demás. Cuando estudies
+cualquier protocolo, mecanismo o medio, preguntate qué propiedad protege
+(o no):</p>
+<ul>
+<li><strong>Confidencialidad</strong> — que solo el destinatario
+autorizado pueda leer la información.</li>
+<li><strong>Integridad</strong> — que la información no se haya alterado
+(por ruido o por un atacante).</li>
+<li><strong>Autenticidad</strong> — que el emisor sea realmente quien
+dice ser.</li>
+<li><strong>Disponibilidad</strong> — que la información llegue cuando
+se la necesita.</li>
+</ul>
+<p>Vas a ver que la mayoría de los protocolos clásicos (Ethernet, IP,
+ARP, DNS) fueron diseñados pensando en que llegue la información, no en
+que llegue <strong>segura</strong>. Por eso existen capas de seguridad
+añadidas (TLS, IPSec, WPA, DNSSEC).</p>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-1-conceptos-y-definiciones">CAPÍTULO 1 — CONCEPTOS Y
+DEFINICIONES</h1>
+<h2 id="glosario-base">1.1 Glosario base</h2>
+<p><strong>Comunicación</strong> Transmitir información desde un punto a
+otro a través de una sucesión de procesos.</p>
+<p><strong>Telecomunicaciones</strong> Comunicación a distancia,
+típicamente bidireccional. Abarca radio, telegrafía, televisión,
+telefonía, transmisión de datos e interconexión de computadoras a nivel
+de enlace.</p>
+<p><strong>Algoritmo</strong> Secuencia ordenada de instrucciones que
+conducen a la solución de un problema. Es independiente del lenguaje de
+programación: un mismo algoritmo se puede escribir en Python, C o Java y
+producir el mismo resultado.</p>
+<p><strong>Interfaz</strong> Conexión —física o lógica— entre
+dispositivos o sistemas. - <strong>Interfaz física</strong>: la conexión
+tangible al medio (puerto Ethernet, antena WiFi, conector de fibra). -
+<strong>Interfaz lógica</strong>: la frontera entre dos capas o
+sistemas, definida por reglas y formatos (por ejemplo, la API de sockets
+entre la capa de transporte y las aplicaciones).</p>
+<p><strong>Primitivas de servicio</strong> Operaciones elementales con
+las que una capa le pide servicios a otra. Cuatro tipos básicos: -
+<strong>REQUEST</strong> — solicitud para realizar una acción. -
+<strong>INDICATION</strong> — notificación de que ocurrió un suceso. -
+<strong>RESPONSE</strong> — respuesta a un suceso. -
+<strong>CONFIRM</strong> — confirmación de que llegó la respuesta a una
+acción anterior.</p>
+<h2 id="componentes-de-una-red">1.2 Componentes de una red</h2>
+<p><strong>Estaciones</strong> Dispositivos en los extremos de la red —
+los que generan o consumen la información. Las estaciones no forman la
+red en sí; se conectan a ella a través de un nodo.</p>
+<p><strong>Nodos</strong> Puntos de paso de la red. Reciben datos y
+deciden hacia dónde reenviarlos. En redes modernas, los nodos son los
+routers y switches.</p>
+<blockquote>
+<p>A los nodos intermedios no les importa qué dice el mensaje, solo
+saben hacia dónde mandarlo. Son como carteros que leen el destinatario
+del sobre pero no abren la carta.</p>
+</blockquote>
+<p><strong>Enlaces de transmisión</strong> Cables o conexiones
+inalámbricas que unen un nodo con otro.</p>
+<p><strong>Topología</strong> Forma en que están organizados y
+conectados los nodos entre sí. Define el “mapa” de la red.</p>
+<h2 id="tareas-de-un-sistema-de-comunicaciones">1.3 Tareas de un sistema
+de comunicaciones</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Utilización del sistema de transmisión</td>
+<td>Uso eficaz de los recursos (multiplexación, control de flujo)</td>
+</tr>
+<tr>
+<td>Interfaz</td>
+<td>Conexión entre el dispositivo y el medio</td>
+</tr>
+<tr>
+<td>Generación de la señal</td>
+<td>Producir una señal electromagnética que se propague por el
+medio</td>
+</tr>
+<tr>
+<td>Sincronismo</td>
+<td>Coordinar transmisor y receptor en tiempo</td>
+</tr>
+<tr>
+<td>Gestión del intercambio</td>
+<td>Reglas y requisitos para que la comunicación tenga efecto</td>
+</tr>
+<tr>
+<td>Detección y corrección de errores</td>
+<td>Cuando es necesario, aplicar una o ambas</td>
+</tr>
+<tr>
+<td>Control de flujo</td>
+<td>Que el emisor no sature al receptor</td>
+</tr>
+<tr>
+<td>Direccionamiento</td>
+<td>Identificar fuente y destino</td>
+</tr>
+<tr>
+<td>Enrutamiento</td>
+<td>Encaminar los datos al destino</td>
+</tr>
+<tr>
+<td>Recuperación</td>
+<td>Recupero ante fallas</td>
+</tr>
+<tr>
+<td>Formato de mensajes</td>
+<td>Acuerdo entre fuente y destino sobre la estructura</td>
+</tr>
+<tr>
+<td>Seguridad y gestión de red</td>
+<td>Que la información solo la reciba el receptor autorizado; monitoreo
+y configuración</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🛡️ <strong>Ojo</strong>: “Seguridad” aparece como una tarea, pero en
+los protocolos clásicos (IP, Ethernet, ARP) <strong>no está implementada
+por defecto</strong>. Casi siempre es responsabilidad de capas o
+protocolos añadidos.</p>
+</blockquote>
+<div class="synthesis"><p>Este capítulo te dio el vocabulario base. <strong>Estaciones, nodos, enlaces y topología</strong> describen el hardware de una red; <strong>primitivas y tareas</strong>, los servicios que esa red debe prestar. Cuando entres a OSI vas a ver que cada capa cumple una combinación de esas tareas — el modelo es una forma ordenada de repartirlas.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-2-procesamiento-de-la-señal">CAPÍTULO 2 — PROCESAMIENTO
+DE LA SEÑAL</h1>
+<h2
+id="cómo-viaja-la-información-desde-que-se-genera-hasta-el-destino">2.1
+¿Cómo viaja la información desde que se genera hasta el destino?</h2>
+<ol type="1">
+<li><strong>Generación (abstracta)</strong> — Una persona habla, un
+sensor lee, una cámara captura. La información todavía es una idea, un
+sonido, una imagen.</li>
+<li><strong>Descripción (símbolos)</strong> — Se representa esa
+información en algún formato físico o eléctrico (ondas de voz,
+variaciones de voltaje, píxeles).</li>
+<li><strong>Codificación</strong> (el corazón del proceso) — adapta la
+señal al canal:
+<ul>
+<li><strong>Codificación de fuente</strong> — busca
+<strong>eficiencia</strong>. Elimina información redundante para que el
+mensaje ocupe menos espacio o ancho de banda (compresión: MP3, JPEG,
+H.264). Si la fuente es analógica (voz), también hace la conversión
+A/D.</li>
+<li><strong>Cifrado</strong> <em>(opcional pero clave para ciber)</em> —
+evita que el mensaje sea entendido por usuarios no autorizados y
+previene que se introduzcan mensajes falsos.</li>
+<li><strong>Codificación de canal</strong> — busca
+<strong>robustez</strong>. Añade redundancia controlada (bits extra)
+para que el receptor pueda detectar o corregir errores que introduce el
+canal.</li>
+<li><strong>Modulación</strong> — adapta la señal digital al medio
+físico, “montándola” sobre una onda portadora.</li>
+</ul></li>
+<li><strong>Transmisión</strong> — La señal viaja por el canal (cobre,
+fibra, aire). El canal siempre introduce ruido e interferencia — es
+inevitable.</li>
+<li><strong>Demodulación</strong> — El receptor separa la información de
+la portadora.</li>
+<li><strong>Decodificación de canal</strong> — Usando la redundancia
+añadida, el sistema detecta y corrige errores.</li>
+<li><strong>Decodificación de fuente</strong> — Se revierte la
+compresión.</li>
+<li><strong>Entrega al usuario destino</strong> — El parlante reproduce
+el audio, la pantalla muestra el video.</li>
+</ol>
+<blockquote>
+<p><strong>Paradoja útil de recordar</strong>: primero eliminamos
+redundancia (compresión) y después añadimos redundancia controlada
+(protección contra errores). Son capas con propósitos distintos.</p>
+</blockquote>
+<h2 id="implicancias-de-seguridad">2.2 🛡️ Implicancias de seguridad</h2>
+<ul>
+<li>El <strong>cifrado</strong> convive con la codificación pero
+resuelve un problema diferente: codificación de fuente protege contra
+desperdicio, codificación de canal contra ruido accidental, cifrado
+contra <strong>adversarios</strong>.</li>
+<li>Cualquier canal físico es <strong>interceptable</strong> (excepto
+fibra, que es difícil): cobre y aire son fácilmente escuchados con
+equipo barato. Por eso la confidencialidad nunca se confía al medio,
+sino al cifrado.</li>
+</ul>
+<div class="synthesis"><p>Las ocho etapas (generación → codificación de fuente → cifrado → codificación de canal → modulación → canal → demodulación → decodificación → entrega) son la columna vertebral de cualquier sistema digital. Lo que sigue en el resumen son refinamientos: los <strong>medios físicos</strong> implementan el canal, los <strong>protocolos</strong> formalizan las codificaciones, y la <strong>criptografía</strong> vive como un eslabón opcional pero crítico entre fuente y canal.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-3-redes-de-datos-y-evolución">CAPÍTULO 3 — REDES DE
+DATOS Y EVOLUCIÓN</h1>
+<h2 id="qué-es-networking">3.1 ¿Qué es networking?</h2>
+<p>El objetivo básico de una red es permitir que la información se
+comparta entre personas y/o máquinas. Una red de computadoras se puede
+definir como <strong>“dos o más computadoras conectadas de alguna manera
+por la cual son capaces de intercambiar información”</strong> (Donahue,
+<em>Network Warrior</em>, 2007).</p>
+<p>A través del networking pueden comunicarse computadoras distintas; lo
+importante no es la marca, sino que todas hablen el <strong>mismo
+protocolo</strong>.</p>
+<p>En una red de datos, la comunicación no es una conexión directa entre
+dos dispositivos: la información viaja saltando de nodo en nodo hasta el
+destino.</p>
+<pre><code>[PC A] → [Nodo 1] → [Nodo 2] → [Nodo 3] → [PC B]</code></pre>
+<h2 id="evolución-cronológica-de-las-redes">3.2 Evolución cronológica de
+las redes</h2>
+<p>TDM, fibra óptica, ATM e IP son las <strong>cuatro etapas de una
+misma historia</strong>: cómo evolucionó el transporte de información a
+medida que crecía la demanda. Antes de TDM, cada comunicación requería
+su propio cable físico de punta a punta, lo que era insostenible a
+escala.</p>
+<h3 id="a-tdm-time-division-multiplexing">a) TDM — la primera idea:
+compartir el cable en el tiempo</h3>
+<p><strong>Time Division Multiplexing</strong> resolvió el desperdicio
+físico: <strong>un solo cable, varias comunicaciones</strong>, cada una
+con su turno de microsegundos.</p>
+<ul>
+<li>El canal se divide en <strong>ranuras de tiempo fijas</strong> (time
+slots).</li>
+<li>Cada comunicación ocupa una ranura, cíclicamente.</li>
+<li>Cada usuario tiene la <strong>ilusión</strong> de tener el canal
+entero.</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Norma</th>
+<th>Canales</th>
+<th>Velocidad</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>T1</strong> (americana)</td>
+<td>24 canales de voz de 64 kbps</td>
+<td>1,544 Mbps</td>
+<td>EE.UU.</td>
+</tr>
+<tr>
+<td><strong>E1</strong> (europea)</td>
+<td>30 de datos + 2 de control</td>
+<td>2,048 Mbps</td>
+<td>Argentina, Europa</td>
+</tr>
+</tbody>
+</table>
+<p>Medio físico: <strong>cobre con PCM</strong> (Pulse Code
+Modulation).</p>
+<p><strong>Su limitación</strong>: la ranura queda <strong>reservada
+aunque no se use</strong> — en una llamada sin voz, ese tiempo se
+desperdicia. Y como las ranuras son fijas, la velocidad de cada usuario
+también lo es.</p>
+<h3 id="b-fibra-óptica-y-sdh">b) Fibra óptica y SDH — el salto
+físico</h3>
+<p>TDM seguía siendo válido, pero el <strong>cobre se quedó
+corto</strong> ante el crecimiento del tráfico. La fibra óptica no es un
+nuevo método de multiplexar — <strong>es un medio físico mejor</strong>:
+transmite <strong>luz</strong> en lugar de electricidad, lo que permite
+velocidades y distancias mucho mayores con menos pérdida.</p>
+<p>Para organizar esa capacidad enorme se creó la jerarquía <strong>SDH
+(Synchronous Digital Hierarchy)</strong>:</p>
+<ul>
+<li><strong>STM-1</strong> (primer nivel) = 155 Mb/s</li>
+<li>Los niveles superiores multiplican: <strong>STM-4, STM-16,
+STM-64…</strong></li>
+</ul>
+<blockquote>
+<p>💡 <strong>Punto clave</strong>: SDH sigue siendo <strong>TDM</strong>,
+solo que sobre fibra y a velocidades mucho mayores. La filosofía no
+cambió — sigue habiendo ranuras de tiempo reservadas.</p>
+</blockquote>
+<h3 id="c-atm-asynchronous-transfer-mode">c) ATM — atacar el desperdicio
+de TDM</h3>
+<p>Con la fibra había muchísimo ancho de banda, pero TDM seguía
+<strong>desperdiciándolo</strong> con sus ranuras fijas. Además,
+llegaron tráficos nuevos (datos, video) que no encajaban bien con la
+rigidez de la voz.</p>
+<p><strong>ATM (Asynchronous Transfer Mode)</strong> rompió con TDM:</p>
+<table>
+<thead>
+<tr>
+<th>TDM</th>
+<th>ATM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ranuras de tiempo <strong>fijas</strong></td>
+<td><strong>Celdas</strong> de longitud fija y corta enviadas solo
+cuando hay datos</td>
+</tr>
+<tr>
+<td>Canal reservado todo el tiempo</td>
+<td>No hay canal fijo: cada celda viaja independiente</td>
+</tr>
+<tr>
+<td>Voz, datos, video → infraestructuras separadas</td>
+<td>Voz + datos + video sobre la misma red</td>
+</tr>
+</tbody>
+</table>
+<p>Cada celda viaja por <strong>Virtual Paths</strong> (subdivididos en
+<strong>Virtual Channels</strong>) establecidos al inicio. Es decir:
+<strong>conmutación de paquetes</strong> (las celdas), pero con
+<strong>circuitos virtuales</strong> que recuerdan el modelo de
+circuitos. Corre nativamente sobre fibra.</p>
+<h3 id="d-ip-el-ganador-actual">d) IP — el ganador inesperado</h3>
+<p>ATM era técnicamente brillante pero <strong>caro y
+complejo</strong>. Mientras tanto, <strong>IP</strong> venía creciendo
+desde el mundo académico con una filosofía radicalmente más simple.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No orientado a conexión</strong></td>
+<td>Cada paquete viaja independiente, puede tomar rutas distintas</td>
+</tr>
+<tr>
+<td><strong>Tamaño máximo de paquete</strong></td>
+<td>65 535 bytes teórico — en la práctica el MTU típico es ~1500 bytes
+(Ethernet); paquetes mayores se <strong>fragmentan</strong></td>
+</tr>
+<tr>
+<td><strong>TTL (Time To Live)</strong></td>
+<td>Contador que se decrementa en cada nodo; al llegar a 0 el paquete se
+descarta y el router envía un <strong>ICMP Time Exceeded</strong> (es lo
+que hace funcionar <code>traceroute</code>)</td>
+</tr>
+<tr>
+<td><strong>Direccionamiento</strong></td>
+<td><strong>IPv4</strong> = 32 bits; <strong>IPv6</strong> = 128
+bits</td>
+</tr>
+<tr>
+<td><strong>Mejor esfuerzo (best effort)</strong></td>
+<td>No garantiza entrega, orden ni tiempo. Si querés confiabilidad, va
+arriba (TCP)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>IP ganó frente a ATM por <strong>simplicidad y escalabilidad</strong>,
+no por ser técnicamente superior en cada métrica. Hoy es la base de toda
+comunicación moderna.</p>
+</blockquote>
+<h3 id="dos-ejes-para-entender-la-evolución">Dos ejes para entender la
+evolución</h3>
+<p>Hay <strong>dos cosas distintas mezcladas</strong> en esta historia:</p>
+<table>
+<thead>
+<tr>
+<th>Eje</th>
+<th>Evolución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Medio físico</strong></td>
+<td>Cobre PCM → Fibra óptica</td>
+</tr>
+<tr>
+<td><strong>Técnica de multiplexar</strong></td>
+<td>TDM (ranuras fijas) → ATM (celdas) → IP (paquetes independientes)</td>
+</tr>
+</tbody>
+</table>
+<p>Son ortogonales: hoy IP corre <strong>sobre fibra</strong>, pero
+también podría correr sobre cobre o sobre radio. TDM puede correr sobre
+cobre o sobre fibra (SDH).</p>
+<h3 id="implicancia-historica-ciberseguridad">🛡️ Implicancia histórica
+para ciberseguridad</h3>
+<p>Esta historia explica por qué <strong>IP no fue diseñado pensando en
+seguridad</strong>: nació en un entorno académico de confianza mutua.
+ATM, en cambio, tenía un modelo más cercano al telefónico clásico (con
+circuitos identificados). El triunfo de IP nos dejó una red global
+flexible pero <strong>sin autenticación ni cifrado nativo</strong> — eso
+vino después con capas añadidas (IPSec, TLS, DNSSEC).</p>
+<h2 id="qué-es-internet">3.3 ¿Qué es Internet?</h2>
+<p>Es una <strong>red de redes</strong> — una red conectada a otra de
+manera continua y simultánea.</p>
+<p>Plataforma mundial de comunicaciones multimedia basada en: -
+<strong>Protocolo IP</strong> — direccionamiento numérico -
+<strong>DNS</strong> (Domain Name System) — direccionamiento por nombres
+humanos</p>
+<p>Permite intercambio de información (voz, datos, video) en tiempo real
+o diferido, desde terminales fijas y móviles.</p>
+<h2 id="organismos-de-estandarización">3.4 Organismos de
+estandarización</h2>
+<p>Para que dispositivos de fabricantes distintos (Windows, Linux, iOS,
+Android…) puedan comunicarse — <strong>compatibilidad e
+interoperabilidad</strong> —, los protocolos deben estar
+estandarizados.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Organismo</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ISO</strong></td>
+<td>International Organization for Standardization. Publicó OSI.</td>
+</tr>
+<tr>
+<td><strong>IEEE</strong></td>
+<td>Estándares 802.x (Ethernet, WiFi, Bluetooth…)</td>
+</tr>
+<tr>
+<td><strong>IETF</strong></td>
+<td>Internet Engineering Task Force — publica las <strong>RFCs</strong>
+(Request for Comments). Define TCP/IP, HTTP, etc.</td>
+</tr>
+<tr>
+<td><strong>ICANN / IANA</strong></td>
+<td>Coordinación global de DNS y asignación de IPs</td>
+</tr>
+<tr>
+<td><strong>LACNIC, ARIN, RIPE NCC, APNIC, AfriNIC</strong></td>
+<td>Registros regionales de IPs</td>
+</tr>
+<tr>
+<td><strong>NIC Argentina</strong></td>
+<td>Administración del <code>.ar</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="implicancias-de-seguridad-1">3.5 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>Best-effort</strong> significa que IP no asume confianza ni
+garantía. Cualquier seguridad debe venir de arriba.</li>
+<li><strong>DNS</strong> se vuelve un blanco crítico: si te envenenan la
+resolución, podés terminar conectado al servidor del atacante creyendo
+que estás en el banco (cache poisoning, hijacking). DNSSEC busca
+mitigarlo, pero su despliegue es incompleto.</li>
+<li><strong>ICMP</strong> (TTL Exceeded, Echo Reply, etc.) es la base de
+herramientas legítimas (<code>ping</code>, <code>traceroute</code>) y
+también de reconocimiento ofensivo. Muchos firewalls lo restringen por
+eso.</li>
+</ul>
+<div class="synthesis"><p>TDM, fibra, ATM e IP no son tecnologías rivales sino respuestas sucesivas al mismo problema: <strong>cómo mover más información de forma más eficiente</strong>. La fibra cambió el medio físico; ATM e IP cambiaron la lógica de multiplexar. Que IP haya ganado define la red en la que vivís hoy: simple, escalable y diseñada para confianza mutua — por eso la seguridad se construye en capas superpuestas (TLS, IPSec, DNSSEC), no en la base.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-4-medios-físicos">CAPÍTULO 4 — MEDIOS FÍSICOS</h1>
+<p>Para que las computadoras se comuniquen físicamente se necesita un
+<strong>medio de transmisión</strong>. El tipo se elige según velocidad,
+costo y ubicación.</p>
+<h2 id="cable-coaxial">4.1 Cable Coaxial</h2>
+<p>Dos elementos de conducción: un conductor de cobre central rodeado de
+aislante, y sobre éste un blindaje trenzado de cobre o malla metálica
+que actúa como segundo conductor y reduce interferencias.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Variante</th>
+<th>Características</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>THICK</strong> (amarillo)</td>
+<td>Mayor velocidad y distancia, alto costo, poca flexibilidad</td>
+</tr>
+<tr>
+<td><strong>THIN</strong></td>
+<td>Más barato y flexible, menor distancia</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy está prácticamente en desuso en redes de datos; sigue vivo en TV
+por cable.</p>
+<h2 id="par-trenzado-pcm">4.2 Par trenzado (PCM)</h2>
+<p>El más usado actualmente. Pares de cables de cobre <strong>trenzados
+entre sí</strong> — el trenzado reduce la interferencia electromagnética
+entre pares.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Características</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UTP</strong> (Unshielded Twisted Pair)</td>
+<td>Sin blindaje. Bajo costo y fácil manejo. Mayor tasa de error y
+limitaciones de distancia. <strong>El más usado en el
+mercado.</strong></td>
+</tr>
+<tr>
+<td><strong>STP</strong> (Shielded Twisted Pair)</td>
+<td>Cada par con lámina blindada + malla exterior. Menor tasa de error.
+Alto costo.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Categorías de cable</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Categoría</th>
+<th>Ancho de banda</th>
+<th>Velocidad típica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cat 3</td>
+<td>16 MHz</td>
+<td>hasta 10 Mbps</td>
+</tr>
+<tr>
+<td>Cat 5</td>
+<td>100 MHz</td>
+<td>100/1000 Mbps</td>
+</tr>
+<tr>
+<td>Cat 5e</td>
+<td>100 MHz</td>
+<td>1/10 Gbps</td>
+</tr>
+<tr>
+<td>Cat 6</td>
+<td>250 MHz</td>
+<td>1 Gbps+</td>
+</tr>
+<tr>
+<td>Cat 6a</td>
+<td>500 MHz</td>
+<td>10 Gbps</td>
+</tr>
+<tr>
+<td>Cat 7 / 7a</td>
+<td>600-1000 MHz</td>
+<td>10 Gbps+</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fibra-óptica">4.3 Fibra óptica</h2>
+<p>En lugar de electricidad, transmite <strong>pulsos de luz</strong>.
+Está hecha de hilos de cuarzo fundido o plástico tratado. Cada hilo
+tiene: - <strong>Núcleo</strong> (core) — donde viaja la luz -
+<strong>Cubierta</strong> (cladding) — con diferente índice de
+refracción; refleja la luz hacia adentro -
+<strong>Revestimiento</strong> (coating/buffer) — protección
+mecánica</p>
+<p>Como núcleo y cubierta tienen distintos índices de refracción, cuando
+la luz toca la frontera se <strong>refleja totalmente hacia
+adentro</strong> y sigue viajando.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Núcleo</th>
+<th>Características</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Multimodo</strong></td>
+<td>50-62,5 μm</td>
+<td>Varios rayos viajan simultáneamente por distintos caminos. Núcleo
+grande, más fácil de acoplar. Distancia menor (~2 km). λ = 850 nm.</td>
+</tr>
+<tr>
+<td><strong>Monomodo</strong></td>
+<td>8-10 μm</td>
+<td>Un solo rayo en línea recta. Mayor velocidad, mayor distancia (40
+km). λ = 1300 nm. Telefonía, TV por cable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Características generales de la fibra:</strong> - Gran ancho
+de banda - Baja atenuación - Muy alta inmunidad a interferencias
+electromagnéticas - Alta seguridad (difícil de interceptar sin acceso
+físico) - Alto costo de fabricación e instalación</p>
+<h2 id="parámetros-del-cableado">4.4 Parámetros del cableado</h2>
+<p><strong>Atenuación</strong> Pérdida de potencia de la señal a medida
+que viaja. Se mide en <strong>decibeles (dB)</strong> = 20·log₁₀(V_tx /
+V_rx). Una atenuación <strong>pequeña es buena</strong>. Es fija —
+depende de longitud y diámetro del cable.</p>
+<p><strong>NEXT — Near-End Crosstalk</strong> Interferencia que genera
+un par trenzado sobre otro par del mismo cable. Se mide en el extremo
+donde se inyecta la señal (donde es más fuerte y genera más
+interferencia). NEXT = 20·log₁₀(V_tx / V_acoplado). Un <strong>NEXT
+grande es bueno</strong> (menos ruido).</p>
+<p><strong>ACR — Attenuation to Crosstalk Ratio</strong> ACR (dB) = NEXT
+(dB) − Atenuación (dB). También llamado <strong>headroom</strong>.
+Indicador final de si el cableado funciona bien. Debe ser positivo y de
+varios dB. Una pequeña mejora reduce dramáticamente la tasa de
+errores.</p>
+<h2 id="implicancias-de-seguridad-2">4.5 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>Cobre y aire son interceptables</strong> con equipo
+accesible (sondas, antenas). La fibra es el medio más resistente a
+interceptación pasiva.</li>
+<li><strong>TEMPEST</strong>: emisiones electromagnéticas involuntarias
+del cobre pueden reconstruir el tráfico a distancia (ataque clásico de
+espionaje estatal).</li>
+<li>En auditorías de cableado vas a ver mediciones de ACR/NEXT — un
+cableado mal certificado puede causar pérdidas que se confunden con
+ataques o problemas de red.</li>
+</ul>
+<div class="synthesis"><p>Coaxial, par trenzado y fibra son las tres opciones físicas para transportar bits, ordenadas históricamente de menor a mayor capacidad. <strong>Atenuación, NEXT y ACR</strong> son las métricas con las que se evalúa un cableado: si la capa 1 falla, todo lo de arriba falla de manera silenciosa o errática. Por eso un cable certificado es la base invisible sobre la que se apoya cualquier protocolo de capas superiores.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-5-topologías-y-tipos-de-transmisión">CAPÍTULO 5 —
+TOPOLOGÍAS Y TIPOS DE TRANSMISIÓN</h1>
+<h2 id="topologías">5.1 Topologías</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Topología</th>
+<th>Descripción</th>
+<th>Falla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Estrella</strong></td>
+<td>Todos se conectan a un dispositivo central (HUB/switch). La más
+usada en LAN.</td>
+<td>Si cae un nodo, solo ese se afecta. Si cae el central, cae toda la
+red.</td>
+</tr>
+<tr>
+<td><strong>Malla</strong></td>
+<td>Todos los nodos conectados entre sí. Alta redundancia.</td>
+<td>Difícil de escalar — crece exponencialmente en cables/costos. Usada
+en backbones de Internet.</td>
+</tr>
+<tr>
+<td><strong>Anillo</strong></td>
+<td>Cada nodo conectado al siguiente, formando un bucle. Mensajes viajan
+en una sola dirección.</td>
+<td>Si un nodo falla, puede interrumpir toda la red (salvo anillo
+doble).</td>
+</tr>
+<tr>
+<td><strong>Bus</strong></td>
+<td>Todos los dispositivos en un único cable compartido. Cada uno
+“escucha” para ver si el mensaje le corresponde.</td>
+<td>Si el cable principal falla, cae toda la red. <strong>Hoy en
+desuso</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tipos-de-transmisión">5.2 Tipos de transmisión</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Modo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Simplex</strong></td>
+<td>Un solo sentido. Ejemplo: radio AM, TV.</td>
+</tr>
+<tr>
+<td><strong>Half Duplex</strong></td>
+<td>Ambos sentidos, pero no simultáneo. Ejemplo: walkie-talkie.</td>
+</tr>
+<tr>
+<td><strong>Full Duplex</strong></td>
+<td>Ambos sentidos simultáneos. Ejemplo: celular, notebook.</td>
+</tr>
+<tr>
+<td><strong>Full-Full Duplex</strong></td>
+<td>Tx y Rx simultáneo, no necesariamente con la misma contraparte.
+Ejemplo: videoconferencia.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tipos-de-conexión">5.3 Tipos de conexión</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Punto a punto</strong></td>
+<td>Canal entre exactamente dos nodos. Ambos iguales.</td>
+</tr>
+<tr>
+<td><strong>Multipunto</strong></td>
+<td>Varios nodos comparten un mismo medio. Todos se “ven”. Hay que
+coordinar quién habla cuándo.</td>
+</tr>
+<tr>
+<td><strong>Conmutadas</strong></td>
+<td>Información viaja a través de nodos intermedios que la
+encaminan.</td>
+</tr>
+</tbody>
+</table>
+<div class="synthesis"><p>Tres dimensiones describen la forma de una red: <strong>topología</strong> (geometría física), <strong>modo de transmisión</strong> (cómo se usa el canal: simplex/duplex) y <strong>tipo de conexión</strong> (punto a punto, multipunto o conmutada). Combinadas, determinan cómo se comporta una red frente a fallos, congestión y crecimiento — y por dónde tiene sentido colocar redundancias y controles.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-6-clasificación-por-área-de-cobertura">CAPÍTULO 6 —
+CLASIFICACIÓN POR ÁREA DE COBERTURA</h1>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Red</th>
+<th>Alcance</th>
+<th>Características</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PAN</strong> (Personal)</td>
+<td>~10 m</td>
+<td>Dispositivos personales (celular, smartwatch, auriculares).
+Bluetooth (IEEE 802.15). Bajo costo y consumo.</td>
+</tr>
+<tr>
+<td><strong>LAN</strong> (Local)</td>
+<td>Edificio / campus</td>
+<td>Una sola organización. Altas velocidades. Ethernet, WiFi, Token
+Ring, FDDI.</td>
+</tr>
+<tr>
+<td><strong>MAN</strong> (Metropolitana)</td>
+<td>Ciudad</td>
+<td>Entre LAN y WAN. Surge cuando una empresa necesita conectar varios
+edificios. MetroEthernet, redes inalámbricas.</td>
+</tr>
+<tr>
+<td><strong>WAN</strong> (Wide)</td>
+<td>Países / continentes</td>
+<td>Usa carriers (Telefónica, Claro). Une LANs y MANs alejadas. X.25,
+Frame Relay, ATM.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="modelo-jerárquico-de-tres-capas-diseño-de-lan">6.1 Modelo
+jerárquico de tres capas (diseño de LAN)</h2>
+<p>En diseño de redes corporativas se suele usar un modelo de tres
+capas:</p>
+<ul>
+<li><strong>Access Layer</strong> — donde se conectan los usuarios
+finales. Bajo costo, alta densidad de puertos. Filtrado MAC,
+segmentación, VPN.</li>
+<li><strong>Distribution Layer</strong> — agregación, routing entre
+VLAN, políticas de seguridad, ACLs, filtros, encripción, QoS.</li>
+<li><strong>Core Layer</strong> — backbone, transporte de alta
+velocidad, baja latencia, redundancia. <strong>No</strong> debe hacer
+trabajos pesados (filtrado, encripción).</li>
+</ul>
+<h2 id="implicancias-de-seguridad-3">6.2 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>PAN/Bluetooth</strong>: vulnerable a <em>bluejacking</em>,
+<em>bluesnarfing</em>, ataques a dispositivos sin parchear.</li>
+<li><strong>LAN</strong>: el perímetro de mayor confianza pero también
+donde un atacante interno hace más daño (ARP spoofing, MAC
+flooding).</li>
+<li><strong>WAN</strong>: tradicionalmente “untrusted”; se cifra con
+<strong>VPN/IPSec</strong>.</li>
+<li>El modelo jerárquico ayuda a <strong>segmentar</strong>: si
+comprometés un host de access, no deberías llegar al core sin pasar por
+filtros del distribution.</li>
+</ul>
+<div class="synthesis"><p>PAN, LAN, MAN y WAN no son tecnologías sino <strong>escalas</strong>: cada una impone compromisos distintos entre velocidad, costo y administración. El modelo jerárquico <strong>access / distribution / core</strong> traslada esa idea al diseño interno de una red corporativa: cada nivel asume responsabilidades distintas, lo que también define dónde se colocan los controles de seguridad (filtros y ACLs cerca del usuario, segmentación y QoS en el medio, transporte limpio en el núcleo).</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-7-protocolos-y-modelo-osi">CAPÍTULO 7 — PROTOCOLOS Y
+MODELO OSI</h1>
+<h2 id="qué-es-un-protocolo">7.1 ¿Qué es un protocolo?</h2>
+<p>Conjunto de reglas que gobiernan el intercambio de datos entre dos
+entidades. Normas acordadas para unificar criterios entre fabricantes y
+permitir la interconexión de redes.</p>
+<p><strong>Un protocolo define cuatro cosas:</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Qué define</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sintaxis</strong></td>
+<td>Formato del mensaje a nivel de bits, bytes y campos</td>
+</tr>
+<tr>
+<td><strong>Semántica</strong></td>
+<td>Significado de cada campo (información de control, manejo de
+errores)</td>
+</tr>
+<tr>
+<td><strong>Temporización</strong></td>
+<td>Reglas de velocidad entre emisor y receptor, orden de eventos</td>
+</tr>
+<tr>
+<td><strong>Acciones</strong></td>
+<td>Qué hacer al transmitir o recibir un mensaje</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tareas-y-funciones-de-un-protocolo">7.2 Tareas y funciones de un
+protocolo</h2>
+<p><strong>Fases de una comunicación:</strong> 1. Establecer el canal
+(en conmutados) 2. Establecer la transmisión (modo control) 3. Efectuar
+la transmisión (modo información) 4. Verificar la transmisión 5.
+Señalizar el fin 6. Cortar el canal</p>
+<p><strong>Funciones que debe cumplir:</strong> - Segmentación y
+ensamblado - Encapsulamiento - Control de conexión - Entrega en orden -
+Control de flujo - Control y detección de errores - Direccionamiento</p>
+<h2 id="modelo-osi-las-7-capas">7.3 Modelo OSI — las 7 capas</h2>
+<p>Desarrollado por la <strong>ISO</strong> a fines de los 70 como marco
+universal. Divide la comunicación en 7 capas, cada una con
+responsabilidad específica.</p>
+<p><strong>Principios:</strong> - Un cambio en una capa no afecta a las
+demás - Las capas se apilan verticalmente (pila de protocolos) - Cada
+capa: reúne funciones similares, confía a la inferior las tareas más
+primitivas, provee servicios a la superior, y se comunica con su par del
+otro extremo usando un protocolo</p>
+<blockquote>
+<p><strong>Regla mnemotécnica</strong>: capas 1-4 = transporte de datos
+por la red (las miran los equipos de red); capas 5-7 = comunicación
+entre hosts (las miran las aplicaciones).</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Capa</th>
+<th>Función</th>
+<th>Protocolos típicos</th>
+<th>Equipos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td><strong>Aplicación</strong></td>
+<td>Protocolos cercanos al usuario (no son las apps en sí)</td>
+<td>HTTP, HTTPS, SMTP, POP3, IMAP, FTP, DNS, SSH</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Presentación</strong></td>
+<td>“Traducción”: codificación, compresión, cifrado</td>
+<td>SSL, TLS</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Sesión</strong></td>
+<td>Establece, mantiene y cierra sesiones; checkpoints</td>
+<td>NetBIOS, L2TP, SAP</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Transporte</strong></td>
+<td>Primera capa extremo-a-extremo. Segmenta, ordena, controla errores,
+puertos</td>
+<td>TCP, UDP, SPX</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Red</strong></td>
+<td>Enrutamiento de paquetes entre redes</td>
+<td>IPv4, IPv6, ICMP, IPSec, IGMP</td>
+<td>Routers</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Enlace</strong></td>
+<td>Tramas, MAC, CRC, control nodo-a-nodo</td>
+<td>Ethernet, WiFi, PPP, ARP</td>
+<td>Switches, bridges</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Física</strong></td>
+<td>Tensiones, cables, codificación, velocidades</td>
+<td>DSL, estándares IEEE 802</td>
+<td>Hubs, repetidores</td>
+</tr>
+</tbody>
+</table>
+<h3 id="capa-fisica-tecnologias">Capa 1 — Tecnologías y parámetros concretos</h3>
+<p>Define niveles de tensión, tipos de interfaces, estándares de cables, distancias máximas, velocidades y codificación. Tabla de referencia directa del apunte:</p>
+<table>
+<thead>
+<tr>
+<th>Tecnología</th>
+<th>Velocidad</th>
+<th>Tipo de cable</th>
+<th>Distancia máx.</th>
+<th>Topología</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>10BaseT</td><td>10 Mbps</td><td>Par trenzado</td><td>100 m</td><td>Hub o Switch</td></tr>
+<tr><td>10BaseF</td><td>10 Mbps</td><td>Fibra óptica</td><td>2000 m</td><td>Hub o Switch</td></tr>
+<tr><td>100BaseTx</td><td>100 Mbps</td><td>Par trenzado (Cat 5)</td><td>100 m</td><td>Hub o Switch</td></tr>
+<tr><td>100BaseFx</td><td>100 Mbps</td><td>Fibra óptica (multimodo)</td><td>2000 m</td><td>Switch</td></tr>
+<tr><td>1000BaseT</td><td>1000 Mbps</td><td>Par trenzado (Cat 5 o 6)</td><td>100 m</td><td>Switch</td></tr>
+<tr><td>1000BaseSx</td><td>1000 Mbps</td><td>Fibra óptica (multimodo)</td><td>550 m</td><td>Switch</td></tr>
+<tr><td>1000BaseLx</td><td>1000 Mbps</td><td>Fibra óptica (multi/mono)</td><td>550 m / 5000 m</td><td>Switch</td></tr>
+</tbody>
+</table>
+
+<h2 id="subcapas-de-enlace-capa-2-mac-y-llc">7.4 Subcapas de Enlace
+(capa 2): MAC y LLC</h2>
+<p>La capa de enlace se divide en dos subcapas:</p>
+<h3 id="mac-medium-access-control">MAC — Medium Access Control</h3>
+<p>Subcapa <strong>inferior</strong>. Se comunica directamente con la
+<strong>NIC</strong> (tarjeta de red). Trabaja en medios compartidos
+(LANs). Regula <strong>quién puede usar el canal y cuándo</strong> para
+evitar colisiones.</p>
+<p><strong>Dirección MAC</strong>: 48 bits = 24 bits
+<strong>OUI</strong> (fabricante, asignado por IEEE) + 24 bits
+<strong>UAA</strong> (único por interfaz). Suele escribirse en
+hexadecimal: <code>e4:8c:23:6c:77:9b</code>.</p>
+<p><strong>Métodos de acceso al medio:</strong></p>
+<ul>
+<li><strong>Estático</strong> — el canal se divide de antemano:
+<ul>
+<li><strong>FDM</strong> (División de Frecuencia): el ancho de banda se
+parte en X bandas iguales. Si un usuario no transmite, su banda se
+desperdicia.</li>
+<li><strong>TDM</strong> (División de Tiempo): cada usuario tiene un
+slot fijo. Si no lo usa, se pierde.</li>
+</ul></li>
+<li><strong>Dinámico</strong> — el canal se usa según demanda. Mayor aprovechamiento. Para que funcione correctamente se deben considerar cuatro variables:
+  <ul>
+    <li><strong>Método de envío de tramas:</strong> no se transmite nada hasta que la trama anterior haya sido transmitida con éxito.</li>
+    <li><strong>Medio compartido:</strong> existe un único canal para todos los equipos; todos pueden enviar y recibir; las prioridades las determinan los protocolos.</li>
+    <li><strong>Colisión:</strong> si dos o más tramas se transmiten simultáneamente se superponen, dañando la señal y forzando retransmisión.</li>
+    <li><strong>Tiempo:</strong> puede ser <em>continuo</em> (transmisión en cualquier instante) o <em>ranurado</em> (tiempo dividido en intervalos discretos).</li>
+    <li><strong>Portadora — detección vs. sin detección:</strong> con detección, los equipos verifican si el canal está libre antes de usarlo; sin detección, transmiten según el protocolo sin verificar.</li>
+  </ul>
+</li>
+</ul>
+<h3 id="llc-logical-link-control">LLC — Logical Link Control</h3>
+<p>Subcapa <strong>superior</strong>. <strong>Independiente de la
+tecnología</strong> — funciona igual sobre UTP, fibra o WiFi. Definida
+por <strong>IEEE 802.2</strong>.</p>
+<p>Define puntos de interfaz lógica llamados <strong>SAPs</strong>
+(Service Access Points). Ofrece: - <strong>Entramado</strong> —
+encapsulación, delimitación de inicio/fin de trama - <strong>Control de
+errores</strong> — Checksum y CRC - <strong>Recuperación entre
+fallos</strong> — detecta y asegura entrega ordenada - <strong>Control
+de flujo</strong> — que el emisor no sature al receptor</p>
+<blockquote>
+<p><strong>Resumen rápido</strong>: LLC se encarga de que los datos
+lleguen bien y en orden. MAC se encarga de que los datos puedan salir al
+cable sin chocar con otros.</p>
+</blockquote>
+<h2 id="modelo-tcpip">7.5 Modelo TCP/IP</h2>
+<p>Mientras OSI fue diseñado por comité como modelo teórico,
+<strong>TCP/IP surgió de la práctica</strong> dentro de ARPANET y se
+convirtió en el modelo que domina Internet. Define <strong>4
+capas</strong> que se corresponden no estrictamente con las 7 de
+OSI:</p>
+<table>
+<thead>
+<tr>
+<th>OSI</th>
+<th>TCP/IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7 Aplicación, 6 Presentación, 5 Sesión</td>
+<td><strong>Aplicación</strong></td>
+</tr>
+<tr>
+<td>4 Transporte</td>
+<td><strong>Transporte</strong></td>
+</tr>
+<tr>
+<td>3 Red</td>
+<td><strong>Internet</strong></td>
+</tr>
+<tr>
+<td>2 Enlace, 1 Física</td>
+<td><strong>Acceso a red</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>OSI ganó la batalla académica; TCP/IP ganó la del mundo real.</p>
+</blockquote>
+<h3 id="tcp-transmission-control-protocol">TCP — Transmission Control
+Protocol</h3>
+<p><strong>Orientado a la conexión.</strong> Garantiza que los datos
+lleguen completos, en orden y sin errores. Web, mail, transferencia de
+archivos, SSH.</p>
+<ul>
+<li>Establecimiento por <strong>three-way handshake</strong>: cliente
+envía <strong>SYN</strong>, servidor responde <strong>SYN+ACK</strong>,
+cliente cierra con <strong>ACK</strong>.</li>
+<li>Asegura entrega usando <strong>números de secuencia y ACKs</strong>:
+si un segmento no se confirma, se retransmite.</li>
+<li><strong>Control de flujo</strong> (ventana deslizante) y
+<strong>control de congestión</strong>.</li>
+<li>Cierre con intercambio ordenado de <strong>FIN/ACK</strong>.</li>
+<li>Encabezado: <strong>20 bytes mínimo</strong>, hasta 60 con
+opciones.</li>
+</ul>
+<h3 id="udp-user-datagram-protocol">UDP — User Datagram Protocol</h3>
+<p><strong>No orientado a la conexión.</strong> Envía datagramas y se
+olvida. Si llegan, llegan.</p>
+<ul>
+<li>Ideal cuando velocidad &gt; confiabilidad: telefonía IP, streaming
+en vivo, juegos online, DNS.</li>
+<li>Best-effort: sin garantías de entrega ni orden.</li>
+<li>Sin retransmisiones, sin control de flujo.</li>
+<li><strong>Detecta</strong> errores con checksum, pero <strong>NO los
+corrige</strong> (los descarta).</li>
+<li>Encabezado: <strong>8 bytes fijos</strong>.</li>
+</ul>
+<h3 id="puertos-típicos">Puertos típicos</h3>
+<table>
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Servicio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Telnet (inseguro)</td>
+</tr>
+<tr>
+<td>25</td>
+<td>SMTP</td>
+</tr>
+<tr>
+<td>53</td>
+<td>DNS</td>
+</tr>
+<tr>
+<td>80</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>443</td>
+<td>HTTPS</td>
+</tr>
+<tr>
+<td>3389</td>
+<td>RDP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="encapsulación-de-datos">7.6 Encapsulación de datos</h2>
+<p>Cada capa, al recibir datos de la superior, agrega su propia
+<strong>cabecera</strong> (header) con la información de control que
+necesita su par del otro extremo. En el destino, cada capa retira su
+cabecera correspondiente — <strong>desencapsulación</strong>.</p>
+<p>A medida que los datos bajan, la <strong>PDU (Protocol Data
+Unit)</strong> cambia de nombre:</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>PDU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7-5</td>
+<td>Datos / Mensaje</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Segmento</strong> (TCP) / <strong>Datagrama</strong>
+(UDP)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Paquete</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Trama</strong> (frame)</td>
+</tr>
+<tr>
+<td>1</td>
+<td><strong>Bits</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ejemplo: petición HTTP de 223.1.2.3 a 198.1.45.1</strong></p>
+<ol type="1">
+<li>Aplicación → genera <code>GET /index.html</code></li>
+<li>Transporte (TCP) → header con puerto origen 1024 y destino 80 →
+<strong>segmento</strong></li>
+<li>Red (IP) → header con IP origen 223.1.2.3 y destino 198.1.45.1 →
+<strong>paquete</strong></li>
+<li>Enlace (Ethernet) → header con MAC origen y MAC destino (la del
+próximo salto) → <strong>trama</strong></li>
+<li>Física → bits transmitidos</li>
+</ol>
+<blockquote>
+<p><strong>Punto clave</strong>: los <strong>routers procesan solo hasta
+capa 3</strong>. En cada salto desencapsulan hasta IP, deciden por qué
+interfaz reenviar, y re-encapsulan en una trama nueva. <strong>Las IPs
+no cambian a lo largo del camino, pero las MACs cambian en cada
+salto.</strong></p>
+</blockquote>
+<h2 id="implicancias-de-seguridad-por-capa">7.7 🛡️ Implicancias de
+seguridad por capa</h2>
+<p>Esto es el mapa mental que te va a acompañar toda la carrera:</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Ataques típicos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 Física</strong></td>
+<td>Wiretapping, TEMPEST, daño físico, desconexión</td>
+</tr>
+<tr>
+<td><strong>2 Enlace</strong></td>
+<td><strong>ARP spoofing</strong>, <strong>MAC flooding</strong>
+(saturar CAM table del switch), <strong>MAC spoofing</strong>, VLAN
+hopping</td>
+</tr>
+<tr>
+<td><strong>3 Red</strong></td>
+<td><strong>IP spoofing</strong>, fragmentación maliciosa, smurf, ICMP
+redirect</td>
+</tr>
+<tr>
+<td><strong>4 Transporte</strong></td>
+<td><strong>SYN flood</strong>, <strong>TCP hijacking</strong>, port
+scanning, UDP flood</td>
+</tr>
+<tr>
+<td><strong>5-7</strong></td>
+<td><strong>DNS spoofing/cache poisoning</strong>, SSL stripping,
+hijacking de sesión, ataques a HTTP, phishing</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>TLS/SSL</strong> (capa 6) da <strong>confidencialidad +
+integridad + autenticidad</strong> sobre TCP. <strong>HTTPS = HTTP sobre
+TLS</strong>. Es el que protege tu sesión bancaria.</li>
+<li><strong>IPSec</strong> (capa 3) cifra y autentica paquetes IP — base
+de las VPNs site-to-site.</li>
+<li><strong>Cifrado de canal</strong> (WPA, TLS) vs
+<strong>end-to-end</strong> (Signal, PGP): aunque te pinchen el medio,
+end-to-end sigue siendo opaco.</li>
+</ul>
+<div class="synthesis"><p>OSI y TCP/IP son dos formas de organizar el mismo problema: dividir la comunicación entre dos hosts en responsabilidades manejables. Cada capa toma los datos de la superior, agrega su cabecera y los entrega abajo — eso es la <strong>encapsulación</strong>. Saber qué información agrega cada capa es exactamente lo que te permite leer una captura con Wireshark y razonar sobre por qué un ataque opera en una capa concreta y no en otra.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-8-conmutación-de-circuitos-y-paquetes">CAPÍTULO 8 —
+CONMUTACIÓN DE CIRCUITOS Y PAQUETES</h1>
+<h2 id="qué-es-la-conmutación">8.1 ¿Qué es la conmutación?</h2>
+<p><strong>Switching</strong> = establecer una vía, de extremo a
+extremo, entre un emisor (Tx) y un receptor (Rx) a través de los nodos
+de la red.</p>
+<ul>
+<li>Permite la entrega desde origen a destino encontrando un camino
+apropiado.</li>
+<li>Permite descongestionar la red disminuyendo tráfico y aumentando el
+ancho de banda disponible.</li>
+</ul>
+<h2 id="conmutación-de-circuitos">8.2 Conmutación de circuitos</h2>
+<p>Se establece una <strong>vía dedicada, exclusiva y temporal</strong>
+—un “circuito”— entre emisor y receptor durante toda la sesión. Cuando
+termina, se libera.</p>
+<p><strong>Características:</strong> - La conexión se establece
+<strong>antes</strong> de transmitir datos - La capacidad del canal
+queda reservada - Camino dedicado entre las dos estaciones - Una vez
+establecido, la red es transparente para los usuarios - Velocidad de
+transmisión fija</p>
+<p><strong>3 fases (vida del circuito):</strong> 1.
+<strong>Establecimiento</strong> — se busca y reserva la ruta 2.
+<strong>Transferencia</strong> — se intercambian datos 3.
+<strong>Desconexión</strong> — se libera</p>
+<p><strong>Ineficiencias:</strong> - Capacidad dedicada aunque no haya
+datos (en voz hay silencios, en terminales de datos la línea está sin
+uso la mayor parte del tiempo) - Retardo previo para establecer la
+llamada - Velocidad fija (limita interconexión de equipos con
+velocidades distintas)</p>
+<p><strong>Ejemplo: PSTN (red telefónica conmutada)</strong></p>
+<p>Las centrales se organizan en red jerárquica (locales, primarias,
+secundarias, terciarias). Siempre hay un superior jerárquico al que
+recurrir, lo que facilita encaminamiento y aporta redundancia.</p>
+<ol type="1">
+<li>Usuario descuelga → interruptor activa → tono de marcado</li>
+<li>Marca número → se transmite a la red</li>
+<li>Llamada local → se envía a estación de conexión computarizada que la
+encamina al número</li>
+<li>Llamada de larga distancia (0054-3492-…) → viaja a estación de larga
+distancia</li>
+<li>Tráfico entre usuarios de la misma central no sale de la
+central</li>
+<li>Entre centrales distintas → enlaces troncales y centrales
+intermedias</li>
+</ol>
+<p><strong>Señalización de control (4 categorías):</strong></p>
+<ul>
+<li><strong>Supervisión</strong> — funciones binarias (activado/desactivado).</li>
+<li><strong>Direccionamiento</strong> — encaminamiento para localizar destino.</li>
+<li><strong>Información sobre la llamada</strong> — estado, establecimiento, cierre.</li>
+<li><strong>Gestión de red</strong> — mantenimiento y operación.</li>
+</ul>
+<h2 id="conmutación-de-paquetes">8.3 Conmutación de paquetes</h2>
+<p>Intercambio de bloques de información de tamaño específico
+(“paquetes”). En origen, la información se divide y a cada paquete se le
+agrega un <strong>encabezado</strong> con dirección de destino y
+control.</p>
+<p>En cada nodo, un paquete se almacena brevemente y se encamina según
+su cabecera. Múltiples caminos posibles → la red elige el óptimo en cada
+momento.</p>
+<p><strong>Tabla comparativa de ventajas/desventajas:</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ventaja</th>
+<th>Desventaja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mayor eficiencia de línea (enlace compartido dinámicamente)</td>
+<td><strong>Retardo (delay)</strong> variable por procesamiento y
+encolado</td>
+</tr>
+<tr>
+<td>Conversión de tasa de datos: cada estación a su velocidad</td>
+<td><strong>Jitter</strong>: variabilidad de retardos. No ideal para
+tiempo real</td>
+</tr>
+<tr>
+<td>Aceptación bajo tráfico pesado (circuitos bloquearían nuevas
+conexiones)</td>
+<td><strong>Overhead</strong>: direcciones, secuencia, etc. reducen
+capacidad útil</td>
+</tr>
+<tr>
+<td>Permite prioridades entre paquetes</td>
+<td>Más procesamiento requerido en cada nodo</td>
+</tr>
+</tbody>
+</table>
+<h2 id="técnicas-de-conmutación-de-paquetes">8.4 Técnicas de conmutación
+de paquetes</h2>
+<h3 id="a-datagramas">a) Datagramas</h3>
+<p>Cada paquete se envía <strong>independiente</strong> con suficiente
+información para encaminarse por sí solo.</p>
+<ul>
+<li>Sin fase de establecimiento → para mensajes cortos, más rápido</li>
+<li>Cada nodo elige el próximo salto → flexibilidad, evita
+congestión</li>
+<li>Paquetes con mismo destino pueden seguir rutas distintas</li>
+<li>Pueden llegar fuera de secuencia → el destino reordena</li>
+<li>Si un paquete se pierde, los extremos detectan y solicitan
+recuperación</li>
+<li>Si un nodo falla, los siguientes paquetes se reencaminan</li>
+</ul>
+<h3 id="b-circuitos-virtuales">b) Circuitos virtuales</h3>
+<p>Los datos viajan por más de un circuito real, pero la conmutación es
+<strong>transparente para el usuario</strong> — desde su punto de vista
+parece haber un único camino. <strong>TCP es un ejemplo</strong>.</p>
+<ul>
+<li>Funcionamiento similar a conmutación de circuitos</li>
+<li>Antes de transmitir: paquete de <strong>petición de llamada</strong>
++ <strong>llamada aceptada</strong>. Al terminar: <strong>petición de
+liberación</strong>.</li>
+<li>Cada paquete lleva un <strong>identificador de circuito
+virtual</strong> en vez de la dirección completa</li>
+<li>Todos los paquetes siguen la misma ruta y llegan en orden</li>
+<li>No es camino dedicado: los paquetes se almacenan (buffered) en cada
+nodo, pero la decisión de ruteo se toma <strong>una sola vez</strong> al
+establecer el circuito</li>
+<li>Los paquetes transitan más rápido (no se decide ruteo en cada
+nodo)</li>
+<li>Si un nodo falla, <strong>todos los circuitos virtuales</strong> que
+pasan por él fallan</li>
+</ul>
+<p><strong>3 fases:</strong> 1. <strong>Apertura</strong> — se determina
+ruta, se reservan recursos, se actualizan tablas de reenvío 2.
+<strong>Transferencia</strong> — se transmiten datos 3.
+<strong>Cierre</strong> — se libera ruta y se actualizan tablas</p>
+<blockquote>
+<p>💡 <strong>Inciso conceptual</strong>: cuando hablamos de IP, estamos
+describiendo el protocolo dominante de la capa 3 (Red). IP fragmenta la
+información en <strong>paquetes</strong> (PDU de capa 3). Esos paquetes
+viajan <strong>independientes</strong>, sin reserva previa de camino →
+estamos frente a una <strong>red de datagramas</strong>.</p>
+<p>En otras palabras: IP, capa de red, paquetes y datagramas son cuatro
+formas de mirar lo mismo: el protocolo, la capa donde opera, la unidad
+de datos que maneja, y la técnica de conmutación que implementa.</p>
+</blockquote>
+<h2 id="estrategias-de-encaminamiento">8.5 Estrategias de
+encaminamiento</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Estrategia</th>
+<th>Descripción</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Estática</strong></td>
+<td>Para cada par origen-destino, el siguiente nodo está fijado de
+antemano</td>
+<td>Simple, pero no reacciona a fallos ni congestión</td>
+</tr>
+<tr>
+<td><strong>Inundación (flooding)</strong></td>
+<td>Cada nodo reenvía a todos sus vecinos hasta que una copia llega</td>
+<td>Garantiza entrega y menor número de saltos, pero genera mucho
+tráfico</td>
+</tr>
+<tr>
+<td><strong>Aleatorio</strong></td>
+<td>En cada nodo se elige un camino al azar entre los disponibles</td>
+<td>Mejora congestión vs flooding</td>
+</tr>
+<tr>
+<td><strong>Adaptable</strong></td>
+<td>Decisiones cambian según condiciones de la red. Los nodos
+intercambian información de estado</td>
+<td><strong>La más usada</strong>: mejora prestaciones y retrasa
+congestiones graves</td>
+</tr>
+</tbody>
+</table>
+<h2 id="servicios-orientados-y-no-orientados-a-la-conexión">8.6
+Servicios orientados y no orientados a la conexión</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Orientado a la conexión</th>
+<th>No orientado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Camino específico establecido al inicio</td>
+<td>Cada paquete va independiente</td>
+</tr>
+<tr>
+<td>Datos por conexión permanente</td>
+<td>Sin predeterminación de camino</td>
+</tr>
+<tr>
+<td>Útil para voz/video que no toleran retardos ni reordenamientos</td>
+<td>Útil para mail, web (toleran cierto retardo)</td>
+</tr>
+<tr>
+<td>Reserva estática: si falla un punto del camino, falla todo</td>
+<td>Selección dinámica: evita fallas eligiendo paquete a paquete</td>
+</tr>
+<tr>
+<td>Reserva estática de recursos: BW reservado, no compartible</td>
+<td>Asignación dinámica de BW, uso más eficiente</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implicancias-de-seguridad-4">8.7 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>Conmutación de circuitos</strong> (PSTN, GSM):
+interceptación tradicional pasa por puntos fijos (centrales). De ahí
+viene el concepto de <strong>wiretap legal</strong>.</li>
+<li><strong>Conmutación de paquetes</strong>: cada paquete puede tomar
+rutas distintas → más difícil de interceptar
+<strong>completamente</strong>, pero también más blancos.</li>
+<li><strong>Análisis de tráfico</strong>: incluso si los datos están
+cifrados, los metadatos (quién habla con quién, cuándo, cuánto) son
+visibles. Tor y mixnets buscan ocultar esto.</li>
+</ul>
+<div class="synthesis"><p>Circuitos reservan recursos antes de hablar; paquetes los toman al vuelo. <strong>Datagramas</strong> y <strong>circuitos virtuales</strong> son las dos formas de hacer conmutación de paquetes (libre o "guiada"). IP siguió el modelo de datagramas, TCP el de circuitos virtuales — y por eso TCP corre encima de IP: combina la flexibilidad de los paquetes con la confiabilidad de los circuitos.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-9-aloha-csma-cd-ethernet-y-80211">CAPÍTULO 9 — ALOHA, CSMA/CD, ETHERNET Y 802.11</h1>
+
+<h2 id="el-hilo-conductor">9.0 El hilo conductor: control de acceso al medio (MAC)</h2>
+<p>Este capítulo recorre la evolución de los <strong>mecanismos de control de acceso al medio (MAC)</strong>, fundamentales para entender cómo múltiples dispositivos comparten un mismo canal sin que la información se destruya por colisiones.</p>
+<p>La historia siguió una progresión muy intuitiva: cada solución eliminó una limitación de la anterior.</p>
+<ol>
+<li><strong>Aloha</strong> — "hablá cuando quieras; si chocás, reintentá".</li>
+<li><strong>CSMA y CSMA/CD</strong> — "escuchá antes de hablar; callate si chocás" (medios cableados).</li>
+<li><strong>Ethernet</strong> — la implementación industrial que ganó.</li>
+<li><strong>802.11 (Wi-Fi)</strong> — la adaptación al medio inalámbrico, donde <strong>detectar</strong> colisiones es imposible y hay que <strong>evitarlas</strong>.</li>
+</ol>
+
+<h2 id="origen-aloha">9.1 El origen: protocolos Aloha</h2>
+<p>Desarrollados originalmente para paquetes de radio en la <strong>Universidad de Hawai (Norman Abramson, 1971)</strong>, dentro del proyecto <strong>ALOHANET</strong>, que conectaba terminales en varias islas. No existía ningún protocolo para que múltiples emisores compartieran un canal radioeléctrico — lo inventaron desde cero.</p>
+
+<h3 id="aloha-puro">Aloha puro</h3>
+<p>Las estaciones transmiten apenas tienen datos. Si hay colisión (solapamiento con otra trama), se retransmite después de un tiempo aleatorio. Eficiencia máxima: <strong>~18%</strong>.</p>
+<p><strong>¿Por qué tan poco?</strong> Una trama mía es vulnerable a colisión durante el <strong>doble</strong> del tiempo de transmisión:</p>
+<ul>
+<li>Otra estación pudo haber empezado a transmitir hasta T segundos <strong>antes</strong> que yo (su trama todavía está en el aire).</li>
+<li>Otra estación puede empezar hasta T segundos <strong>después</strong> que yo (yo todavía estoy transmitiendo).</li>
+</ul>
+<p>→ Ventana de vulnerabilidad = <strong>2T</strong>. El análisis estadístico da un throughput máximo teórico ≈ 18% del canal.</p>
+
+<h3 id="aloha-ranurado">Aloha ranurado</h3>
+<p>El tiempo se divide en <strong>ranuras fijas</strong> = un tiempo de transmisión de trama. Las estaciones solo pueden <strong>empezar a transmitir al inicio de una ranura</strong> (requiere un reloj central).</p>
+<p>Esto reduce la ventana de vulnerabilidad de 2T a T (la mitad) → eficiencia teórica máxima ≈ <strong>37%</strong> (el doble).</p>
+<blockquote><p>Aloha probó que compartir un medio es factible, pero también que casi el 80% del canal se desperdicia sin alguna forma de detección previa. La siguiente evolución obvia: <strong>escuchar antes de hablar</strong>.</p></blockquote>
+
+<h2 id="evolucion-cableada">9.2 Evolución hacia Ethernet: CSMA y CSMA/CD</h2>
+<p>En cables, el tiempo de propagación es muy corto, así que la "escucha" previa es viable.</p>
+
+<h3 id="csma">CSMA — Carrier Sense Multiple Access</h3>
+<p>Antes de transmitir, la estación <strong>escucha el medio</strong>: si está ocupado, espera; si está libre, transmite. Esto reduce drásticamente las colisiones, pero no las elimina del todo — dos estaciones que detectan el medio libre al mismo tiempo van a chocar igual.</p>
+
+<h3 id="csma-variantes">Variantes de persistencia</h3>
+<table>
+<thead>
+<tr><th>Variante</th><th>Si el medio está ocupado…</th><th>Trade-off</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>No persistente</strong></td><td>Espera un tiempo <strong>aleatorio</strong> y reintenta</td><td>Menos colisiones, pero desperdicia capacidad — el canal queda libre y nadie transmite</td></tr>
+<tr><td><strong>1-persistente</strong></td><td>Escucha continuamente y transmite <strong>apenas</strong> se libere</td><td>Más agresiva ("egoísta"): si dos están esperando, colisionan seguro</td></tr>
+<tr><td><strong>p-persistente</strong></td><td>Transmite con probabilidad <code>p</code>, espera con <code>(1−p)</code></td><td>Compromiso: ajustando <code>p</code> se equilibran los extremos</td></tr>
+</tbody>
+</table>
+<p><strong>Sobre la elección de <code>p</code></strong>: si hay <code>n</code> estaciones esperando, en promedio <code>n·p</code> intentarán transmitir cuando se libere el canal. Si <code>n·p &gt; 1</code> el sistema se inestabiliza (espiral de colisiones); si <code>p</code> es muy chico, se desperdicia tiempo en baja carga. Es un balance fino.</p>
+
+<h3 id="csmacd">CSMA/CD — Collision Detection</h3>
+<p>Una mejora más sobre CSMA: <strong>mientras transmitís, seguí escuchando</strong>. Si detectás que tu señal está colisionando con otra, <strong>cortá inmediatamente</strong>, emití una <strong>señal de jam (32 bits)</strong> para que todos se enteren del choque, y reintentá tras un <em>backoff</em> aleatorio. Es el estándar de <strong>Ethernet Half Duplex</strong>.</p>
+<blockquote><p>💡 <strong>Analogía clásica</strong>: una conversación en una mesa a oscuras. Antes de hablar, escuchás (<em>Carrier Sense</em>). Si dos empiezan a la vez se dan cuenta y se callan (<em>Collision Detection</em>).</p></blockquote>
+
+<h4>Funcionamiento paso a paso</h4>
+<ol>
+<li>Si el medio está libre, transmite. Si no, esperá hasta que se libere.</li>
+<li>Mientras transmitís, seguí escuchando.</li>
+<li>Si detectás colisión → enviá la señal de <strong>jam (32 bits)</strong> para reforzarla.</li>
+<li>Esperá un tiempo aleatorio (algoritmo <strong>truncated binary exponential backoff</strong>: tras la <code>k</code>-ésima colisión, un número aleatorio de slots entre 0 y <code>2^k − 1</code>, hasta k=10) y volvé al paso 1.</li>
+<li>Tras <strong>16 intentos consecutivos</strong>, descartá el frame.</li>
+</ol>
+
+<h4>¿Por qué Ethernet tiene un tamaño mínimo de trama (64 bytes)?</h4>
+<p>Para que CSMA/CD funcione, el emisor tiene que <strong>seguir transmitiendo el tiempo suficiente</strong> como para que una colisión ocurrida en el otro extremo del cable le llegue de vuelta. Si una trama termina antes de eso, el emisor cree que tuvo éxito y no retransmite.</p>
+<p>El <strong>slot time</strong> = tiempo de ida y vuelta máximo en el segmento. En 10 Mbps son 51,2 μs = 512 bits = <strong>64 bytes mínimo</strong>. Tramas más cortas se rellenan con padding. Este número también <strong>limita la longitud máxima del cable</strong>.</p>
+
+<h4>Conceptos asociados</h4>
+<ul>
+<li><strong>Dominio de colisión</strong> — red CSMA/CD donde dos transmisores simultáneos colisionan. Hubs/repetidores forman <strong>un solo dominio gigante</strong>; los <strong>switches separan dominios</strong> (uno por puerto) — esa fue la razón principal de su adopción masiva.</li>
+<li><strong>IFG (Interframe Gap)</strong> — tiempo mínimo de silencio entre tramas: 96 bit-times (9,6 μs en 10 Mbps; 96 ns en Gigabit).</li>
+<li><strong>Las colisiones son normales</strong> — no implican pérdida de datos. El sistema las maneja con backoff y retransmisión. Solo tras 16 intentos consecutivos se descarta el frame (síntoma de red saturada o rota).</li>
+</ul>
+
+<h2 id="ethernet-estandares">9.3 Estándares y componentes de Ethernet</h2>
+<p>Ethernet evolucionó desde los <strong>2,94 Mbps iniciales de Metcalfe (Xerox PARC, 1972)</strong> hasta <strong>400 Gbps actuales</strong> y proyecciones a <strong>terabits por segundo</strong>.</p>
+
+<h3 id="ethernet-historia">Historia breve</h3>
+<ul>
+<li><strong>1972</strong> — Robert Metcalfe y colegas en Xerox PARC desarrollan "Alto Aloha Network" a 2,94 Mbps.</li>
+<li><strong>1973</strong> — Metcalfe lo rebautiza <strong>Ethernet</strong>, por el "éter luminífero" hipotético del siglo XIX que supuestamente propagaba las ondas. La idea: el cable es el "éter" que propaga las señales.</li>
+<li><strong>1980-82</strong> — el consorcio <strong>DIX</strong> (Digital + Intel + Xerox) publica <strong>Ethernet V2</strong> a 10 Mbps y libera la tecnología.</li>
+<li><strong>1985</strong> — la <strong>IEEE</strong> lo estandariza formalmente como <strong>IEEE 802.3</strong> (con un formato de trama ligeramente distinto). Desde entonces conviven ambos.</li>
+<li><strong>Evolución</strong> — 10 Mbps → 100 Mbps (Fast Ethernet) → 1 Gbps → 10/40/100 GbE → 200/400 GbE (2017) → 800 Gbps / 1.6 Tbps en estudio.</li>
+</ul>
+<blockquote><p>"La invención de Ethernet como red local <strong>abierta, no propietaria y estándar de la industria</strong> fue quizás más significativa que la invención de la tecnología Ethernet en sí." — Robert M. Metcalfe</p></blockquote>
+
+<h3 id="ethernet-elementos">Elementos básicos del sistema</h3>
+<ol>
+<li><strong>Medio físico</strong> — cables y conectores (par trenzado, fibra óptica, antiguamente coaxial).</li>
+<li><strong>Señalización</strong> — <em>transceivers</em> que codifican/decodifican bits sobre el medio.</li>
+<li><strong>Reglas de acceso al medio</strong> — protocolo MAC (CSMA/CD en half-duplex; deshabilitado en full-duplex).</li>
+<li><strong>Trama (frame)</strong> — el paquete estandarizado de bits que transporta los datos.</li>
+</ol>
+
+<h3 id="ethernet-trama">Estructura de la trama Ethernet</h3>
+<p>Coexisten dos formatos casi idénticos:</p>
+<p><strong>Ethernet V2 (DIX) — el más usado hoy:</strong></p>
+<pre><code>| Preámbulo | Destino | Origen | EtherType | Datos     | FCS |
+|   8 B     |   6 B   |  6 B   |   2 B     | 46-1500 B | 4 B |</code></pre>
+<p><strong>IEEE 802.3:</strong></p>
+<pre><code>| Preámbulo | SFD | Destino | Origen | Longitud | Datos     | FCS |
+|   7 B     | 1 B |   6 B   |  6 B   |   2 B    | 46-1500 B | 4 B |</code></pre>
+<p><strong>¿Cómo distingue el receptor cuál es?</strong> Mira los 2 bytes después del campo Origen:</p>
+<ul>
+<li>Si el valor numérico es <strong>≤ 1500</strong> (0x05DC) → es <strong>Longitud</strong> → trama 802.3.</li>
+<li>Si es <strong>≥ 1536</strong> (0x0600) → es <strong>EtherType</strong> → trama V2.</li>
+</ul>
+
+<h4>Campos clave en detalle</h4>
+<ul>
+<li><strong>Preámbulo + SFD</strong> — sincronización. El SFD (<em>Start Frame Delimiter</em>) marca dónde empieza el contenido real.</li>
+<li><strong>Direcciones MAC</strong> (6 bytes = 48 bits cada una). Estructura: <strong>24 bits OUI</strong> (Organizationally Unique Identifier, fabricante asignado por IEEE) + <strong>24 bits UAA</strong> (Universally Administered Address, único por interfaz). Notación: <code>e4:8c:23:6c:77:9b</code>.</li>
+<li><strong>EtherType</strong> (en V2) — protocolo de capa superior. Los más comunes:
+<ul>
+<li><code>0x0800</code> = IPv4</li>
+<li><code>0x86DD</code> = IPv6</li>
+<li><code>0x0806</code> = ARP</li>
+<li><code>0x8100</code> = VLAN tag (802.1Q)</li>
+<li><code>0x8808</code> = PAUSE frame (control de flujo)</li>
+</ul></li>
+<li><strong>Datos (payload)</strong> — 46 a 1500 bytes. <strong>MTU = 1500 bytes</strong>.</li>
+<li><strong>FCS</strong> (Frame Check Sequence) — 4 bytes de CRC para detección de errores accidentales.</li>
+</ul>
+<blockquote><p><strong>MTU vs PDU</strong> — el <strong>MTU</strong> es solo el payload máximo (1500 B). La <strong>PDU</strong> completa de capa 2 (sin contar el preámbulo) llega a <strong>1518 bytes</strong>.</p></blockquote>
+
+<h3 id="ethernet-identificadores">Identificadores de medio (cómo leerlos)</h3>
+<p>Sintaxis: <code>&lt;velocidad&gt;Base&lt;sufijo&gt;</code> — velocidad en Mbps, <em>Base</em> = banda base, sufijo = medio (<code>T</code>=par trenzado, <code>F</code>/<code>SX</code>/<code>LX</code>=fibra, <code>C</code>=cobre blindado).</p>
+<table>
+<thead>
+<tr><th>Identificador</th><th>Velocidad</th><th>Medio</th><th>Distancia máx</th></tr>
+</thead>
+<tbody>
+<tr><td>10Base-T</td><td>10 Mbps</td><td>UTP cat 3+</td><td>100 m</td></tr>
+<tr><td>100Base-TX</td><td>100 Mbps</td><td>UTP cat 5+</td><td>100 m</td></tr>
+<tr><td>100Base-FX</td><td>100 Mbps</td><td>Fibra multimodo</td><td>412 m (half) / 2 km (full)</td></tr>
+<tr><td>1000Base-T</td><td>1 Gbps</td><td>UTP cat 5e+</td><td>100 m</td></tr>
+<tr><td>1000Base-SX</td><td>1 Gbps</td><td>Fibra multimodo</td><td>220-550 m</td></tr>
+<tr><td>1000Base-LX</td><td>1 Gbps</td><td>Fibra mono/multi</td><td>5 km (monomodo)</td></tr>
+<tr><td>10GBase-T</td><td>10 Gbps</td><td>UTP cat 6a+</td><td>100 m</td></tr>
+</tbody>
+</table>
+
+<h3 id="ethernet-duplex">Half duplex vs Full duplex</h3>
+<table>
+<thead><tr><th>Half duplex</th><th>Full duplex</th></tr></thead>
+<tbody>
+<tr><td>Comparte segmento, usa CSMA/CD</td><td>Punto a punto, trayectorias Tx/Rx independientes</td></tr>
+<tr><td>Colisiones posibles</td><td><strong>No hay colisiones</strong>, CSMA/CD se deshabilita</td></tr>
+<tr><td>Distancia limitada por slot time (RTT)</td><td>En fibra, distancia mucho mayor (100Base-FX: 412 m → 2 km)</td></tr>
+</tbody>
+</table>
+<p>En full duplex, como ya no hay colisiones para regular el flujo, hace falta un <strong>control de flujo explícito</strong>: el <strong>frame PAUSE</strong> (IEEE 802.3x, EtherType <code>0x8808</code>).</p>
+
+<h3 id="ethernet-extensiones">Extensiones para proveedores de servicio</h3>
+<p>Cuando una telco vende "Ethernet" como servicio a varios clientes sobre la misma red física, hace falta aislar el tráfico:</p>
+<ul>
+<li><strong>802.1Q (VLAN tagging)</strong> — 4 bytes con un VLAN ID; hasta 4094 redes lógicas separadas.</li>
+<li><strong>802.1AD (Q-in-Q)</strong> — anida dos tags VLAN: cliente y proveedor.</li>
+<li><strong>802.1AH (Provider Backbone Bridge)</strong> — MACs propias del proveedor para encapsular completamente el tráfico del cliente.</li>
+<li><strong>VPLS (Virtual Private LAN Service)</strong> — transporta Ethernet sobre MPLS.</li>
+</ul>
+<blockquote><p>⚠️ <strong>Ethernet es "Mejor Esfuerzo" (Best Effort)</strong> — no garantiza por sí solo que los datos lleguen. Ruido, sobrecarga o 16 colisiones consecutivas → frame descartado. La confiabilidad la dan capas superiores (TCP).</p></blockquote>
+
+<h2 id="redes-inalambricas-80211">9.4 Redes inalámbricas: IEEE 802.11 (Wi-Fi)</h2>
+<p>En el aire pasa algo que no pasa en el cable: una estación <strong>no puede escuchar y transmitir a la vez</strong> en la misma frecuencia (su propia señal tapa la del otro). Por lo tanto, <strong>detectar colisiones es imposible</strong>. WiFi cambia la estrategia: en lugar de <strong>detectarlas</strong> (CD), las <strong>evita</strong> (CA).</p>
+
+<h3 id="csmaca">CSMA/CA — Collision Avoidance</h3>
+<p>En vez de chocar y reaccionar, <strong>intenta evitar la colisión</strong> mediante un intercambio previo de tramas de control:</p>
+<ol>
+<li><strong>RTS</strong> (Request To Send) — la estación que quiere transmitir pregunta al AP: "¿puedo enviar X bytes?".</li>
+<li><strong>NAV</strong> (Network Allocation Vector) — el AP difunde un valor que informa a todos los demás: "el canal está reservado por este tiempo, no transmitan".</li>
+<li><strong>CTS</strong> (Clear To Send) — el AP autoriza al solicitante.</li>
+<li><strong>Datos</strong> → <strong>ACK</strong> — se transmite y se confirma.</li>
+<li>Si no llega CTS o ACK, se asume colisión y se reintenta tras un backoff aleatorio.</li>
+</ol>
+<p>Este mecanismo también ataca el <strong>problema del nodo escondido</strong>: dos estaciones que no se escuchan entre sí pero ambas llegan al AP. El RTS/CTS hace que el AP "informe" la reserva a quienes sí lo escuchan.</p>
+
+<h3 id="80211-arquitectura">Arquitectura</h3>
+<table>
+<thead><tr><th>Componente</th><th>Qué es</th></tr></thead>
+<tbody>
+<tr><td><strong>STA</strong> (Station)</td><td>Cualquier dispositivo WiFi</td></tr>
+<tr><td><strong>AP</strong> (Access Point)</td><td>Da acceso al sistema de distribución a las estaciones</td></tr>
+<tr><td><strong>BSS</strong> (Basic Service Set)</td><td>Grupo de estaciones bajo un mismo AP</td></tr>
+<tr><td><strong>ESS</strong> (Extended Service Set)</td><td>Varios BSS interconectados — permite <em>roaming</em> sin perder la sesión</td></tr>
+<tr><td><strong>DS</strong> (Distribution System)</td><td>Lo que interconecta varios BSS (típicamente la LAN cableada)</td></tr>
+</tbody>
+</table>
+
+<h4>Topologías</h4>
+<ul>
+<li><strong>Ad-Hoc (peer-to-peer)</strong> — estaciones que se conectan directamente entre sí, sin AP. Útil para reuniones, conferencias, sincronización rápida. La trama usa 2 direcciones (origen y destino).</li>
+<li><strong>Infraestructura</strong> — las estaciones se conectan a un AP, que las une a una red cableada y permite extender el alcance con múltiples APs (roaming). La trama usa 4 direcciones (origen, destino, transmisor, receptor), porque puede haber un puente intermedio.</li>
+</ul>
+
+<h3 id="80211-servicios">Servicios clave de 802.11</h3>
+<ul>
+<li><strong>Asociación / Reasociación / Desasociación</strong> — el proceso de "registro" de una estación con un AP. La reasociación permite cambiar de AP sin perder la sesión (<em>roaming</em>).</li>
+<li><strong>Autenticación</strong> — antes de unirse a la red hay que probar identidad. Dos métodos originales:
+<ul>
+<li><em>Open System</em> — cualquiera es aceptado (sin seguridad real).</li>
+<li><em>Shared Key</em> — requiere conocer una frase de paso compartida.</li>
+</ul></li>
+<li><strong>Privacidad</strong> — cifrado del tráfico. Originalmente con <strong>WEP</strong> (Wired Equivalent Privacy), hoy obsoleto y roto. Reemplazado por WPA/WPA2/WPA3.</li>
+<li><strong>Distribución / Integración</strong> — el AP local lleva los datos al AP remoto a través del DS; la integración permite conectar al sistema con LAN cableadas (Ethernet).</li>
+</ul>
+<blockquote><p>El Cap 10 profundiza en las vulnerabilidades de WiFi y la evolución <strong>WEP → WPA → WPA2 → WPA3</strong>.</p></blockquote>
+
+<h2 id="implicancias-de-seguridad-de-ethernet">9.5 🛡️ Implicancias de seguridad de Ethernet</h2>
+<ul>
+<li><strong>MAC spoofing</strong> — la MAC se puede cambiar por software (<code>ifconfig</code>, <code>ip link</code>). No es identidad confiable.</li>
+<li><strong>MAC flooding</strong> — el atacante satura la <strong>CAM table</strong> del switch con MACs falsas → el switch entra en "fail-open" y empieza a comportarse como hub (replica todo a todos los puertos) → el atacante sniffea todo el tráfico. Mitigación: <strong>port security</strong> (limitar MACs por puerto).</li>
+<li><strong>VLAN hopping</strong> — si una VLAN está mal configurada, un atacante puede saltar de una a otra (<strong>double-tagging</strong>: aprovecha que algunos switches procesan solo el tag externo). Mitigación: no usar la VLAN nativa, deshabilitar DTP.</li>
+<li><strong>ARP spoofing</strong> — no es Ethernet propiamente dicho pero opera en la misma capa: un atacante envía respuestas ARP falsas para hacerse pasar por el gateway y hacer MITM.</li>
+<li><strong>CRC</strong> detecta errores <strong>accidentales</strong> pero <strong>no protege contra modificación maliciosa</strong>: un atacante puede modificar la trama y recalcular un CRC válido. Para integridad frente a adversarios → hashes criptográficos (SHA-256) o <strong>MACs</strong> criptográficos (HMAC).</li>
+<li><strong>802.1X / MACsec</strong> — estándares para autenticación y cifrado en capa 2. Útiles cuando no se confía en quién pueda conectarse físicamente a un puerto.</li>
+</ul>
+
+<div class="synthesis"><p>La progresión Aloha → CSMA → CSMA/CD → Ethernet → 802.11 es la historia de cómo resolvimos el problema de <strong>compartir un medio físico</strong>. Cada eslabón eliminó una limitación del anterior: Aloha probó la idea, CSMA agregó "escuchá antes de hablar", CSMA/CD añadió "callate si chocás", Ethernet lo industrializó con un formato de trama estándar, y WiFi adaptó todo al aire (donde detectar colisiones es imposible, así que se evitan con RTS/CTS). La <strong>trama Ethernet</strong> — con sus direcciones MAC, EtherType y FCS — es el sobre físico de prácticamente todo el tráfico LAN del mundo: saber leerla es saber leer la red.</p></div>
+
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-10-redes-inalámbricas-ieee-802.11-wifi">CAPÍTULO 10 —
+REDES INALÁMBRICAS: IEEE 802.11 (WiFi)</h1>
+<h2 id="generalidades">10.1 Generalidades</h2>
+<p><strong>IEEE 802.11</strong> (o WiFi) define las capas física y de
+enlace de datos para LAN inalámbricas. Diseñar acceso al medio
+inalámbrico es más complejo que el cableado: la señal se atenúa
+rápidamente, hay interferencia, “terminales ocultas” (un nodo no escucha
+a otro pero ambos llegan al AP).</p>
+<p><strong>Terminología:</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Término</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AP</strong> (Access Point)</td>
+<td>Da acceso al sistema de distribución a las estaciones</td>
+</tr>
+<tr>
+<td><strong>BSS</strong> (Basic Service Set)</td>
+<td>Conjunto de estaciones coordinadas</td>
+</tr>
+<tr>
+<td><strong>ESS</strong> (Extended Service Set)</td>
+<td>Varios BSS interconectados</td>
+</tr>
+<tr>
+<td><strong>DS</strong> (Distribution System)</td>
+<td>Interconecta BSS</td>
+</tr>
+<tr>
+<td><strong>STA</strong> (Station)</td>
+<td>Cualquier dispositivo WiFi</td>
+</tr>
+</tbody>
+</table>
+<h2 id="topologías-1">10.2 Topologías</h2>
+<ul>
+<li><strong>Ad-hoc (peer-to-peer)</strong>: equipos forman red sin AP. 2
+direcciones (origen/destino).</li>
+<li><strong>Infraestructura</strong>: estaciones se conectan vía AP a
+una red cableada. <strong>4 direcciones</strong> (origen, destino,
+transmisor, receptor) porque la trama puede pasar por un puente
+intermedio.</li>
+</ul>
+<h2 id="csmaca-collision-avoidance">10.3 CSMA/CA — Collision
+Avoidance</h2>
+<p>En WiFi <strong>no se detecta colisión</strong> (no podés escuchar y
+transmitir a la vez en la misma frecuencia). Se la
+<strong>evita</strong>.</p>
+<p><strong>Mecanismo RTS/CTS/ACK:</strong></p>
+<ol type="1">
+<li>Estación lista para transmitir envía <strong>RTS</strong> (Request
+To Send) al AP, indicando destino y duración.</li>
+<li>El AP difunde el <strong>NAV</strong> (Network Allocation Vector) —
+todos los nodos saben cuánto debe durar el silencio.</li>
+<li>Otros nodos esperan NAV + un backoff aleatorio.</li>
+<li>Si todo va bien, el AP responde con <strong>CTS</strong> (Clear To
+Send).</li>
+<li>Emisor envía datos.</li>
+<li>Receptor responde con <strong>ACK</strong>.</li>
+<li>Si no llega CTS, se asume colisión y se reintenta.</li>
+</ol>
+<h2 id="servicios-y-seguridad-802.11">10.4 Servicios y seguridad
+802.11</h2>
+<p><strong>Servicios de estación:</strong></p>
+<ul>
+<li><strong>Autenticación</strong> — antes de unirse a la red.
+<ul>
+<li><em>Open System</em>: cualquiera es aceptado.</li>
+<li><em>Shared Key</em>: requiere conocer la frase de paso.</li>
+</ul></li>
+<li><strong>Desautenticación</strong> — termina la asociación con un AP.</li>
+<li><strong>Privacidad</strong> — WEP (<em>Wired Equivalent Privacy</em>), hoy obsoleto.</li>
+<li><strong>Entrega MSDU</strong> — transporte de datos de subcapa MAC.</li>
+</ul>
+<p><strong>Servicios del DS:</strong></p>
+<ul>
+<li><strong>Asociación / Reasociación / Desasociación</strong> — entre nodo y AP.</li>
+<li><strong>Distribución</strong> — lleva datos del AP local al AP remoto.</li>
+<li><strong>Integración</strong> — conexión con LAN cableada.</li>
+</ul>
+<h2 id="implicancias-de-seguridad-de-wifi">10.5 🛡️ Implicancias de
+seguridad de WiFi</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Protocolo</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WEP</strong></td>
+<td><strong>Roto</strong> desde 2001. No lo uses nunca. Claves
+recuperables en minutos.</td>
+</tr>
+<tr>
+<td><strong>WPA</strong></td>
+<td>Mejora parcial sobre WEP. Vulnerabilidades conocidas (TKIP).</td>
+</tr>
+<tr>
+<td><strong>WPA2</strong></td>
+<td>Estándar de facto hasta hace poco. Vulnerable a
+<strong>KRACK</strong> (2017).</td>
+</tr>
+<tr>
+<td><strong>WPA3</strong></td>
+<td>Actual recomendado. Reemplaza PSK por <strong>SAE</strong>
+(Simultaneous Authentication of Equals), protege contra ataques offline
+al handshake.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Otros vectores:</strong></p>
+<ul>
+<li><strong>Evil Twin / Rogue AP</strong> — un AP falso con el mismo SSID que la red legítima → el cliente se conecta solo.</li>
+<li><strong>Deauth attack</strong> — el atacante envía paquetes de desautenticación forjados → desconecta clientes, capturando re-handshakes.</li>
+<li><strong>WPS</strong> (Wi-Fi Protected Setup) — el PIN de 8 dígitos es vulnerable a fuerza bruta. Desactivalo siempre.</li>
+<li><strong>Sniffing pasivo</strong> — con una placa en modo monitor, cualquiera captura tráfico WiFi cercano. Solo el cifrado lo protege.</li>
+</ul>
+<div class="synthesis"><p>WiFi resuelve el mismo problema que Ethernet pero en un medio que <strong>no permite detectar colisiones</strong> — por eso usa CSMA/CA con RTS/CTS en lugar de CSMA/CD. La historia <strong>WEP → WPA → WPA2 → WPA3</strong> es un caso de estudio de cómo los protocolos de seguridad se rompen y se rediseñan iterativamente. El aire es siempre interceptable: el cifrado es lo único que separa una conversación privada de un broadcast público.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1
+id="capítulo-11-equipamiento-hub-bridge-switch-router-firewall">CAPÍTULO
+11 — EQUIPAMIENTO: HUB, BRIDGE, SWITCH, ROUTER, FIREWALL</h1>
+<h2 id="nic-network-interface-card">11.1 NIC (Network Interface
+Card)</h2>
+<ul>
+<li>Tarjeta de red del host.</li>
+<li>Opera en capas 1 y 2.</li>
+<li>Identificada por la <strong>MAC</strong> (Media Access Control),
+única (en teoría).</li>
+</ul>
+<h2 id="repetidor">11.2 Repetidor</h2>
+<ul>
+<li><strong>Capa 1.</strong> Amplifica y regenera la señal.</li>
+<li>Conecta solo <strong>dos</strong> segmentos.</li>
+<li>Obsoleto hoy.</li>
+</ul>
+<h2 id="hub">11.3 Hub</h2>
+<ul>
+<li>“Repetidor multipuerto”. <strong>Capa 1.</strong></li>
+<li><strong>Broadcast puro</strong>: todo lo que llega por un puerto se
+reenvía a <strong>todos</strong> los demás.</li>
+<li><strong>No distingue tráfico</strong>, no separa dominios de
+colisión.</li>
+<li>Comparte el ancho de banda entre todos los dispositivos.</li>
+<li><strong>Inseguro</strong>: cualquier dispositivo conectado puede
+sniffear todo el tráfico.</li>
+<li>Obsoleto.</li>
+</ul>
+<h2 id="bridge-puente">11.4 Bridge (puente)</h2>
+<ul>
+<li><strong>Capa 2.</strong> Conecta dos segmentos LAN.</li>
+<li>Procesa la trama hasta capa de enlace.</li>
+<li><strong>No retransmite colisiones</strong> ni tramas con error.</li>
+<li>Aprende <strong>adaptativamente</strong> las direcciones MAC
+observando el campo origen de las tramas que recibe.</li>
+<li>Mantiene una <strong>tabla de reenvío</strong> por puerto.</li>
+<li>Transparente para los hosts.</li>
+<li>Implementa el <strong>algoritmo de árbol de expansión (Spanning
+Tree, IEEE 802.1D)</strong> para evitar bucles en topologías con
+redundancia.</li>
+</ul>
+<p><strong>Por qué usar bridges:</strong> fiabilidad, rendimiento, seguridad (segmentación) y geografía.</p>
+
+<h3 id="bridge-retransmision">Lógica de retransmisión (cómo decide qué hacer con una trama)</h3>
+<p>Por cada trama que llega al puerto X:</p>
+<ol>
+<li>Busca la dirección MAC destino en su tabla de reenvío.</li>
+<li>Si <strong>no está en la tabla</strong> → la envía por <strong>todos los puertos excepto X</strong> (flooding).</li>
+<li>Si está en la tabla y está en el mismo puerto X → la descarta (ya está en ese segmento).</li>
+<li>Si está en otro puerto Y → la reenvía solo por Y (filtrado selectivo).</li>
+<li>Las tramas <strong>broadcast</strong> siempre se inundan a todos los puertos.</li>
+</ol>
+
+<h3 id="bridge-aprendizaje">Aprendizaje de direcciones</h3>
+<p>El bridge <strong>aprende</strong> observando la dirección origen de cada trama que recibe. Cuando llega una trama al puerto X desde la dirección Z, registra: "Z está en el puerto X". Cada entrada tiene un temporizador y se actualiza cada vez que se recibe tráfico de esa MAC.</p>
+
+<h3 id="bridge-spanning-tree">Árbol de expansión (Spanning Tree — IEEE 802.1D)</h3>
+<p>En redes grandes con múltiples bridges interconectados puede haber <strong>bucles</strong> (loops). Un bucle haría que las tramas broadcast circulen indefinidamente (<em>broadcast storm</em>). El algoritmo de árbol de expansión <strong>resuelve esto automáticamente</strong>:</p>
+<ul>
+<li>Cada bridge tiene un <strong>identificador único</strong>.</li>
+<li>Los bridges intercambian mensajes para <strong>elegir un root bridge</strong> (raíz).</li>
+<li>Se construye un árbol de rutas sin bucles que mantiene conectividad.</li>
+<li>Los puertos que crearían un bucle se ponen en estado <strong>bloqueado</strong>.</li>
+<li>Si un enlace cae, el árbol se recalcula automáticamente (tolerancia a fallos).</li>
+</ul>
+<blockquote><p>La motivación para tener rutas alternativas es doble: <strong>balanceo de carga</strong> y <strong>tolerancia a fallos</strong>. Spanning Tree le da lo segundo sin provocar loops.</p></blockquote>
+
+<h2 id="switch">11.5 Switch</h2>
+<p>Esencialmente un <strong>bridge multipuerto en hardware</strong>.
+<strong>Capa 2</strong> (los de capa 3 son una variante).</p>
+<p><strong>Ventajas sobre hubs y bridges:</strong> - Filtrado por MAC en
+<strong>cada puerto</strong> - Ancho de banda <strong>dedicado</strong>
+por puerto (no compartido) - Más rápido que bridges (conmuta en
+hardware) - Permite <strong>VLANs</strong> → segmentación lógica -
+Separa <strong>dominios de colisión</strong> (cada puerto = un
+dominio)</p>
+<p><strong>Tipos de conmutación interna:</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cut-through</strong></td>
+<td>Reenvía apenas lee la MAC destino (alta velocidad pero puede
+reenviar frames con errores)</td>
+</tr>
+<tr>
+<td><strong>Store-and-forward</strong></td>
+<td>Recibe la trama completa, valida CRC, después reenvía</td>
+</tr>
+<tr>
+<td><strong>Fragment-Free</strong></td>
+<td>Espera los primeros 64 bytes (donde ocurren la mayoría de las
+colisiones) y después reenvía</td>
+</tr>
+<tr>
+<td><strong>ATM</strong></td>
+<td>Transfiere celdas de tamaño fijo; soporta voz, video y datos con calidad garantizada</td>
+</tr>
+<tr>
+<td><strong>Switches L3</strong></td>
+<td>Conmutan también por IP (routing en hardware); combinan lo mejor de switch y router</td>
+</tr>
+</tbody>
+</table>
+<blockquote><p>💡 <strong>Hub vs Switch: diferencia clave</strong> — el hub transmite a todos (broadcast); el switch transmite solo al destinatario. En un hub, todos los dispositivos comparten el mismo ancho de banda y el mismo dominio de colisión; en un switch, cada puerto tiene su propio ancho de banda y su propio dominio de colisión.</p></blockquote>
+<ul>
+<li><strong>Capa 3.</strong> Comunica equipos de redes distintas.</li>
+<li>Busca la <strong>mejor ruta</strong> para enviar paquetes.</li>
+<li>Tareas: control de broadcast/multicast, ruteo óptimo, administración
+de tráfico, direccionamiento lógico, conexión a WAN.</li>
+<li>En cada salto reescribe MACs origen/destino pero <strong>conserva
+las IPs</strong>.</li>
+</ul>
+<h2 id="firewall">11.7 Firewall</h2>
+<p>Dispositivo de <strong>seguridad perimetral</strong>. Filtra tráfico
+según reglas.</p>
+<ul>
+<li>Pueden ser routers con ACL, equipos dedicados (Palo Alto, Fortinet,
+FortiGate) o software (iptables, pfSense).</li>
+<li>Aplicaciones: filtrado de paquetes, <strong>inspección de
+estado</strong> (stateful), filtrado de contenido,
+<strong>IDS/IPS</strong> (detección/prevención de intrusos).</li>
+<li>Operan en capas 3-4 (filtros básicos) o 7 (firewalls de aplicación /
+WAF).</li>
+</ul>
+<h2 id="tabla-comparativa">11.8 Tabla comparativa</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Equipo</th>
+<th>Capa</th>
+<th>Inteligencia</th>
+<th>Separa dominios de colisión</th>
+<th>Separa dominios de broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hub</td>
+<td>1</td>
+<td>Ninguna</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Bridge</td>
+<td>2</td>
+<td>MAC</td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Switch</td>
+<td>2 (o 3)</td>
+<td>MAC (+ IP en L3)</td>
+<td>Sí</td>
+<td>Solo con VLAN</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>3</td>
+<td>IP</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Firewall</td>
+<td>3-7</td>
+<td>IP + estado + L7</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implicancias-de-seguridad-5">11.9 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li>Un <strong>hub</strong> es un sniffer gratis. Por eso desaparecieron
+de las redes corporativas.</li>
+<li>Un <strong>switch</strong> ya impide sniffing pasivo, pero
+<strong>MAC flooding</strong> lo puede degradar a hub (fail-open).
+Mitigación: port security (limitar MACs por puerto).</li>
+<li><strong>ARP</strong> opera en capa 2 y es el primer blanco en una
+LAN: ARP spoofing permite hacer Man-In-The-Middle entre dos hosts del
+mismo segmento.</li>
+<li><strong>VLAN ≠ seguridad fuerte</strong>: separan tráfico, pero un
+atacante que controla un puerto trunk puede saltar VLANs.</li>
+<li><strong>Routers</strong> filtran por IP pero por defecto no
+inspeccionan contenido.</li>
+<li><strong>Firewalls</strong> son la primera línea de defensa, pero no
+reemplazan endpoint security ni segmentación interna (“defensa en
+profundidad”).</li>
+<li><strong>NAT</strong> no es un firewall, pero suele actuar como uno
+por accidente al ocultar IPs internas.</li>
+</ul>
+<div class="synthesis"><p>La cadena <strong>hub → bridge → switch → router → firewall</strong> es también una cadena de capas crecientes: cada equipo opera más arriba en la pila OSI y toma decisiones más inteligentes. Un hub no separa nada; un router separa redes; un firewall separa zonas de confianza. Saber qué capa procesa cada dispositivo es exactamente saber qué puede ver, qué puede filtrar y qué puede proteger.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1 id="capítulo-12-control-de-flujo-y-control-de-errores">CAPÍTULO 12 —
+CONTROL DE FLUJO Y CONTROL DE ERRORES</h1>
+<h2 id="marco-general">12.1 Marco general</h2>
+<p>Para que dos estaciones se comuniquen efectivamente no alcanza con
+tener un cable: hace falta una capa lógica (la <strong>capa de
+enlace</strong>) que coordine. Esta debe cumplir:</p>
+<ul>
+<li><strong>Sincronización de tramas</strong> — reconocer principio y
+fin</li>
+<li><strong>Control de flujo</strong> — que el emisor no sature al
+receptor</li>
+<li><strong>Control de errores</strong> — detectar y corregir errores
+del canal</li>
+<li><strong>Direccionamiento</strong> — identificar emisor y
+receptor</li>
+<li><strong>Control de datos</strong> — distinguir información de
+control de datos</li>
+<li><strong>Manejo de conexiones</strong> — iniciar, mantener y
+cerrar</li>
+</ul>
+<h2 id="control-de-flujo">12.2 Control de flujo</h2>
+<p>Coordina el intercambio para que el emisor no sobrecargue al
+receptor, previniendo <strong>buffer overflow</strong>.</p>
+<p>El receptor tiene un <strong>buffer de recepción</strong> finito. Si
+el emisor envía más rápido de lo que el receptor procesa, el buffer se
+llena y las tramas siguientes se descartan <strong>aunque hayan llegado
+bien</strong>.</p>
+<p><strong>Dos tiempos clave:</strong></p>
+<ul>
+<li><strong>Tiempo de transmisión</strong> — lo que tarda el emisor en poner todos los bits de una trama en el medio (proporcional al tamaño).</li>
+<li><strong>Tiempo de propagación</strong> — lo que tarda un bit en viajar del emisor al receptor (depende de distancia y medio).</li>
+</ul>
+<h3 id="a-stop-and-wait">a) Stop-and-Wait</h3>
+<p>El más simple:</p>
+<ol>
+<li>Emisor envía una trama y espera.</li>
+<li>Receptor envía <strong>ACK</strong> (recibida bien + listo para la próxima).</li>
+<li>Emisor inicia un <strong>timer</strong>. Si el ACK llega antes del timeout, envía la siguiente. Si no, asume pérdida y retransmite.</li>
+</ol>
+<p><strong>Para evitar duplicados</strong> — tramas y ACKs se numeran alternadamente con <code>0</code> y <code>1</code>.</p>
+<ul>
+<li>Emisor mantiene variable <code>S</code> (última trama enviada).</li>
+<li>Receptor mantiene variable <code>R</code> (próxima esperada).</li>
+<li>Los ACKs indican el número de la <strong>siguiente</strong> trama esperada, no la recibida.</li>
+</ul>
+<p><strong>Piggybacking</strong>: cuando ambas estaciones tienen datos
+para enviarse, el ACK se “monta” sobre la trama de datos que va en
+sentido contrario. Ahorra ancho de banda.</p>
+<p><strong>Desventaja</strong>: solo una trama en tránsito → ineficiente
+en enlaces rápidos o de larga distancia (el emisor pasa más tiempo
+esperando que transmitiendo).</p>
+<h3 id="b-sliding-window-ventana-deslizante">b) Sliding Window (ventana
+deslizante)</h3>
+<p>Permite múltiples tramas en tránsito simultáneamente sin esperar ACK
+individual.</p>
+<ul>
+<li>Enlace <strong>full-duplex</strong>.</li>
+<li>Tramas numeradas con un campo de <strong>k bits</strong> → módulo
+<code>2^k</code>.</li>
+<li>Emisor puede enviar hasta <strong>N = 2^k − 1</strong> tramas sin
+ACK → <strong>tamaño de ventana</strong>.</li>
+<li>Receptor tiene buffer del tamaño de la ventana.</li>
+<li>Cada ACK confirma <strong>acumulativamente</strong> todas las tramas
+hasta cierto número.</li>
+</ul>
+<p><strong>Dos ventanas:</strong></p>
+<ul>
+<li><strong>Ventana de envío (sender)</strong> — tramas que el emisor
+puede transmitir o ya transmitió y espera ACK.
+<ul>
+<li>Borde derecho avanza al enviar una trama.</li>
+<li>Borde izquierdo avanza al recibir un ACK.</li>
+</ul></li>
+<li><strong>Ventana de recepción (receiver)</strong> — tramas que el
+receptor está dispuesto a aceptar.</li>
+</ul>
+<p><strong>Receive Not Ready (RNR)</strong>: si el receptor necesita
+pausar, confirma lo recibido pero le pide al emisor que pare. Para
+reanudar, envía un ACK normal.</p>
+<blockquote>
+<p><strong>¿Por qué <code>N = 2^k &minus; 1</code> y no <code>2^k</code>?</strong> Se necesita un número de reserva para distinguir "no recibí ninguna trama" de "recibí todas las posibles". Sin ese margen habría ambigüedad sobre qué confirma un ACK.</p>
+</blockquote>
+
+<h3 id="piggybacking">Piggybacking</h3>
+<p>Optimización cuando <strong>ambas estaciones tienen datos que enviarse</strong>. En lugar de enviar el ACK como trama separada, la estación lo <strong>incluye en la cabecera de su próxima trama de datos</strong> — ahorrando ancho de banda y una transmisión.</p>
+<p><strong>Ejemplo:</strong> A le envía datos a B. B tiene que confirmar con un ACK <em>y</em> también quiere enviarle datos a A. En lugar de dos tramas separadas, B envía una única trama con sus datos que además contiene el ACK para los datos de A.</p>
+
+<h3 id="sliding-window-ejemplo-numerico">Ejemplo numérico — ventana deslizante módulo-8</h3>
+<p>k=3 bits → módulo-8 → tamaño de ventana = 2³&minus;1 = <strong>7</strong>:</p>
+<ol>
+<li>A y B arrancan con ventana que permite enviar 7 tramas, comenzando en F0.</li>
+<li>A envía F0, F1, F2 sin esperar ACK (ventana se reduce: aún puede enviar F3–F6).</li>
+<li>B responde <strong>RR 3</strong> = "recibí todo hasta F2; espero F3; puedo aceptar 7 más".</li>
+<li>A descarta las copias de F0–F2 ya confirmadas. Puede transmitir F3 y siguientes.</li>
+<li>A envía F3, F4, F5, F6. B responde <strong>RR 4</strong> (solo confirma F3).</li>
+<li>A ya transmitió hasta F6 → puede abrir ventana para F7+ (numeración circular en módulo-8).</li>
+</ol>
+
+<h2 id="control-de-errores">12.3 Control de errores</h2>
+<p>El canal nunca es perfecto: introduce ruido, interferencia,
+atenuación. Los canales de radio móvil son los más susceptibles.</p>
+<p><strong>Tipos de errores:</strong></p>
+<ul>
+<li><strong>Trama perdida</strong> — nunca llega al destino.</li>
+<li><strong>Trama dañada</strong> — llega con bits modificados.</li>
+</ul>
+<p><strong>Enfoques generales:</strong></p>
+<ul>
+<li><strong>FEC (Forward Error Correction)</strong> — el receptor corrige por sí mismo con la redundancia incluida. Útil cuando retransmitir es caro o imposible (satélite, broadcast).</li>
+<li><strong>ARQ (Automatic Repeat Request)</strong> — el receptor detecta y solicita retransmisión. Más eficiente cuando hay canal de retorno y los errores son ocasionales.</li>
+</ul>
+<h2 id="detección-de-errores">12.4 Detección de errores</h2>
+<h3 id="codificación-por-bloques">Codificación por bloques</h3>
+<p>La idea base de toda detección y corrección: <strong>agregar
+redundancia controlada</strong>.</p>
+<ol type="1">
+<li>Bloque de <strong>k</strong> bits de datos</li>
+<li>Se agregan <strong>r</strong> bits de redundancia calculados a
+partir de los datos</li>
+<li>Se transmite la palabra código (<strong>codeword</strong>) de
+<strong>n = k + r</strong> bits</li>
+<li>De <code>2^n</code> codewords posibles, solo <code>2^k</code> son
+válidos. El resto, si llegan, indican error.</li>
+</ol>
+<p><strong>Cuatro posibles eventos en el receptor:</strong></p>
+<ol>
+<li>Palabra válida = a la enviada → sin error.</li>
+<li>Hay error, la redundancia permite detectarlo y corregirlo.</li>
+<li>Error detectable pero no corregible → se pide retransmisión.</li>
+<li>Error que coincide casualmente con otra palabra válida → <strong>error no detectado (peor caso)</strong>.</li>
+</ol>
+<p><strong>Tasa del código</strong>: k/n. Mide cuánto ancho de banda
+extra cuesta la protección. Cerca de 1 = menos overhead pero menos
+protección.</p>
+<h3 id="códigos-de-bloque-lineales">Códigos de bloque lineales</h3>
+<p>El XOR de dos palabras código válidas da otra palabra código válida.
+Simplifica enormemente el cálculo.</p>
+<h3 id="distancia-de-hamming">Distancia de Hamming</h3>
+<ul>
+<li><strong>Entre dos palabras</strong>: <code>d(v1,v2)</code> = número
+de bits en los que difieren.</li>
+<li><strong>De un código</strong>: la mínima entre cualquier par de
+palabras válidas.</li>
+</ul>
+<p><strong>Reglas (lo único que tenés que recordar):</strong> - Para
+<strong>detectar</strong> <code>d</code> errores → distancia mínima ≥
+<code>d + 1</code> - Para <strong>corregir</strong> <code>d</code>
+errores → distancia mínima ≥ <code>2d + 1</code></p>
+<h3 id="bit-de-paridad">Bit de paridad</h3>
+<p>El más simple. Un bit al final del bloque que hace que el total de
+unos sea par (paridad par) o impar (paridad impar).</p>
+<p><strong>Desventaja crítica</strong>: no detecta un número
+<strong>par</strong> de errores. Si dos bits cambian, la paridad se
+mantiene. Solo útil en canales muy poco ruidosos.</p>
+<h3 id="crc-cyclic-redundancy-check">CRC — Cyclic Redundancy Check</h3>
+<p>El más usado en redes de datos. Mucho más robusto que paridad.</p>
+<ol type="1">
+<li>El emisor toma el bloque M de k bits y lo trata como un número
+binario.</li>
+<li>Lo divide por un divisor P (polinomio fijo de r+1 bits).</li>
+<li>El resto (de r bits) es el <strong>FCS</strong> (Frame Check
+Sequence).</li>
+<li>Se transmite <strong>datos + FCS</strong> (k + r bits), construido
+de modo que sea divisible exactamente por P.</li>
+<li>El receptor divide la trama recibida por el mismo P:
+<ul>
+<li>Resto = 0 → sin errores detectables</li>
+<li>Resto ≠ 0 → hubo error → descartar / pedir retransmisión</li>
+</ul></li>
+</ol>
+<p><strong>Errores que CRC detecta:</strong> - Todos los de 1 bit -
+Todos los de 2 bits si P tiene al menos 3 términos en 1 - Cualquier
+número impar de errores si P contiene el factor <code>(x + 1)</code> -
+Cualquier ráfaga de longitud menor que el FCS - La gran mayoría de las
+ráfagas largas</p>
+<blockquote>
+<p>🛡️ <strong>Importante para ciberseguridad</strong>: <strong>CRC NO es
+un método criptográfico</strong>. Sirve para detectar errores
+<strong>accidentales</strong> (ruido), no para proteger contra
+<strong>modificación maliciosa</strong>. Un atacante con conocimiento
+del polinomio puede modificar los datos y recalcular un CRC válido. Para
+integridad frente a adversarios → <strong>funciones hash
+criptográficas</strong> (SHA-256, BLAKE2) o <strong>MACs</strong>
+(HMAC).</p>
+</blockquote>
+<h2 id="mecanismos-arq">12.5 Mecanismos ARQ</h2>
+<h3 id="a-stop-and-wait-arq">a) Stop-and-Wait ARQ</h3>
+<p>Manejo de errores sobre Stop-and-Wait. Tramas y ACKs numerados 0 y
+1.</p>
+<p><strong>Casos:</strong></p>
+<ul>
+<li><strong>Trama perdida</strong> → no llega ACK → timeout → retransmite.</li>
+<li><strong>ACK perdido</strong> → emisor retransmite → receptor detecta duplicado por la numeración y reenvía ACK.</li>
+<li><strong>Trama dañada</strong> → receptor la descarta sin ACK → timeout → retransmite.</li>
+</ul>
+<p>Simple pero lento.</p>
+<h3 id="b-go-back-n-vuelta-atrás-n">b) Go-Back-N (vuelta-atrás-N)</h3>
+<p>Combina ventana deslizante con manejo de errores simple:</p>
+<ul>
+<li>Emisor envía secuencialmente sin esperar ACK individual.</li>
+<li>Si llega bien → receptor envía <strong>RR (Receive Ready)</strong> con número de la próxima esperada.</li>
+<li>Si llega con error → receptor envía <strong>REJ (Reject)</strong> y descarta esa y todas las siguientes.</li>
+<li>Emisor retransmite la errónea y todas las posteriores.</li>
+</ul>
+<p><strong>Trade-off</strong>: desperdicia tramas correctas que se
+descartaron, pero el receptor es muy simple (no necesita reordenar).</p>
+<h3 id="c-selective-repeat-rechazo-selectivo">c) Selective Repeat
+(rechazo selectivo)</h3>
+<p>Optimización del anterior: solo se retransmite la trama errónea.</p>
+<ul>
+<li>Receptor detecta error → envía <strong>SREJ (Selective
+Reject)</strong> indicando solo esa trama</li>
+<li>Emisor retransmite únicamente la indicada</li>
+<li>Receptor guarda tramas correctas posteriores en buffer y reordena al
+recibir la retransmisión</li>
+</ul>
+<p><strong>Trade-off inverso</strong>: mejor uso del ancho de banda,
+pero el receptor necesita más buffer y lógica.</p>
+<h2 id="fec-principios">12.5b FEC — Corrección hacia adelante (Forward Error Correction)</h2>
+<p>FEC agrega redundancia extra al bloque para que el receptor pueda <strong>corregir errores sin pedir retransmisión</strong>. Indispensable en canales sin retorno (broadcasting) o con retardo elevado (satélite, fibra submarina).</p>
+<p><strong>Mecanismo:</strong></p>
+<ul>
+<li>Se envían <strong>n bits</strong> para representar <strong>k bits</strong> de datos (n &gt; k).</li>
+<li>De los 2^n codewords posibles, solo 2^k son válidos.</li>
+<li>Tasa del código = k/n. Cerca de 1 = poco overhead pero menos protección; lejos de 1 = más protección pero más costo en ancho de banda.</li>
+</ul>
+<p><strong>Ejemplo con código (5,2) — k=2, n=5, distancia mínima=3:</strong></p>
+<table>
+<thead><tr><th>Datos (k=2)</th><th>Palabra código (n=5)</th></tr></thead>
+<tbody>
+<tr><td>00</td><td>00000</td></tr>
+<tr><td>01</td><td>00111</td></tr>
+<tr><td>10</td><td>11001</td></tr>
+<tr><td>11</td><td>11110</td></tr>
+</tbody>
+</table>
+<p>Si llega <code>00100</code> (inválido), el receptor calcula la distancia de Hamming a cada codeword válido y elige el más cercano → corrige al original.</p>
+<p><strong>Trade-off de diseño:</strong> querés bits extra (n-k) grandes para menor tasa de error, pero también chicos para ahorrar ancho de banda. Son objetivos en conflicto que hay que negociar según el canal.</p>
+
+<h2 id="conectando-con-lo-visto">12.6 Conectando con lo visto</h2>
+<p>Vale la pena cerrar el capítulo uniendo los puntos:</p>
+<ul>
+<li><strong>Control de flujo y control de errores</strong> son funciones
+de la <strong>capa de enlace</strong> (capa 2 OSI), específicamente de
+la <strong>subcapa LLC</strong>.</li>
+<li><strong>Bandwidth-delay product</strong> (ancho de banda × retardo):
+producto que justifica por qué las ventanas grandes son necesarias en
+redes rápidas y largas.</li>
+<li><strong>CRC</strong> es la herramienta concreta detrás de la
+“detección de errores” en LLC.</li>
+<li><strong>ARQ</strong> implementa la “recuperación entre fallos”
+mencionada en LLC.</li>
+<li>En <strong>TCP/IP</strong>, TCP implementa una versión sofisticada
+de ventana deslizante <strong>en la capa de transporte</strong>, no de
+enlace. Los mismos principios aparecen en distintas capas: enlace lo
+hace entre nodos vecinos; TCP lo hace <strong>extremo a
+extremo</strong>.</li>
+</ul>
+<h2 id="implicancias-de-seguridad-6">12.7 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>CRC vs HMAC</strong> ya lo dijimos: detección de ruido ≠
+integridad criptográfica.</li>
+<li><strong>Replay attacks</strong>: un atacante puede reenviar una
+trama válida vieja. Los protocolos seguros usan <strong>nonces</strong>
+o <strong>números de secuencia firmados</strong>.</li>
+<li><strong>TCP sequence number prediction</strong> (Mitnick, años 90):
+si los números de secuencia eran predecibles, un atacante podía inyectar
+segmentos. Hoy se generan aleatoriamente, pero el principio sigue
+vigente.</li>
+<li><strong>Slowloris / SYN flood</strong>: explotan el control de
+flujo/conexión de TCP para agotar recursos del servidor (DoS).</li>
+</ul>
+<div class="synthesis"><p>El <strong>control de flujo</strong> evita que el emisor sature al receptor; el <strong>control de errores</strong> se ocupa de que lo que llegue, llegue correctamente. CRC detecta errores accidentales, ARQ los recupera vía retransmisión, FEC los corrige sin retransmisión. Los mismos principios reaparecen en capas distintas — LLC entre nodos vecinos, TCP extremo a extremo — porque son <strong>patrones universales del transporte confiable de datos</strong>.</p></div>
+<hr />
+<div style="page-break-before: always;">
+
+</div>
+<h1
+id="apéndice-recursos-y-herramientas-de-ciberseguridad-que-van-a-aparecer">APÉNDICE
+— RECURSOS Y HERRAMIENTAS DE CIBERSEGURIDAD QUE VAN A APARECER</h1>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Para qué</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ping</code></td>
+<td>Probar conectividad ICMP</td>
+</tr>
+<tr>
+<td><code>traceroute</code> / <code>tracert</code></td>
+<td>Mapear el camino IP (usa TTL e ICMP Time Exceeded)</td>
+</tr>
+<tr>
+<td><code>arp -a</code></td>
+<td>Ver la tabla ARP</td>
+</tr>
+<tr>
+<td><code>nslookup</code> / <code>dig</code></td>
+<td>Consultar DNS</td>
+</tr>
+<tr>
+<td><code>netstat</code> / <code>ss</code></td>
+<td>Conexiones TCP/UDP activas</td>
+</tr>
+<tr>
+<td><code>tcpdump</code> / <strong>Wireshark</strong></td>
+<td>Sniffer de paquetes — la herramienta más importante para entender
+redes</td>
+</tr>
+<tr>
+<td><code>nmap</code></td>
+<td>Escaneo de puertos y descubrimiento de hosts</td>
+</tr>
+<tr>
+<td><strong><code>aircrack-ng</code></strong></td>
+<td>Auditoría de WiFi</td>
+</tr>
+<tr>
+<td><strong>Burp Suite / ZAP</strong></td>
+<td>Proxy de interceptación HTTP/HTTPS</td>
+</tr>
+<tr>
+<td><code>iptables</code> / <code>nftables</code> /
+<strong>pfSense</strong></td>
+<td>Firewalls</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
