@@ -186,6 +186,105 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
     </div>
   </div>
 
+  <h3>Estructura visual del header IPv4</h3>
+  <div class="card">
+    <div class="card-body" style="margin-bottom:12px">Cada fila representa una <strong>palabra de 32 bits</strong>. El header mínimo son 5 palabras (20 bytes); con opciones puede llegar a 6 palabras o más.</div>
+    <div style="overflow-x:auto;background:var(--surface-alt);border-radius:var(--radius);padding:14px;border:1px solid var(--border)">
+    <svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;height:auto;display:block;font-family:'DM Sans',sans-serif">
+      <defs>
+        <style>
+          .hdr-cell{fill:var(--surface);stroke:var(--border);stroke-width:1}
+          .hdr-cell-blue{fill:#eff5ff;stroke:#2563eb;stroke-width:1.2}
+          .hdr-cell-green{fill:#ecfdf5;stroke:#10b981;stroke-width:1.2}
+          .hdr-cell-orange{fill:#fffbeb;stroke:#f59e0b;stroke-width:1.2}
+          .hdr-cell-red{fill:#fef2f2;stroke:#ef4444;stroke-width:1.2}
+          .hdr-cell-purple{fill:#f5f3ff;stroke:#7c3aed;stroke-width:1.2}
+          .hdr-cell-gray{fill:#f4f3ef;stroke:#8a8985;stroke-width:1;stroke-dasharray:4 3}
+          .hdr-txt{font-size:11px;fill:#1a1a1a;font-weight:500}
+          .hdr-txt-sm{font-size:9px;fill:#5c5b57}
+          .bit-mark{font-size:9px;fill:#5c5b57;font-family:'JetBrains Mono',monospace}
+          @media(prefers-color-scheme:dark){
+            .hdr-cell{fill:#1c1c1a;stroke:#333330}
+            .hdr-cell-blue{fill:#1e293b;stroke:#60a5fa}
+            .hdr-cell-green{fill:#0c1f17;stroke:#34d399}
+            .hdr-cell-orange{fill:#1f1a0c;stroke:#fbbf24}
+            .hdr-cell-red{fill:#1f0c0c;stroke:#f87171}
+            .hdr-cell-purple{fill:#1a1528;stroke:#a78bfa}
+            .hdr-cell-gray{fill:#252522;stroke:#6b6b67}
+            .hdr-txt{fill:#ededeb}
+            .hdr-txt-sm{fill:#a3a39f}
+            .bit-mark{fill:#a3a39f}
+          }
+        </style>
+      </defs>
+      <!-- Bit markers -->
+      <text x="20" y="14" class="bit-mark">0</text>
+      <text x="170" y="14" class="bit-mark">8</text>
+      <text x="320" y="14" class="bit-mark">16</text>
+      <text x="470" y="14" class="bit-mark">24</text>
+      <text x="610" y="14" class="bit-mark">31</text>
+      <!-- Row 1: Versión | IHL | Tipo de servicio | Longitud total -->
+      <rect x="20" y="20" width="75" height="36" class="hdr-cell-blue"/>
+      <text x="57.5" y="38" text-anchor="middle" class="hdr-txt">Versión</text>
+      <text x="57.5" y="50" text-anchor="middle" class="hdr-txt-sm">4 bits</text>
+      <rect x="95" y="20" width="75" height="36" class="hdr-cell-blue"/>
+      <text x="132.5" y="38" text-anchor="middle" class="hdr-txt">IHL</text>
+      <text x="132.5" y="50" text-anchor="middle" class="hdr-txt-sm">4 bits</text>
+      <rect x="170" y="20" width="150" height="36" class="hdr-cell-orange"/>
+      <text x="245" y="38" text-anchor="middle" class="hdr-txt">Tipo de servicio</text>
+      <text x="245" y="50" text-anchor="middle" class="hdr-txt-sm">8 bits</text>
+      <rect x="320" y="20" width="300" height="36" class="hdr-cell"/>
+      <text x="470" y="38" text-anchor="middle" class="hdr-txt">Longitud total</text>
+      <text x="470" y="50" text-anchor="middle" class="hdr-txt-sm">16 bits</text>
+      <!-- Row 2: Identificación | Flags | Offset -->
+      <rect x="20" y="56" width="300" height="36" class="hdr-cell"/>
+      <text x="170" y="74" text-anchor="middle" class="hdr-txt">Identificación</text>
+      <text x="170" y="86" text-anchor="middle" class="hdr-txt-sm">16 bits</text>
+      <rect x="320" y="56" width="60" height="36" class="hdr-cell-purple"/>
+      <text x="350" y="74" text-anchor="middle" class="hdr-txt">Flags</text>
+      <text x="350" y="86" text-anchor="middle" class="hdr-txt-sm">3 bits</text>
+      <rect x="380" y="56" width="240" height="36" class="hdr-cell-purple"/>
+      <text x="500" y="74" text-anchor="middle" class="hdr-txt">Offset de fragmentación</text>
+      <text x="500" y="86" text-anchor="middle" class="hdr-txt-sm">13 bits</text>
+      <!-- Row 3: TTL | Protocolo | Header checksum -->
+      <rect x="20" y="92" width="150" height="36" class="hdr-cell-red"/>
+      <text x="95" y="110" text-anchor="middle" class="hdr-txt">TTL</text>
+      <text x="95" y="122" text-anchor="middle" class="hdr-txt-sm">8 bits</text>
+      <rect x="170" y="92" width="150" height="36" class="hdr-cell-green"/>
+      <text x="245" y="110" text-anchor="middle" class="hdr-txt">Protocolo</text>
+      <text x="245" y="122" text-anchor="middle" class="hdr-txt-sm">8 bits</text>
+      <rect x="320" y="92" width="300" height="36" class="hdr-cell"/>
+      <text x="470" y="110" text-anchor="middle" class="hdr-txt">Checksum del header</text>
+      <text x="470" y="122" text-anchor="middle" class="hdr-txt-sm">16 bits</text>
+      <!-- Row 4: Dirección IP origen -->
+      <rect x="20" y="128" width="600" height="36" class="hdr-cell-orange"/>
+      <text x="320" y="146" text-anchor="middle" class="hdr-txt">Dirección IP origen</text>
+      <text x="320" y="158" text-anchor="middle" class="hdr-txt-sm">32 bits</text>
+      <!-- Row 5: Dirección IP destino -->
+      <rect x="20" y="164" width="600" height="36" class="hdr-cell-orange"/>
+      <text x="320" y="182" text-anchor="middle" class="hdr-txt">Dirección IP destino</text>
+      <text x="320" y="194" text-anchor="middle" class="hdr-txt-sm">32 bits</text>
+      <!-- Row 6: Opciones + Padding -->
+      <rect x="20" y="200" width="540" height="36" class="hdr-cell-gray"/>
+      <text x="290" y="218" text-anchor="middle" class="hdr-txt">Opciones</text>
+      <text x="290" y="230" text-anchor="middle" class="hdr-txt-sm">opcional, longitud variable</text>
+      <rect x="560" y="200" width="60" height="36" class="hdr-cell-gray"/>
+      <text x="590" y="218" text-anchor="middle" class="hdr-txt">Padding</text>
+      <text x="590" y="230" text-anchor="middle" class="hdr-txt-sm">relleno</text>
+      <!-- Row 7: Datos -->
+      <rect x="20" y="244" width="600" height="50" class="hdr-cell"/>
+      <text x="320" y="268" text-anchor="middle" class="hdr-txt" style="font-weight:600">DATOS (Payload)</text>
+      <text x="320" y="282" text-anchor="middle" class="hdr-txt-sm">capa superior: TCP, UDP, ICMP… — longitud variable</text>
+      <!-- Side label: Header -->
+      <line x1="5" y1="20" x2="5" y2="236" stroke="#5c5b57" stroke-width="1"/>
+      <line x1="5" y1="20" x2="12" y2="20" stroke="#5c5b57" stroke-width="1"/>
+      <line x1="5" y1="236" x2="12" y2="236" stroke="#5c5b57" stroke-width="1"/>
+      <text x="0" y="135" text-anchor="middle" class="hdr-txt-sm" transform="rotate(-90 0 135)">HEADER</text>
+      <text x="640" y="305" text-anchor="end" class="hdr-txt-sm">32 bits = 1 palabra</text>
+    </svg>
+    </div>
+  </div>
+
   <h3>Campos del header IPv4</h3>
   <div class="card">
     <table>
@@ -276,17 +375,168 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
     <div class="highlight info">Truco: cada "número" separado por punto es 1 byte (8 bits). Rango por sección: 0 a 255.</div>
   </div>
 
-  <h3>Clases de direcciones IPv4</h3>
+  <h3>Clases de direcciones IPv4 (esquema classful)</h3>
   <div class="card">
-    <div class="card-body" style="margin-bottom:12px">El sistema clasful original define 5 clases. Los primeros bits del primer byte determinan la clase:</div>
+    <div class="card-body" style="margin-bottom:12px">
+      El sistema original (anterior a CIDR) dividía el espacio de 32 bits en 5 clases. <strong>Los primeros bits del primer byte determinan la clase</strong> — y a su vez determinan cómo se reparten los 32 bits entre la parte RED y la parte HOST:
+    </div>
     <table>
-      <thead><tr><th>Clase</th><th>Bits iniciales</th><th>Rango</th><th>Parte RED</th><th>Parte HOST</th><th>Redes / Hosts</th></tr></thead>
+      <thead><tr><th>Clase</th><th>Bits iniciales</th><th>Rango decimal</th><th>RED</th><th>HOST</th><th># de redes</th><th># de hosts por red</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge red">A</span></td><td><code>0</code></td><td>0.0.0.0 – 127.255.255.255</td><td>1 byte</td><td>3 bytes</td><td>126 / 16.777.214</td></tr>
-        <tr><td><span class="badge orange">B</span></td><td><code>10</code></td><td>128.0.0.0 – 191.255.255.255</td><td>2 bytes</td><td>2 bytes</td><td>16.382 / 65.534</td></tr>
-        <tr><td><span class="badge green">C</span></td><td><code>110</code></td><td>192.0.0.0 – 223.255.255.255</td><td>3 bytes</td><td>1 byte</td><td>2.097.150 / 254</td></tr>
-        <tr><td><span class="badge blue">D</span></td><td><code>1110</code></td><td>224.0.0.0 – 239.255.255.255</td><td colspan="3">Multicast — ID grupo multicast (no tiene RED/HOST)</td></tr>
-        <tr><td><span class="badge gray">E</span></td><td><code>11110</code></td><td>240.0.0.0 – 247.255.255.255</td><td colspan="3">Experimental — reservado para investigación</td></tr>
+        <tr><td><span class="badge red">A</span></td><td><code>0xxx...</code></td><td>1.0.0.0 – 126.255.255.255</td><td>8 bits (1 byte)</td><td>24 bits (3 bytes)</td><td>126</td><td>16.777.214</td></tr>
+        <tr><td><span class="badge orange">B</span></td><td><code>10xx...</code></td><td>128.0.0.0 – 191.255.255.255</td><td>16 bits (2 bytes)</td><td>16 bits (2 bytes)</td><td>16.384</td><td>65.534</td></tr>
+        <tr><td><span class="badge green">C</span></td><td><code>110x...</code></td><td>192.0.0.0 – 223.255.255.255</td><td>24 bits (3 bytes)</td><td>8 bits (1 byte)</td><td>2.097.152</td><td>254</td></tr>
+        <tr><td><span class="badge blue">D</span></td><td><code>1110...</code></td><td>224.0.0.0 – 239.255.255.255</td><td colspan="4">Multicast — no tiene RED/HOST, todos los bits identifican un grupo</td></tr>
+        <tr><td><span class="badge gray">E</span></td><td><code>1111...</code></td><td>240.0.0.0 – 255.255.255.255</td><td colspan="4">Experimental — reservado, no se usa en redes normales</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight info">
+      <strong>¿Por qué se restan 2 hosts por red?</strong> El primero (todos los bits de host a 0) representa la red misma; el último (todos a 1) es el broadcast. Ninguno se puede asignar a un host real.
+    </div>
+  </div>
+
+  <h3>Máscaras de red: la herramienta que separa RED de HOST</h3>
+  <div class="card">
+    <div class="card-body">
+      La máscara de red es un número de 32 bits que <strong>marca con 1 los bits de RED y con 0 los bits de HOST</strong>. Sirve para que cualquier dispositivo (host, router) sepa exactamente cuál es la red de una IP, sin importar la clase.
+    </div>
+    <div class="card-body" style="margin-top:10px">
+      Cada clase tiene su máscara <em>por defecto</em>:
+    </div>
+    <table>
+      <thead><tr><th>Clase</th><th>Máscara decimal</th><th>Máscara binaria</th><th>Prefijo CIDR</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge red">A</span></td><td><code>255.0.0.0</code></td><td><code>11111111.00000000.00000000.00000000</code></td><td><code>/8</code></td></tr>
+        <tr><td><span class="badge orange">B</span></td><td><code>255.255.0.0</code></td><td><code>11111111.11111111.00000000.00000000</code></td><td><code>/16</code></td></tr>
+        <tr><td><span class="badge green">C</span></td><td><code>255.255.255.0</code></td><td><code>11111111.11111111.11111111.00000000</code></td><td><code>/24</code></td></tr>
+      </tbody>
+    </table>
+    <div class="highlight info">
+      <strong>Cómo "aplicar" la máscara:</strong> se hace <code>AND</code> bit a bit entre la IP y la máscara. El resultado es la <strong>dirección de red</strong>.<br><br>
+      Ejemplo: <code>192.168.1.42</code> AND <code>255.255.255.0</code> = <code>192.168.1.0</code> ← esta es la red.
+    </div>
+  </div>
+
+  <h3>Subnetting: dividir una red en sub-redes</h3>
+  <div class="card">
+    <div class="card-body">
+      En <strong>1984</strong> se agregó la posibilidad de tomar <strong>bits prestados de la parte de HOST</strong> para crear sub-redes más pequeñas dentro de una red grande. Esto introdujo un tercer nivel jerárquico: <span class="badge blue">RED</span> + <span class="badge purple">SUBRED</span> + <span class="badge green">HOST</span>.
+    </div>
+    <div class="card-body" style="margin-top:10px">
+      <strong>Ejemplo</strong>: una red Clase C <code>192.168.1.0/24</code> tiene 256 direcciones (254 hosts utilizables). Si "prestamos" 2 bits del host para subred, obtenemos máscara <code>/26</code>:
+    </div>
+    <table>
+      <thead><tr><th>Subred</th><th>Rango</th><th>Hosts utilizables</th></tr></thead>
+      <tbody>
+        <tr><td><code>192.168.1.0/26</code></td><td>.0 – .63</td><td>.1 – .62 (62 hosts)</td></tr>
+        <tr><td><code>192.168.1.64/26</code></td><td>.64 – .127</td><td>.65 – .126 (62 hosts)</td></tr>
+        <tr><td><code>192.168.1.128/26</code></td><td>.128 – .191</td><td>.129 – .190 (62 hosts)</td></tr>
+        <tr><td><code>192.168.1.192/26</code></td><td>.192 – .255</td><td>.193 – .254 (62 hosts)</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight">2 bits prestados → 4 subredes (2² = 4). Cada subred pierde 2 direcciones (red + broadcast), por eso quedan 62 hosts utilizables de los 64 totales.</div>
+  </div>
+
+  <h3>Notación CIDR: el prefijo "/n"</h3>
+  <div class="card">
+    <div class="card-title"><div class="icon blue">✂️</div>¿Qué significa la "/" en una IP?</div>
+    <div class="card-body">
+      <strong>CIDR (Classless Inter-Domain Routing)</strong> reemplaza la máscara decimal por un número que indica <strong>cuántos bits a 1 tiene la máscara</strong>. Es solo otra forma de escribir lo mismo, pero mucho más corta y flexible.
+    </div>
+    <table style="margin-top:12px">
+      <thead><tr><th>Prefijo</th><th>Máscara decimal</th><th>Direcciones</th><th>Hosts utilizables</th></tr></thead>
+      <tbody>
+        <tr><td><code>/8</code></td><td><code>255.0.0.0</code></td><td>16.777.216</td><td>16.777.214</td></tr>
+        <tr><td><code>/16</code></td><td><code>255.255.0.0</code></td><td>65.536</td><td>65.534</td></tr>
+        <tr><td><code>/24</code></td><td><code>255.255.255.0</code></td><td>256</td><td>254</td></tr>
+        <tr><td><code>/25</code></td><td><code>255.255.255.128</code></td><td>128</td><td>126</td></tr>
+        <tr><td><code>/26</code></td><td><code>255.255.255.192</code></td><td>64</td><td>62</td></tr>
+        <tr><td><code>/27</code></td><td><code>255.255.255.224</code></td><td>32</td><td>30</td></tr>
+        <tr><td><code>/30</code></td><td><code>255.255.255.252</code></td><td>4</td><td>2 (típico de enlaces punto a punto)</td></tr>
+      </tbody>
+    </table>
+    <div class="card-body" style="margin-top:12px">
+      <strong>Lo poderoso de CIDR:</strong> permite usar <em>cualquier</em> longitud de prefijo, no solo /8, /16 o /24. Si una empresa necesita 500 hosts, le asignan un <code>/23</code> (510 hosts utilizables) en vez de regalarle una Clase B entera con 65.534. Resultado: las clases A/B/C son <strong>irrelevantes</strong> en el internet moderno.
+    </div>
+    <div class="highlight info">
+      <strong>Ejemplo rápido</strong>: <code>128.223.254.10/24</code> → red <code>128.223.254.0</code> | host <code>.10</code><br>
+      Aunque <code>128</code> caería en rango de Clase B, con CIDR la clase no importa: lo que manda es el prefijo <code>/24</code>.
+    </div>
+  </div>
+
+  <h3>🎯 Ejemplo práctico: cómo reconocer una dirección IP</h3>
+  <div class="card">
+    <div class="card-body" style="margin-bottom:12px">
+      Te dan la dirección <span class="ip" style="display:inline-block;margin:0">172.20.45.200/20</span> y tenés que identificar: clase, parte de red, parte de host, máscara, y si es multicast. Vamos paso a paso:
+    </div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>Mirar el primer byte para determinar la clase.</strong><br>
+        <code>172</code> está entre 128 y 191 → es <span class="badge orange">Clase B</span> (en el esquema classful original).<br>
+        <span style="color:var(--text-3)">Bonus: en binario <code>172 = 10101100</code>. Empieza con <code>10</code>, confirmando Clase B.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>¿Es multicast?</strong><br>
+        No. Multicast es Clase D (224–239). <code>172.x.x.x</code> está fuera de ese rango.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>Convertir la máscara CIDR <code>/20</code> a decimal.</strong><br>
+        <code>/20</code> = 20 bits a 1 + 12 bits a 0:<br>
+        <code>11111111.11111111.11110000.00000000</code> = <code>255.255.240.0</code>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>Separar parte de RED y parte de HOST.</strong><br>
+        Con <code>/20</code>, los primeros 20 bits son red y los últimos 12 son host. En el tercer byte (<code>45</code>) hay 4 bits de red y 4 bits de host:<br>
+        <code>172.20.45.200 → 10101100.00010100.<span style="background:#eff5ff;color:#1e40af;padding:1px 3px;border-radius:3px">0010</span><span style="background:#ecfdf5;color:#065f46;padding:1px 3px;border-radius:3px">1101</span>.11001000</code><br>
+        <span style="color:#1e40af">■ RED</span> = 20 bits primeros &nbsp;|&nbsp; <span style="color:#065f46">■ HOST</span> = 12 bits últimos
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>Calcular la dirección de red (IP AND máscara).</strong><br>
+        Pongo a 0 los 12 bits de host: <code>172.20.<span style="background:#eff5ff;color:#1e40af;padding:1px 3px;border-radius:3px">0010</span>0000.00000000</code> = <code>172.20.32.0</code><br>
+        → La red es <strong>172.20.32.0/20</strong>.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <strong>Dirección de broadcast de esa red.</strong><br>
+        Pongo a 1 los 12 bits de host: <code>172.20.<span style="background:#eff5ff;color:#1e40af;padding:1px 3px;border-radius:3px">0010</span>1111.11111111</code> = <code>172.20.47.255</code>
+      </div>
+    </div>
+    <div class="card-body" style="margin-top:14px;padding:14px;background:var(--success-bg);border-radius:var(--radius);color:var(--success-text)">
+      <strong>📋 Ficha técnica de 172.20.45.200/20:</strong><br>
+      • Clase original: <strong>B</strong> &nbsp;•&nbsp; ¿Multicast? <strong>No</strong><br>
+      • Máscara: <strong>255.255.240.0</strong> (/20)<br>
+      • Red: <strong>172.20.32.0</strong> &nbsp;•&nbsp; Broadcast: <strong>172.20.47.255</strong><br>
+      • Rango de hosts utilizables: <strong>172.20.32.1 a 172.20.47.254</strong> (4.094 hosts)<br>
+      • <strong>Es una IP privada</strong> (cae en 172.16.0.0/12, rango RFC 1918)
+    </div>
+  </div>
+
+  <h3>Mini-tabla rápida para reconocer clase de un vistazo</h3>
+  <div class="card">
+    <table>
+      <thead><tr><th>Primer byte</th><th>Clase</th><th>Pista mental</th></tr></thead>
+      <tbody>
+        <tr><td>1 – 126</td><td><span class="badge red">A</span></td><td>Empieza con <code>0</code></td></tr>
+        <tr><td>127</td><td><span class="badge purple">Loopback</span></td><td>Reservado — apunta a tu propia máquina</td></tr>
+        <tr><td>128 – 191</td><td><span class="badge orange">B</span></td><td>Empieza con <code>10</code></td></tr>
+        <tr><td>192 – 223</td><td><span class="badge green">C</span></td><td>Empieza con <code>110</code></td></tr>
+        <tr><td>224 – 239</td><td><span class="badge blue">D · Multicast</span></td><td>Empieza con <code>1110</code> — no tiene host individual</td></tr>
+        <tr><td>240 – 255</td><td><span class="badge gray">E · Experimental</span></td><td>No usar en redes reales</td></tr>
       </tbody>
     </table>
   </div>
@@ -294,7 +544,7 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
   <div class="card">
     <div class="card-title"><div class="icon purple">🔁</div>Dirección especial: Loopback</div>
     <div class="card-body">
-      La dirección <strong>127.0.0.0</strong> es la dirección de loopback:<br>
+      Toda la red <strong>127.0.0.0/8</strong> está reservada como loopback. La más usada es <code>127.0.0.1</code>:<br>
       • Se usa para comunicaciones de procesos en la misma máquina.<br>
       • Nunca es propagada a la red (no sale del dispositivo).
     </div>
@@ -330,18 +580,6 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
         <tr><td>Direcciones loopback</td><td>Rango 127.0.0.0/8 — casi siempre se usa 127.0.0.1</td><td><span class="ip">127.0.0.1</span></td></tr>
       </tbody>
     </table>
-  </div>
-
-  <h3>Notación CIDR (prefijo)</h3>
-  <div class="card">
-    <div class="card-title"><div class="icon blue">✂️</div>¿Qué significa la "/" en una IP?</div>
-    <div class="card-body">
-      La máscara de red define qué parte de la IP es RED y qué parte es HOST. La máscara también se puede especificar como la cantidad de bits a 1:
-      <span class="ip">255.255.255.0 → tiene 24 bits a 1 → se escribe /24</span>
-      <span class="ip">128.223.254.10/24 → red: 128.223.254.0 | host: .10</span>
-      Hoy día se utilizan indistintamente las dos notaciones (máscara completa o notación de prefijo con /).
-    </div>
-    <div class="highlight info">Truco: /24 = las primeras 3 secciones son red. /16 = las primeras 2. /8 = solo la primera.</div>
   </div>
 
   <h3>Direcciones privadas (no salen a internet)</h3>
@@ -389,14 +627,55 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
   <div class="highlight purple">¡Las viejas clases A, B, C no tienen significado ninguno en el internet de hoy!</div>
 
   <h3>Soluciones a corto plazo (IPv4)</h3>
-  <div class="grid2">
-    <div class="card">
-      <div class="card-title"><div class="icon blue">🛣️</div>CIDR</div>
-      <div class="card-body"><strong>Classless Interdomain Routing</strong>: los routers ya no consideran A, B, C como /8, /16, /24. Trabajan con prefijos de cualquier longitud (/20, /22, /25…). Permite asignar bloques exactos según necesidad.</div>
+  <div class="card">
+    <div class="card-body">
+      Como migrar de IPv4 a IPv6 lleva décadas, la comunidad inventó varias técnicas para <strong>estirar la vida útil de IPv4</strong>. Las cuatro principales atacan problemas distintos:
     </div>
-    <div class="card">
-      <div class="card-title"><div class="icon green">📏</div>VLSM</div>
-      <div class="card-body"><strong>Variable Length Subnet Masks</strong>: los routers no asumen que todas las subredes son del mismo tamaño. Distintas subredes dentro de la misma red pueden tener máscaras de diferente longitud.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon blue">🛣️</div>CIDR — eliminar las clases rígidas</div>
+    <div class="card-body">
+      <strong>Classless Inter-Domain Routing</strong> rompe con el esquema A/B/C. Antes, las máscaras estaban atadas a la clase: A→/8, B→/16, C→/24. Con CIDR los routers trabajan con <strong>prefijos de cualquier longitud</strong>: /20, /22, /27, /30…<br><br>
+      <strong>Por qué importa:</strong> permite asignar bloques exactos según necesidad. Si una empresa pide 500 IPs, le dan un /23 (510 hosts) en vez de regalarle una Clase B entera con 65.534 (de las cuales 65.000 se desperdiciarían).<br><br>
+      <strong>Bonus de ruteo (supernetting / agregación):</strong> CIDR también permite a los ISPs agrupar varias redes consecutivas en una sola entrada de tabla de ruteo. Esto reduce el tamaño de las tablas globales que cargan los routers de internet.
+    </div>
+    <div class="highlight info">Ejemplo: en vez de tener 4 entradas para <code>192.0.0.0/24</code>, <code>192.0.1.0/24</code>, <code>192.0.2.0/24</code>, <code>192.0.3.0/24</code>, el router publica una sola: <code>192.0.0.0/22</code>.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon green">📏</div>VLSM — máscaras de longitud variable dentro de una misma red</div>
+    <div class="card-body">
+      <strong>Variable Length Subnet Mask</strong> permite que <strong>distintas subredes dentro de la misma red tengan máscaras distintas</strong>. Sin VLSM, una vez que dividís una red, todas las subredes tienen que ser del mismo tamaño — un desperdicio enorme si las áreas necesitan tamaños distintos.<br><br>
+      <strong>Ejemplo</strong>: tenés <code>192.168.1.0/24</code> (256 IPs) y tu empresa necesita:
+    </div>
+    <table style="margin-top:10px">
+      <thead><tr><th>Área</th><th>Hosts necesarios</th><th>Subred asignada</th><th>Hosts utilizables</th></tr></thead>
+      <tbody>
+        <tr><td>Oficina principal</td><td>100</td><td><code>192.168.1.0/25</code></td><td>126 (.1 – .126)</td></tr>
+        <tr><td>Sucursal</td><td>50</td><td><code>192.168.1.128/26</code></td><td>62 (.129 – .190)</td></tr>
+        <tr><td>Servidores</td><td>20</td><td><code>192.168.1.192/27</code></td><td>30 (.193 – .222)</td></tr>
+        <tr><td>Enlace WAN</td><td>2</td><td><code>192.168.1.224/30</code></td><td>2 (.225 – .226)</td></tr>
+      </tbody>
+    </table>
+    <div class="card-body" style="margin-top:10px">
+      Con VLSM cada área tiene exactamente lo que necesita — y todavía sobran direcciones para crecer. Sin VLSM, tendríamos que usar /25 para todo (126 hosts cada subred), gastando direcciones en el enlace WAN que solo necesitaba 2.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon orange">🔄</div>NAT — Network Address Translation</div>
+    <div class="card-body">
+      Permite que <strong>muchos dispositivos compartan una sola IP pública</strong>. El router traduce las IPs privadas internas (192.168.x.x, 10.x.x.x) a la IP pública del ISP cuando los paquetes salen, y hace el camino inverso cuando vuelven. Es la solución que más alargó la vida de IPv4: tu casa con 10 dispositivos consume <strong>una sola IP pública</strong> gracias a NAT.<br><br>
+      <strong>Limitaciones:</strong> rompe el principio "punta a punta" original de internet, complica protocolos que llevan IPs dentro de los datos (VoIP, FTP activo) y dificulta conexiones entrantes (por eso aparecen UPnP, hole-punching, etc.).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon purple">📥</div>DHCP — asignación dinámica de IPs</div>
+    <div class="card-body">
+      <strong>Dynamic Host Configuration Protocol</strong> reparte IPs <strong>a demanda</strong> en vez de tenerlas fijas. Un dispositivo se conecta a la red, pide una IP, el servidor DHCP le presta una de un pool por un tiempo (<em>lease</em>), y cuando el dispositivo se va, esa IP vuelve al pool.<br><br>
+      <strong>Por qué ayuda al agotamiento:</strong> en una oficina con 200 dispositivos pero solo 80 conectados a la vez, basta con un pool de ~100 IPs en vez de 200 fijas. Es lo que hace tu router de casa con todos los dispositivos.
     </div>
   </div>
 
@@ -404,7 +683,7 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
 
   <div class="card">
     <div class="card-title"><div class="icon green">✅</div>Solución definitiva</div>
-    <div class="card-body">Estos problemas se solucionan a corto plazo en el contexto de IPv4 (con CIDR y VLSM). Pero son definitivamente solucionados en <strong>IPv6</strong>.</div>
+    <div class="card-body">CIDR, VLSM, NAT y DHCP son <strong>parches que estiran IPv4</strong> pero no resuelven la causa raíz: solo hay 32 bits. La solución de fondo es <strong>IPv6</strong>, que pasa de 32 a 128 bits y rediseña el protocolo desde cero.</div>
   </div>
 </div>
 
@@ -430,12 +709,26 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
       <div class="card-body">IPv6 incrementa el tamaño de las direcciones de 32 a 128 bits, para soportar más niveles de jerarquía de direccionamiento, un número mucho más grande de nodos direccionables y una <strong>autoconfiguración más simple</strong>.</div>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon green">📡</div>Multicast mejorado</div>
-      <div class="card-body">La escalabilidad del enrutamiento multicast es mejorada al agregar un campo de ámbito (<strong>"scope"</strong>) a las direcciones multicast.</div>
+      <div class="card-title"><div class="icon green">📡</div>Multicast mejorado: el "scope"</div>
+      <div class="card-body">
+        En IPv4 el multicast iba a "todos los suscritos" sin distinguir qué tan lejos podía llegar. IPv6 agrega un campo de <strong>scope (ámbito)</strong> dentro de la dirección multicast que <strong>limita hasta dónde puede viajar el paquete</strong>:<br><br>
+        • <code>scope = 1</code> → <strong>interface-local</strong> (no sale de la interfaz)<br>
+        • <code>scope = 2</code> → <strong>link-local</strong> (no sale del segmento físico)<br>
+        • <code>scope = 5</code> → <strong>site-local</strong> (queda dentro de la organización)<br>
+        • <code>scope = 8</code> → <strong>organization-local</strong> (varias sedes de la misma empresa)<br>
+        • <code>scope = E</code> → <strong>global</strong> (todo internet)<br><br>
+        <strong>Por qué importa:</strong> antes, un multicast pensado para una oficina podía propagarse y consumir ancho de banda mundial. Con scope, los routers descartan paquetes que "se pasen del barrio" autorizado.
+      </div>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon purple">🆕</div>Anycast</div>
-      <div class="card-body">Se creó un nuevo tipo de dirección llamada <strong>"Anycast"</strong> utilizada para enviar un paquete a algún nodo que pertenece a un grupo de nodos (el más cercano).</div>
+      <div class="card-title"><div class="icon purple">🆕</div>Anycast: "el más cercano del grupo"</div>
+      <div class="card-body">
+        Tipo de dirección nueva en IPv6. Varios servidores comparten la <strong>misma dirección Anycast</strong>, pero cuando un cliente envía un paquete a esa IP, los routers lo encaminan al servidor <strong>topológicamente más cercano</strong> (menos saltos de red).<br><br>
+        <strong>Usos reales:</strong><br>
+        • <strong>DNS root servers</strong>: hay 13 "letras" (A a M) pero cada una corresponde a cientos de servidores físicos en el mundo, todos respondiendo a la misma IP Anycast. Cuando tu PC consulta DNS, se conecta automáticamente al más cercano.<br>
+        • <strong>CDNs</strong> (Cloudflare, Akamai): la misma IP responde desde Buenos Aires, Madrid o Tokio según dónde estés.<br>
+        • <strong>Tolerancia a fallos</strong>: si un nodo Anycast se cae, los demás siguen respondiendo a la misma IP, sin que el cliente note el cambio.
+      </div>
     </div>
     <div class="card">
       <div class="card-title"><div class="icon blue">⚡</div>Header simplificado</div>
@@ -446,31 +739,156 @@ footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);mar
       <div class="card-body">Mejora el soporte de opciones y extensiones permitiendo un reenvío más eficiente, menos restricciones en la longitud de las opciones y mayor flexibilidad para introducir nuevas opciones en el futuro.</div>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon orange">🏷️</div>Etiquetamiento de flujos</div>
-      <div class="card-body">Incluye capacidad de etiquetamiento de flujos que permite marcar los paquetes para ser asociados a un "flujo" entre transmisor y receptor, pudiendo solicitar manejo especial (<strong>QoS</strong>).</div>
+      <div class="card-title"><div class="icon orange">🏷️</div>Etiquetamiento de flujos (Flow Label)</div>
+      <div class="card-body">
+        Un <strong>flujo</strong> es una secuencia de paquetes que pertenecen a la misma "conversación" lógica: por ejemplo, una llamada por Zoom, un stream de Netflix o un partido de Twitch. IPv6 reserva un campo de <strong>20 bits</strong> en el header llamado <strong>Flow Label</strong> donde el emisor marca todos los paquetes del mismo flujo con el mismo número.<br><br>
+        <strong>¿Para qué sirve?</strong> Los routers intermedios pueden identificar y tratar a todos los paquetes del flujo <strong>como una unidad</strong>, sin tener que mirar los headers de TCP/UDP (que están más adentro y son más caros de procesar).<br><br>
+        <strong>Ejemplo de QoS (Quality of Service):</strong> en una videoconferencia, los paquetes del flujo de video se marcan con prioridad alta. Los routers les dan paso preferencial, mientras que las descargas pesadas que van en paralelo (con flow label distinto) esperan. Resultado: tu llamada no se corta porque alguien está bajando un archivo.
+      </div>
     </div>
     <div class="card">
-      <div class="card-title"><div class="icon red">🔒</div>Seguridad integrada</div>
-      <div class="card-body">Tiene extensiones para <strong>autenticación y privacidad, integridad de datos, y confidencialidad de datos</strong>. En IPv4 esto era opcional (IPsec).</div>
+      <div class="card-title"><div class="icon red">🔒</div>Seguridad integrada (IPSec)</div>
+      <div class="card-body">IPv6 tiene <strong>extensiones nativas para autenticación, integridad y confidencialidad de datos</strong>. En IPv4 esto era un add-on opcional (IPSec). Más abajo se explica con detalle.</div>
     </div>
     <div class="card">
       <div class="card-title"><div class="icon purple">🚫</div>Sin broadcast</div>
-      <div class="card-body"><strong>No hay direcciones broadcast en IPv6.</strong> Todo lo que antes era broadcast ahora se hace con multicast, que es más eficiente.</div>
+      <div class="card-body"><strong>No hay direcciones broadcast en IPv6.</strong> Todo lo que antes era broadcast ahora se hace con multicast (con scope), que es más eficiente porque solo llega a quienes están suscritos.</div>
+    </div>
+  </div>
+
+  <h3>🛡️ IPSec: seguridad nativa en IPv6</h3>
+  <div class="card">
+    <div class="card-body">
+      <strong>IPSec (Internet Protocol Security)</strong> es un conjunto de protocolos que <strong>cifran y autentican el tráfico IP</strong>. No es un protocolo nuevo de IPv6: existe desde 1995 y se usa en IPv4 también (es la base de las VPN tipo site-to-site). La diferencia es <strong>cómo se integra</strong>:
+    </div>
+    <table style="margin-top:12px">
+      <thead><tr><th>En IPv4</th><th>En IPv6</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>IPSec es <strong>opcional</strong>: se agrega "pegado" al paquete como add-on. Muchas implementaciones no lo soportan.</td>
+          <td>IPSec es parte del <strong>estándar obligatorio</strong>: todo nodo IPv6 debe soportarlo. Se implementa como <strong>headers de extensión</strong> nativos.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="highlight info" style="margin-top:12px">
+      <strong>Aclaración importante:</strong> "se elimina en IPv6" es un mito común. <em>No</em> se elimina — al contrario, se <strong>integra y vuelve obligatorio</strong>. Lo que se elimina es la naturaleza opcional de IPv4.
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><div class="icon blue">🔐</div>AH — Authentication Header</div>
+      <div class="card-body">
+        Garantiza <strong>autenticidad e integridad</strong>: confirma que el paquete viene de quien dice venir y que nadie lo modificó en el camino. <strong>No cifra</strong> los datos — quien intercepte el paquete puede leerlo, pero no puede alterarlo sin que se detecte.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon green">🔒</div>ESP — Encapsulating Security Payload</div>
+      <div class="card-body">
+        Hace lo de AH y además <strong>cifra los datos</strong>: confidencialidad + autenticidad + integridad. Es el que se usa en la mayoría de las VPN. Si vas a Netflix usando una VPN, los paquetes viajan dentro de ESP.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon purple">🚛</div>Modos de operación: transporte vs túnel</div>
+    <div class="card-body">
+      <strong>Modo transporte</strong>: cifra solo los datos (payload). El header IP original queda visible. Se usa para comunicación segura host-a-host (dos servidores que dialogan cifrado).<br><br>
+      <strong>Modo túnel</strong>: cifra el paquete IP <em>completo</em> (header + datos) y lo encapsula dentro de otro paquete IP nuevo. Se usa para VPN site-to-site: el paquete original viaja oculto dentro de un sobre cifrado que va de router a router.
     </div>
   </div>
 
   <h3>Formato del datagrama IPv6</h3>
   <div class="card">
-    <div class="card-body" style="margin-bottom:12px">El header IPv6 tiene 32 bits de ancho por fila y contiene los siguientes campos:</div>
+    <div class="card-body" style="margin-bottom:12px">El header IPv6 es <strong>fijo de 40 bytes</strong> (mucho más simple que IPv4, que es variable). Cada fila representa 32 bits:</div>
+    <div style="overflow-x:auto;background:var(--surface-alt);border-radius:var(--radius);padding:14px;border:1px solid var(--border)">
+    <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;height:auto;display:block;font-family:'DM Sans',sans-serif">
+      <defs>
+        <style>
+          .v6-cell{fill:var(--surface);stroke:var(--border);stroke-width:1}
+          .v6-cell-blue{fill:#eff5ff;stroke:#2563eb;stroke-width:1.2}
+          .v6-cell-green{fill:#ecfdf5;stroke:#10b981;stroke-width:1.2}
+          .v6-cell-orange{fill:#fffbeb;stroke:#f59e0b;stroke-width:1.2}
+          .v6-cell-red{fill:#fef2f2;stroke:#ef4444;stroke-width:1.2}
+          .v6-cell-purple{fill:#f5f3ff;stroke:#7c3aed;stroke-width:1.2}
+          .v6-txt{font-size:11px;fill:#1a1a1a;font-weight:500}
+          .v6-txt-sm{font-size:9px;fill:#5c5b57}
+          .v6-bit{font-size:9px;fill:#5c5b57;font-family:'JetBrains Mono',monospace}
+          @media(prefers-color-scheme:dark){
+            .v6-cell{fill:#1c1c1a;stroke:#333330}
+            .v6-cell-blue{fill:#1e293b;stroke:#60a5fa}
+            .v6-cell-green{fill:#0c1f17;stroke:#34d399}
+            .v6-cell-orange{fill:#1f1a0c;stroke:#fbbf24}
+            .v6-cell-red{fill:#1f0c0c;stroke:#f87171}
+            .v6-cell-purple{fill:#1a1528;stroke:#a78bfa}
+            .v6-txt{fill:#ededeb}
+            .v6-txt-sm{fill:#a3a39f}
+            .v6-bit{fill:#a3a39f}
+          }
+        </style>
+      </defs>
+      <!-- Bit markers -->
+      <text x="20" y="14" class="v6-bit">0</text>
+      <text x="170" y="14" class="v6-bit">8</text>
+      <text x="320" y="14" class="v6-bit">16</text>
+      <text x="470" y="14" class="v6-bit">24</text>
+      <text x="610" y="14" class="v6-bit">31</text>
+      <!-- Row 1: Versión | Clase de tráfico | Etiqueta de flujo -->
+      <rect x="20" y="20" width="75" height="36" class="v6-cell-blue"/>
+      <text x="57.5" y="38" text-anchor="middle" class="v6-txt">Versión</text>
+      <text x="57.5" y="50" text-anchor="middle" class="v6-txt-sm">4 bits</text>
+      <rect x="95" y="20" width="150" height="36" class="v6-cell-orange"/>
+      <text x="170" y="38" text-anchor="middle" class="v6-txt">Clase de tráfico</text>
+      <text x="170" y="50" text-anchor="middle" class="v6-txt-sm">8 bits</text>
+      <rect x="245" y="20" width="375" height="36" class="v6-cell-purple"/>
+      <text x="432.5" y="38" text-anchor="middle" class="v6-txt">Etiqueta de flujo (Flow Label)</text>
+      <text x="432.5" y="50" text-anchor="middle" class="v6-txt-sm">20 bits</text>
+      <!-- Row 2: Longitud payload | Siguiente header | Hop Limit -->
+      <rect x="20" y="56" width="300" height="36" class="v6-cell"/>
+      <text x="170" y="74" text-anchor="middle" class="v6-txt">Longitud del payload</text>
+      <text x="170" y="86" text-anchor="middle" class="v6-txt-sm">16 bits</text>
+      <rect x="320" y="56" width="150" height="36" class="v6-cell-green"/>
+      <text x="395" y="74" text-anchor="middle" class="v6-txt">Siguiente header</text>
+      <text x="395" y="86" text-anchor="middle" class="v6-txt-sm">8 bits</text>
+      <rect x="470" y="56" width="150" height="36" class="v6-cell-red"/>
+      <text x="545" y="74" text-anchor="middle" class="v6-txt">Hop Limit</text>
+      <text x="545" y="86" text-anchor="middle" class="v6-txt-sm">8 bits</text>
+      <!-- Row 3-6: Dirección origen (128 bits = 4 filas de 32) -->
+      <rect x="20" y="92" width="600" height="60" class="v6-cell-orange"/>
+      <text x="320" y="118" text-anchor="middle" class="v6-txt" style="font-weight:600">Dirección IP origen</text>
+      <text x="320" y="135" text-anchor="middle" class="v6-txt-sm">128 bits (4 palabras de 32)</text>
+      <!-- Row 7-10: Dirección destino -->
+      <rect x="20" y="152" width="600" height="60" class="v6-cell-orange"/>
+      <text x="320" y="178" text-anchor="middle" class="v6-txt" style="font-weight:600">Dirección IP destino</text>
+      <text x="320" y="195" text-anchor="middle" class="v6-txt-sm">128 bits (4 palabras de 32)</text>
+      <!-- Row 11: Datos / Payload -->
+      <rect x="20" y="216" width="600" height="50" class="v6-cell"/>
+      <text x="320" y="240" text-anchor="middle" class="v6-txt" style="font-weight:600">DATOS (Payload)</text>
+      <text x="320" y="254" text-anchor="middle" class="v6-txt-sm">incluye headers de extensión opcionales (IPSec AH/ESP, fragmentación, routing…)</text>
+      <!-- Side label: Header fijo -->
+      <line x1="5" y1="20" x2="5" y2="212" stroke="#5c5b57" stroke-width="1"/>
+      <line x1="5" y1="20" x2="12" y2="20" stroke="#5c5b57" stroke-width="1"/>
+      <line x1="5" y1="212" x2="12" y2="212" stroke="#5c5b57" stroke-width="1"/>
+      <text x="0" y="120" text-anchor="middle" class="v6-txt-sm" transform="rotate(-90 0 120)">40 BYTES FIJOS</text>
+      <text x="640" y="278" text-anchor="end" class="v6-txt-sm">32 bits = 1 palabra</text>
+    </svg>
+    </div>
+    <div class="card-body" style="margin-top:14px">
+      <strong>Comparado con IPv4, IPv6 elimina varios campos:</strong> IHL (porque el header es fijo), Identificación / Flags / Offset (la fragmentación va a un header de extensión, no en el principal), Checksum (las capas inferiores y superiores ya verifican). Resultado: routers procesan paquetes mucho más rápido.
+    </div>
+  </div>
+
+  <h3>Campos del header IPv6 — referencia</h3>
+  <div class="card">
     <table>
       <thead><tr><th>Campo</th><th>Función</th></tr></thead>
       <tbody>
         <tr><td><strong>Versión</strong></td><td>Versión del protocolo (6)</td></tr>
         <tr><td><strong>Clase de tráfico</strong></td><td>Prioridad del paquete (similar al Tipo de servicio en IPv4)</td></tr>
-        <tr><td><strong>Etiqueta de flujo</strong></td><td>Identifica un flujo de paquetes para manejo especial (QoS)</td></tr>
-        <tr><td><strong>Longitud de los datos</strong></td><td>Tamaño de los datos (payload), sin contar el header</td></tr>
-        <tr><td><strong>Siguiente header</strong></td><td>Indica qué tipo de header o protocolo viene después (TCP, UDP, extensión…)</td></tr>
-        <tr><td><strong>Límite de saltos</strong></td><td>Equivalente al TTL de IPv4 — se decrementa en cada router</td></tr>
+        <tr><td><strong>Etiqueta de flujo</strong></td><td>Identifica un flujo de paquetes para manejo especial (QoS) — 20 bits</td></tr>
+        <tr><td><strong>Longitud del payload</strong></td><td>Tamaño de los datos, sin contar el header</td></tr>
+        <tr><td><strong>Siguiente header</strong></td><td>Indica qué tipo de header o protocolo viene después (TCP, UDP, IPSec AH, IPSec ESP, fragmentación…)</td></tr>
+        <tr><td><strong>Hop Limit (Límite de saltos)</strong></td><td>Equivalente al TTL de IPv4 — se decrementa en cada router</td></tr>
         <tr><td><strong>Dirección IP origen</strong></td><td>128 bits — IP del emisor</td></tr>
         <tr><td><strong>Dirección IP destino</strong></td><td>128 bits — IP del receptor</td></tr>
       </tbody>
