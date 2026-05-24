@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPÍTULO 03 — Redes de Datos y Evolución · Comunicaciones</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-badge">COM</span>
+      <span>Comunicaciones · Resumen interactivo</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="">Inicio</a>
+      <a href="../capitulos.html" class="active">Capítulos</a>
+      <a href="../practica.html" class="">Práctica</a>
+      <a href="../parciales.html" class="">Parciales</a>
+    </div>
+  </div>
+</nav>
+
+<header class="chapter-header">
+  <div class="chapter-header-inner">
+    <div class="eyebrow">CAPÍTULO 03 🌐</div>
+    <h1>Redes de Datos y Evolución</h1>
+  </div>
+</header>
+
+<article class="chapter-content">
+<h1 id="capítulo-3-redes-de-datos-y-evolución">CAPÍTULO 3 — REDES DE
+DATOS Y EVOLUCIÓN</h1>
+<h2 id="qué-es-networking">3.1 ¿Qué es networking?</h2>
+<p>El objetivo básico de una red es permitir que la información se
+comparta entre personas y/o máquinas. Una red de computadoras se puede
+definir como <strong>“dos o más computadoras conectadas de alguna manera
+por la cual son capaces de intercambiar información”</strong> (Donahue,
+<em>Network Warrior</em>, 2007).</p>
+<p>A través del networking pueden comunicarse computadoras distintas; lo
+importante no es la marca, sino que todas hablen el <strong>mismo
+protocolo</strong>.</p>
+<p>En una red de datos, la comunicación no es una conexión directa entre
+dos dispositivos: la información viaja saltando de nodo en nodo hasta el
+destino.</p>
+<pre><code>[PC A] → [Nodo 1] → [Nodo 2] → [Nodo 3] → [PC B]</code></pre>
+<h2 id="evolución-cronológica-de-las-redes">3.2 Evolución cronológica de
+las redes</h2>
+<p>TDM, fibra óptica, ATM e IP son las <strong>cuatro etapas de una
+misma historia</strong>: cómo evolucionó el transporte de información a
+medida que crecía la demanda. Antes de TDM, cada comunicación requería
+su propio cable físico de punta a punta, lo que era insostenible a
+escala.</p>
+<h3 id="a-tdm-time-division-multiplexing">a) TDM — la primera idea:
+compartir el cable en el tiempo</h3>
+<p><strong>Time Division Multiplexing</strong> resolvió el desperdicio
+físico: <strong>un solo cable, varias comunicaciones</strong>, cada una
+con su turno de microsegundos.</p>
+<ul>
+<li>El canal se divide en <strong>ranuras de tiempo fijas</strong> (time
+slots).</li>
+<li>Cada comunicación ocupa una ranura, cíclicamente.</li>
+<li>Cada usuario tiene la <strong>ilusión</strong> de tener el canal
+entero.</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Norma</th>
+<th>Canales</th>
+<th>Velocidad</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>T1</strong> (americana)</td>
+<td>24 canales de voz de 64 kbps</td>
+<td>1,544 Mbps</td>
+<td>EE.UU.</td>
+</tr>
+<tr>
+<td><strong>E1</strong> (europea)</td>
+<td>30 de datos + 2 de control</td>
+<td>2,048 Mbps</td>
+<td>Argentina, Europa</td>
+</tr>
+</tbody>
+</table>
+<p>Medio físico: <strong>cobre con PCM</strong> (Pulse Code
+Modulation).</p>
+<p><strong>Su limitación</strong>: la ranura queda <strong>reservada
+aunque no se use</strong> — en una llamada sin voz, ese tiempo se
+desperdicia. Y como las ranuras son fijas, la velocidad de cada usuario
+también lo es.</p>
+<h3 id="b-fibra-óptica-y-sdh">b) Fibra óptica y SDH — el salto
+físico</h3>
+<p>TDM seguía siendo válido, pero el <strong>cobre se quedó
+corto</strong> ante el crecimiento del tráfico. La fibra óptica no es un
+nuevo método de multiplexar — <strong>es un medio físico mejor</strong>:
+transmite <strong>luz</strong> en lugar de electricidad, lo que permite
+velocidades y distancias mucho mayores con menos pérdida.</p>
+<p>Para organizar esa capacidad enorme se creó la jerarquía <strong>SDH
+(Synchronous Digital Hierarchy)</strong>:</p>
+<ul>
+<li><strong>STM-1</strong> (primer nivel) = 155 Mb/s</li>
+<li>Los niveles superiores multiplican: <strong>STM-4, STM-16,
+STM-64…</strong></li>
+</ul>
+<blockquote>
+<p>💡 <strong>Punto clave</strong>: SDH sigue siendo <strong>TDM</strong>,
+solo que sobre fibra y a velocidades mucho mayores. La filosofía no
+cambió — sigue habiendo ranuras de tiempo reservadas.</p>
+</blockquote>
+<h3 id="c-atm-asynchronous-transfer-mode">c) ATM — atacar el desperdicio
+de TDM</h3>
+<p>Con la fibra había muchísimo ancho de banda, pero TDM seguía
+<strong>desperdiciándolo</strong> con sus ranuras fijas. Además,
+llegaron tráficos nuevos (datos, video) que no encajaban bien con la
+rigidez de la voz.</p>
+<p><strong>ATM (Asynchronous Transfer Mode)</strong> rompió con TDM:</p>
+<table>
+<thead>
+<tr>
+<th>TDM</th>
+<th>ATM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ranuras de tiempo <strong>fijas</strong></td>
+<td><strong>Celdas</strong> de longitud fija y corta enviadas solo
+cuando hay datos</td>
+</tr>
+<tr>
+<td>Canal reservado todo el tiempo</td>
+<td>No hay canal fijo: cada celda viaja independiente</td>
+</tr>
+<tr>
+<td>Voz, datos, video → infraestructuras separadas</td>
+<td>Voz + datos + video sobre la misma red</td>
+</tr>
+</tbody>
+</table>
+<p>Cada celda viaja por <strong>Virtual Paths</strong> (subdivididos en
+<strong>Virtual Channels</strong>) establecidos al inicio. Es decir:
+<strong>conmutación de paquetes</strong> (las celdas), pero con
+<strong>circuitos virtuales</strong> que recuerdan el modelo de
+circuitos. Corre nativamente sobre fibra.</p>
+<h3 id="d-ip-el-ganador-actual">d) IP — el ganador inesperado</h3>
+<p>ATM era técnicamente brillante pero <strong>caro y
+complejo</strong>. Mientras tanto, <strong>IP</strong> venía creciendo
+desde el mundo académico con una filosofía radicalmente más simple.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Detalle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No orientado a conexión</strong></td>
+<td>Cada paquete viaja independiente, puede tomar rutas distintas</td>
+</tr>
+<tr>
+<td><strong>Tamaño máximo de paquete</strong></td>
+<td>65 535 bytes teórico — en la práctica el MTU típico es ~1500 bytes
+(Ethernet); paquetes mayores se <strong>fragmentan</strong></td>
+</tr>
+<tr>
+<td><strong>TTL (Time To Live)</strong></td>
+<td>Contador que se decrementa en cada nodo; al llegar a 0 el paquete se
+descarta y el router envía un <strong>ICMP Time Exceeded</strong> (es lo
+que hace funcionar <code>traceroute</code>)</td>
+</tr>
+<tr>
+<td><strong>Direccionamiento</strong></td>
+<td><strong>IPv4</strong> = 32 bits; <strong>IPv6</strong> = 128
+bits</td>
+</tr>
+<tr>
+<td><strong>Mejor esfuerzo (best effort)</strong></td>
+<td>No garantiza entrega, orden ni tiempo. Si querés confiabilidad, va
+arriba (TCP)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>IP ganó frente a ATM por <strong>simplicidad y escalabilidad</strong>,
+no por ser técnicamente superior en cada métrica. Hoy es la base de toda
+comunicación moderna.</p>
+</blockquote>
+<h3 id="dos-ejes-para-entender-la-evolución">Dos ejes para entender la
+evolución</h3>
+<p>Hay <strong>dos cosas distintas mezcladas</strong> en esta historia:</p>
+<table>
+<thead>
+<tr>
+<th>Eje</th>
+<th>Evolución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Medio físico</strong></td>
+<td>Cobre PCM → Fibra óptica</td>
+</tr>
+<tr>
+<td><strong>Técnica de multiplexar</strong></td>
+<td>TDM (ranuras fijas) → ATM (celdas) → IP (paquetes independientes)</td>
+</tr>
+</tbody>
+</table>
+<p>Son ortogonales: hoy IP corre <strong>sobre fibra</strong>, pero
+también podría correr sobre cobre o sobre radio. TDM puede correr sobre
+cobre o sobre fibra (SDH).</p>
+<h3 id="implicancia-historica-ciberseguridad">🛡️ Implicancia histórica
+para ciberseguridad</h3>
+<p>Esta historia explica por qué <strong>IP no fue diseñado pensando en
+seguridad</strong>: nació en un entorno académico de confianza mutua.
+ATM, en cambio, tenía un modelo más cercano al telefónico clásico (con
+circuitos identificados). El triunfo de IP nos dejó una red global
+flexible pero <strong>sin autenticación ni cifrado nativo</strong> — eso
+vino después con capas añadidas (IPSec, TLS, DNSSEC).</p>
+<h2 id="qué-es-internet">3.3 ¿Qué es Internet?</h2>
+<p>Es una <strong>red de redes</strong> — una red conectada a otra de
+manera continua y simultánea.</p>
+<p>Plataforma mundial de comunicaciones multimedia basada en: -
+<strong>Protocolo IP</strong> — direccionamiento numérico -
+<strong>DNS</strong> (Domain Name System) — direccionamiento por nombres
+humanos</p>
+<p>Permite intercambio de información (voz, datos, video) en tiempo real
+o diferido, desde terminales fijas y móviles.</p>
+<h2 id="organismos-de-estandarización">3.4 Organismos de
+estandarización</h2>
+<p>Para que dispositivos de fabricantes distintos (Windows, Linux, iOS,
+Android…) puedan comunicarse — <strong>compatibilidad e
+interoperabilidad</strong> —, los protocolos deben estar
+estandarizados.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Organismo</th>
+<th>Rol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ISO</strong></td>
+<td>International Organization for Standardization. Publicó OSI.</td>
+</tr>
+<tr>
+<td><strong>IEEE</strong></td>
+<td>Estándares 802.x (Ethernet, WiFi, Bluetooth…)</td>
+</tr>
+<tr>
+<td><strong>IETF</strong></td>
+<td>Internet Engineering Task Force — publica las <strong>RFCs</strong>
+(Request for Comments). Define TCP/IP, HTTP, etc.</td>
+</tr>
+<tr>
+<td><strong>ICANN / IANA</strong></td>
+<td>Coordinación global de DNS y asignación de IPs</td>
+</tr>
+<tr>
+<td><strong>LACNIC, ARIN, RIPE NCC, APNIC, AfriNIC</strong></td>
+<td>Registros regionales de IPs</td>
+</tr>
+<tr>
+<td><strong>NIC Argentina</strong></td>
+<td>Administración del <code>.ar</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="implicancias-de-seguridad-1">3.5 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>Best-effort</strong> significa que IP no asume confianza ni
+garantía. Cualquier seguridad debe venir de arriba.</li>
+<li><strong>DNS</strong> se vuelve un blanco crítico: si te envenenan la
+resolución, podés terminar conectado al servidor del atacante creyendo
+que estás en el banco (cache poisoning, hijacking). DNSSEC busca
+mitigarlo, pero su despliegue es incompleto.</li>
+<li><strong>ICMP</strong> (TTL Exceeded, Echo Reply, etc.) es la base de
+herramientas legítimas (<code>ping</code>, <code>traceroute</code>) y
+también de reconocimiento ofensivo. Muchos firewalls lo restringen por
+eso.</li>
+</ul>
+<div class="synthesis"><p>TDM, fibra, ATM e IP no son tecnologías rivales sino respuestas sucesivas al mismo problema: <strong>cómo mover más información de forma más eficiente</strong>. La fibra cambió el medio físico; ATM e IP cambiaron la lógica de multiplexar. Que IP haya ganado define la red en la que vivís hoy: simple, escalable y diseñada para confianza mutua — por eso la seguridad se construye en capas superpuestas (TLS, IPSec, DNSSEC), no en la base.</p></div>
+
+
+
+</article>
+
+<section class="flashcards-section">
+  <h2>🃏 Flashcards de este capítulo</h2>
+  <p>Hacé click en cualquier tarjeta para verla por el otro lado.</p>
+  <div class="flashcards-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Cliente-servidor</div>
+        <div class="flashcard-face flashcard-back">Modelo donde un cliente solicita y un servidor responde. Es la base de la web.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">P2P (Peer to Peer)</div>
+        <div class="flashcard-face flashcard-back">Cada nodo es a la vez cliente y servidor. Ej: BitTorrent.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">ARPANET</div>
+        <div class="flashcard-face flashcard-back">Red pionera (1969) financiada por el DoD de EE.UU. Origen de Internet.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">TCP/IP</div>
+        <div class="flashcard-face flashcard-back">Suite de protocolos que reemplazó NCP en ARPANET y se volvió estándar global.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Cloud computing</div>
+        <div class="flashcard-face flashcard-back">Provisión de cómputo, almacenamiento y servicios a demanda por red.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">E-commerce</div>
+        <div class="flashcard-face flashcard-back">Comercio electrónico: B2B, B2C, C2C. Requiere redes confiables y seguras.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-section">
+  <h2>📝 Quiz del capítulo</h2>
+  <p style="color:var(--text-mute);margin-top:0;">Respondé y revelá las respuestas al final.</p>
+  <form id="quiz-form-03-redes-de-datos-y-evolucion" class="quiz-form" data-chapter="03-redes-de-datos-y-evolucion">
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 1</div>
+      <div class="q-text">BitTorrent es un ejemplo clásico de qué modelo de red:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-0" value="0" />
+          Cliente-servidor puro
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-0" value="1" />
+          P2P
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-0" value="2" />
+          Mainframe
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-0" value="3" />
+          Broadcast
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> BitTorrent es P2P: cada nodo descarga y a la vez sirve fragmentos a otros.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2</div>
+      <div class="q-text">¿Cuál fue la red pionera, financiada por el DoD de EE.UU., que dio origen a Internet?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-1" value="0" />
+          NSFNET
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-1" value="1" />
+          ARPANET
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-1" value="2" />
+          Ethernet
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-03-redes-de-datos-y-evolucion-1" value="3" />
+          Bitnet
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> ARPANET (1969) introdujo conmutación de paquetes y luego TCP/IP, dando origen a la Internet moderna.</div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="checkQuiz('quiz-form-03-redes-de-datos-y-evolucion')">Corregir quiz</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('quiz-form-03-redes-de-datos-y-evolucion')">Reiniciar</button>
+    </div>
+    <div id="score-quiz-form-03-redes-de-datos-y-evolucion"></div>
+  </form>
+</section>
+
+<nav class="chapter-nav">
+  <a href="02-procesamiento-de-la-senal.html"><div class="nav-dir">← Anterior</div>
+        <div class="nav-title">Procesamiento de la Señal</div></a>
+  <a href="04-medios-fisicos.html" class="next"><div class="nav-dir">Siguiente →</div>
+        <div class="nav-title">Medios Físicos</div></a>
+</nav>
+
+<footer>
+  Resumen interactivo basado en el apunte <em>Introducción a las Comunicaciones (v2)</em>.<br/>
+  Hecho con 🦈 para estudiar mejor · 2026
+</footer>
+<script src="../app.js"></script>
+</body>
+</html>

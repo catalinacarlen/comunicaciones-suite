@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPÍTULO 12 — Control de Flujo y Control de Errores · Comunicaciones</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-badge">COM</span>
+      <span>Comunicaciones · Resumen interactivo</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="">Inicio</a>
+      <a href="../capitulos.html" class="active">Capítulos</a>
+      <a href="../practica.html" class="">Práctica</a>
+      <a href="../parciales.html" class="">Parciales</a>
+    </div>
+  </div>
+</nav>
+
+<header class="chapter-header">
+  <div class="chapter-header-inner">
+    <div class="eyebrow">CAPÍTULO 12 🔐</div>
+    <h1>Control de Flujo y Control de Errores</h1>
+  </div>
+</header>
+
+<article class="chapter-content">
+<h1 id="capítulo-12-control-de-flujo-y-control-de-errores">CAPÍTULO 12 —
+CONTROL DE FLUJO Y CONTROL DE ERRORES</h1>
+<h2 id="marco-general">12.1 Marco general</h2>
+<p>Para que dos estaciones se comuniquen efectivamente no alcanza con
+tener un cable: hace falta una capa lógica (la <strong>capa de
+enlace</strong>) que coordine. Esta debe cumplir:</p>
+<ul>
+<li><strong>Sincronización de tramas</strong> — reconocer principio y
+fin</li>
+<li><strong>Control de flujo</strong> — que el emisor no sature al
+receptor</li>
+<li><strong>Control de errores</strong> — detectar y corregir errores
+del canal</li>
+<li><strong>Direccionamiento</strong> — identificar emisor y
+receptor</li>
+<li><strong>Control de datos</strong> — distinguir información de
+control de datos</li>
+<li><strong>Manejo de conexiones</strong> — iniciar, mantener y
+cerrar</li>
+</ul>
+<h2 id="control-de-flujo">12.2 Control de flujo</h2>
+<p>Coordina el intercambio para que el emisor no sobrecargue al
+receptor, previniendo <strong>buffer overflow</strong>.</p>
+<p>El receptor tiene un <strong>buffer de recepción</strong> finito. Si
+el emisor envía más rápido de lo que el receptor procesa, el buffer se
+llena y las tramas siguientes se descartan <strong>aunque hayan llegado
+bien</strong>.</p>
+<p><strong>Dos tiempos clave:</strong></p>
+<ul>
+<li><strong>Tiempo de transmisión</strong> — lo que tarda el emisor en poner todos los bits de una trama en el medio (proporcional al tamaño).</li>
+<li><strong>Tiempo de propagación</strong> — lo que tarda un bit en viajar del emisor al receptor (depende de distancia y medio).</li>
+</ul>
+<h3 id="a-stop-and-wait">a) Stop-and-Wait</h3>
+<p>El más simple:</p>
+<ol>
+<li>Emisor envía una trama y espera.</li>
+<li>Receptor envía <strong>ACK</strong> (recibida bien + listo para la próxima).</li>
+<li>Emisor inicia un <strong>timer</strong>. Si el ACK llega antes del timeout, envía la siguiente. Si no, asume pérdida y retransmite.</li>
+</ol>
+<p><strong>Para evitar duplicados</strong> — tramas y ACKs se numeran alternadamente con <code>0</code> y <code>1</code>.</p>
+<ul>
+<li>Emisor mantiene variable <code>S</code> (última trama enviada).</li>
+<li>Receptor mantiene variable <code>R</code> (próxima esperada).</li>
+<li>Los ACKs indican el número de la <strong>siguiente</strong> trama esperada, no la recibida.</li>
+</ul>
+<p><strong>Piggybacking</strong>: cuando ambas estaciones tienen datos
+para enviarse, el ACK se “monta” sobre la trama de datos que va en
+sentido contrario. Ahorra ancho de banda.</p>
+<p><strong>Desventaja</strong>: solo una trama en tránsito → ineficiente
+en enlaces rápidos o de larga distancia (el emisor pasa más tiempo
+esperando que transmitiendo).</p>
+<h3 id="b-sliding-window-ventana-deslizante">b) Sliding Window (ventana
+deslizante)</h3>
+<p>Permite múltiples tramas en tránsito simultáneamente sin esperar ACK
+individual.</p>
+<ul>
+<li>Enlace <strong>full-duplex</strong>.</li>
+<li>Tramas numeradas con un campo de <strong>k bits</strong> → módulo
+<code>2^k</code>.</li>
+<li>Emisor puede enviar hasta <strong>N = 2^k − 1</strong> tramas sin
+ACK → <strong>tamaño de ventana</strong>.</li>
+<li>Receptor tiene buffer del tamaño de la ventana.</li>
+<li>Cada ACK confirma <strong>acumulativamente</strong> todas las tramas
+hasta cierto número.</li>
+</ul>
+<p><strong>Dos ventanas:</strong></p>
+<ul>
+<li><strong>Ventana de envío (sender)</strong> — tramas que el emisor
+puede transmitir o ya transmitió y espera ACK.
+<ul>
+<li>Borde derecho avanza al enviar una trama.</li>
+<li>Borde izquierdo avanza al recibir un ACK.</li>
+</ul></li>
+<li><strong>Ventana de recepción (receiver)</strong> — tramas que el
+receptor está dispuesto a aceptar.</li>
+</ul>
+<p><strong>Receive Not Ready (RNR)</strong>: si el receptor necesita
+pausar, confirma lo recibido pero le pide al emisor que pare. Para
+reanudar, envía un ACK normal.</p>
+<blockquote>
+<p><strong>¿Por qué <code>N = 2^k &minus; 1</code> y no <code>2^k</code>?</strong> Se necesita un número de reserva para distinguir "no recibí ninguna trama" de "recibí todas las posibles". Sin ese margen habría ambigüedad sobre qué confirma un ACK.</p>
+</blockquote>
+
+<h3 id="piggybacking">Piggybacking</h3>
+<p>Optimización cuando <strong>ambas estaciones tienen datos que enviarse</strong>. En lugar de enviar el ACK como trama separada, la estación lo <strong>incluye en la cabecera de su próxima trama de datos</strong> — ahorrando ancho de banda y una transmisión.</p>
+<p><strong>Ejemplo:</strong> A le envía datos a B. B tiene que confirmar con un ACK <em>y</em> también quiere enviarle datos a A. En lugar de dos tramas separadas, B envía una única trama con sus datos que además contiene el ACK para los datos de A.</p>
+
+<h3 id="sliding-window-ejemplo-numerico">Ejemplo numérico — ventana deslizante módulo-8</h3>
+<p>k=3 bits → módulo-8 → tamaño de ventana = 2³&minus;1 = <strong>7</strong>:</p>
+<ol>
+<li>A y B arrancan con ventana que permite enviar 7 tramas, comenzando en F0.</li>
+<li>A envía F0, F1, F2 sin esperar ACK (ventana se reduce: aún puede enviar F3–F6).</li>
+<li>B responde <strong>RR 3</strong> = "recibí todo hasta F2; espero F3; puedo aceptar 7 más".</li>
+<li>A descarta las copias de F0–F2 ya confirmadas. Puede transmitir F3 y siguientes.</li>
+<li>A envía F3, F4, F5, F6. B responde <strong>RR 4</strong> (solo confirma F3).</li>
+<li>A ya transmitió hasta F6 → puede abrir ventana para F7+ (numeración circular en módulo-8).</li>
+</ol>
+
+<h2 id="control-de-errores">12.3 Control de errores</h2>
+<p>El canal nunca es perfecto: introduce ruido, interferencia,
+atenuación. Los canales de radio móvil son los más susceptibles.</p>
+<p><strong>Tipos de errores:</strong></p>
+<ul>
+<li><strong>Trama perdida</strong> — nunca llega al destino.</li>
+<li><strong>Trama dañada</strong> — llega con bits modificados.</li>
+</ul>
+<p><strong>Enfoques generales:</strong></p>
+<ul>
+<li><strong>FEC (Forward Error Correction)</strong> — el receptor corrige por sí mismo con la redundancia incluida. Útil cuando retransmitir es caro o imposible (satélite, broadcast).</li>
+<li><strong>ARQ (Automatic Repeat Request)</strong> — el receptor detecta y solicita retransmisión. Más eficiente cuando hay canal de retorno y los errores son ocasionales.</li>
+</ul>
+<h2 id="detección-de-errores">12.4 Detección de errores</h2>
+<h3 id="codificación-por-bloques">Codificación por bloques</h3>
+<p>La idea base de toda detección y corrección: <strong>agregar
+redundancia controlada</strong>.</p>
+<ol type="1">
+<li>Bloque de <strong>k</strong> bits de datos</li>
+<li>Se agregan <strong>r</strong> bits de redundancia calculados a
+partir de los datos</li>
+<li>Se transmite la palabra código (<strong>codeword</strong>) de
+<strong>n = k + r</strong> bits</li>
+<li>De <code>2^n</code> codewords posibles, solo <code>2^k</code> son
+válidos. El resto, si llegan, indican error.</li>
+</ol>
+<p><strong>Cuatro posibles eventos en el receptor:</strong></p>
+<ol>
+<li>Palabra válida = a la enviada → sin error.</li>
+<li>Hay error, la redundancia permite detectarlo y corregirlo.</li>
+<li>Error detectable pero no corregible → se pide retransmisión.</li>
+<li>Error que coincide casualmente con otra palabra válida → <strong>error no detectado (peor caso)</strong>.</li>
+</ol>
+<p><strong>Tasa del código</strong>: k/n. Mide cuánto ancho de banda
+extra cuesta la protección. Cerca de 1 = menos overhead pero menos
+protección.</p>
+<h3 id="códigos-de-bloque-lineales">Códigos de bloque lineales</h3>
+<p>El XOR de dos palabras código válidas da otra palabra código válida.
+Simplifica enormemente el cálculo.</p>
+<h3 id="distancia-de-hamming">Distancia de Hamming</h3>
+<ul>
+<li><strong>Entre dos palabras</strong>: <code>d(v1,v2)</code> = número
+de bits en los que difieren.</li>
+<li><strong>De un código</strong>: la mínima entre cualquier par de
+palabras válidas.</li>
+</ul>
+<p><strong>Reglas (lo único que tenés que recordar):</strong> - Para
+<strong>detectar</strong> <code>d</code> errores → distancia mínima ≥
+<code>d + 1</code> - Para <strong>corregir</strong> <code>d</code>
+errores → distancia mínima ≥ <code>2d + 1</code></p>
+<h3 id="bit-de-paridad">Bit de paridad</h3>
+<p>El más simple. Un bit al final del bloque que hace que el total de
+unos sea par (paridad par) o impar (paridad impar).</p>
+<p><strong>Desventaja crítica</strong>: no detecta un número
+<strong>par</strong> de errores. Si dos bits cambian, la paridad se
+mantiene. Solo útil en canales muy poco ruidosos.</p>
+<h3 id="crc-cyclic-redundancy-check">CRC — Cyclic Redundancy Check</h3>
+<p>El más usado en redes de datos. Mucho más robusto que paridad.</p>
+<ol type="1">
+<li>El emisor toma el bloque M de k bits y lo trata como un número
+binario.</li>
+<li>Lo divide por un divisor P (polinomio fijo de r+1 bits).</li>
+<li>El resto (de r bits) es el <strong>FCS</strong> (Frame Check
+Sequence).</li>
+<li>Se transmite <strong>datos + FCS</strong> (k + r bits), construido
+de modo que sea divisible exactamente por P.</li>
+<li>El receptor divide la trama recibida por el mismo P:
+<ul>
+<li>Resto = 0 → sin errores detectables</li>
+<li>Resto ≠ 0 → hubo error → descartar / pedir retransmisión</li>
+</ul></li>
+</ol>
+<p><strong>Errores que CRC detecta:</strong> - Todos los de 1 bit -
+Todos los de 2 bits si P tiene al menos 3 términos en 1 - Cualquier
+número impar de errores si P contiene el factor <code>(x + 1)</code> -
+Cualquier ráfaga de longitud menor que el FCS - La gran mayoría de las
+ráfagas largas</p>
+<blockquote>
+<p>🛡️ <strong>Importante para ciberseguridad</strong>: <strong>CRC NO es
+un método criptográfico</strong>. Sirve para detectar errores
+<strong>accidentales</strong> (ruido), no para proteger contra
+<strong>modificación maliciosa</strong>. Un atacante con conocimiento
+del polinomio puede modificar los datos y recalcular un CRC válido. Para
+integridad frente a adversarios → <strong>funciones hash
+criptográficas</strong> (SHA-256, BLAKE2) o <strong>MACs</strong>
+(HMAC).</p>
+</blockquote>
+<h2 id="mecanismos-arq">12.5 Mecanismos ARQ</h2>
+<h3 id="a-stop-and-wait-arq">a) Stop-and-Wait ARQ</h3>
+<p>Manejo de errores sobre Stop-and-Wait. Tramas y ACKs numerados 0 y
+1.</p>
+<p><strong>Casos:</strong></p>
+<ul>
+<li><strong>Trama perdida</strong> → no llega ACK → timeout → retransmite.</li>
+<li><strong>ACK perdido</strong> → emisor retransmite → receptor detecta duplicado por la numeración y reenvía ACK.</li>
+<li><strong>Trama dañada</strong> → receptor la descarta sin ACK → timeout → retransmite.</li>
+</ul>
+<p>Simple pero lento.</p>
+<h3 id="b-go-back-n-vuelta-atrás-n">b) Go-Back-N (vuelta-atrás-N)</h3>
+<p>Combina ventana deslizante con manejo de errores simple:</p>
+<ul>
+<li>Emisor envía secuencialmente sin esperar ACK individual.</li>
+<li>Si llega bien → receptor envía <strong>RR (Receive Ready)</strong> con número de la próxima esperada.</li>
+<li>Si llega con error → receptor envía <strong>REJ (Reject)</strong> y descarta esa y todas las siguientes.</li>
+<li>Emisor retransmite la errónea y todas las posteriores.</li>
+</ul>
+<p><strong>Trade-off</strong>: desperdicia tramas correctas que se
+descartaron, pero el receptor es muy simple (no necesita reordenar).</p>
+<h3 id="c-selective-repeat-rechazo-selectivo">c) Selective Repeat
+(rechazo selectivo)</h3>
+<p>Optimización del anterior: solo se retransmite la trama errónea.</p>
+<ul>
+<li>Receptor detecta error → envía <strong>SREJ (Selective
+Reject)</strong> indicando solo esa trama</li>
+<li>Emisor retransmite únicamente la indicada</li>
+<li>Receptor guarda tramas correctas posteriores en buffer y reordena al
+recibir la retransmisión</li>
+</ul>
+<p><strong>Trade-off inverso</strong>: mejor uso del ancho de banda,
+pero el receptor necesita más buffer y lógica.</p>
+<h2 id="fec-principios">12.5b FEC — Corrección hacia adelante (Forward Error Correction)</h2>
+<p>FEC agrega redundancia extra al bloque para que el receptor pueda <strong>corregir errores sin pedir retransmisión</strong>. Indispensable en canales sin retorno (broadcasting) o con retardo elevado (satélite, fibra submarina).</p>
+<p><strong>Mecanismo:</strong></p>
+<ul>
+<li>Se envían <strong>n bits</strong> para representar <strong>k bits</strong> de datos (n &gt; k).</li>
+<li>De los 2^n codewords posibles, solo 2^k son válidos.</li>
+<li>Tasa del código = k/n. Cerca de 1 = poco overhead pero menos protección; lejos de 1 = más protección pero más costo en ancho de banda.</li>
+</ul>
+<p><strong>Ejemplo con código (5,2) — k=2, n=5, distancia mínima=3:</strong></p>
+<table>
+<thead><tr><th>Datos (k=2)</th><th>Palabra código (n=5)</th></tr></thead>
+<tbody>
+<tr><td>00</td><td>00000</td></tr>
+<tr><td>01</td><td>00111</td></tr>
+<tr><td>10</td><td>11001</td></tr>
+<tr><td>11</td><td>11110</td></tr>
+</tbody>
+</table>
+<p>Si llega <code>00100</code> (inválido), el receptor calcula la distancia de Hamming a cada codeword válido y elige el más cercano → corrige al original.</p>
+<p><strong>Trade-off de diseño:</strong> querés bits extra (n-k) grandes para menor tasa de error, pero también chicos para ahorrar ancho de banda. Son objetivos en conflicto que hay que negociar según el canal.</p>
+
+<h2 id="conectando-con-lo-visto">12.6 Conectando con lo visto</h2>
+<p>Vale la pena cerrar el capítulo uniendo los puntos:</p>
+<ul>
+<li><strong>Control de flujo y control de errores</strong> son funciones
+de la <strong>capa de enlace</strong> (capa 2 OSI), específicamente de
+la <strong>subcapa LLC</strong>.</li>
+<li><strong>Bandwidth-delay product</strong> (ancho de banda × retardo):
+producto que justifica por qué las ventanas grandes son necesarias en
+redes rápidas y largas.</li>
+<li><strong>CRC</strong> es la herramienta concreta detrás de la
+“detección de errores” en LLC.</li>
+<li><strong>ARQ</strong> implementa la “recuperación entre fallos”
+mencionada en LLC.</li>
+<li>En <strong>TCP/IP</strong>, TCP implementa una versión sofisticada
+de ventana deslizante <strong>en la capa de transporte</strong>, no de
+enlace. Los mismos principios aparecen en distintas capas: enlace lo
+hace entre nodos vecinos; TCP lo hace <strong>extremo a
+extremo</strong>.</li>
+</ul>
+<h2 id="implicancias-de-seguridad-6">12.7 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li><strong>CRC vs HMAC</strong> ya lo dijimos: detección de ruido ≠
+integridad criptográfica.</li>
+<li><strong>Replay attacks</strong>: un atacante puede reenviar una
+trama válida vieja. Los protocolos seguros usan <strong>nonces</strong>
+o <strong>números de secuencia firmados</strong>.</li>
+<li><strong>TCP sequence number prediction</strong> (Mitnick, años 90):
+si los números de secuencia eran predecibles, un atacante podía inyectar
+segmentos. Hoy se generan aleatoriamente, pero el principio sigue
+vigente.</li>
+<li><strong>Slowloris / SYN flood</strong>: explotan el control de
+flujo/conexión de TCP para agotar recursos del servidor (DoS).</li>
+</ul>
+<div class="synthesis"><p>El <strong>control de flujo</strong> evita que el emisor sature al receptor; el <strong>control de errores</strong> se ocupa de que lo que llegue, llegue correctamente. CRC detecta errores accidentales, ARQ los recupera vía retransmisión, FEC los corrige sin retransmisión. Los mismos principios reaparecen en capas distintas — LLC entre nodos vecinos, TCP extremo a extremo — porque son <strong>patrones universales del transporte confiable de datos</strong>.</p></div>
+
+
+
+</article>
+
+<section class="flashcards-section">
+  <h2>🃏 Flashcards de este capítulo</h2>
+  <p>Hacé click en cualquier tarjeta para verla por el otro lado.</p>
+  <div class="flashcards-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Control de flujo</div>
+        <div class="flashcard-face flashcard-back">Evita que el emisor sature al receptor.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Stop-and-Wait</div>
+        <div class="flashcard-face flashcard-back">Mandás una trama, esperás ACK. Simple pero lento.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Ventana deslizante</div>
+        <div class="flashcard-face flashcard-back">Permite enviar varias tramas sin esperar ACK individual. Mucho más eficiente.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Bandwidth-Delay Product</div>
+        <div class="flashcard-face flashcard-back">Ancho de banda × retardo. Justifica ventanas grandes en redes rápidas/largas.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Distancia de Hamming</div>
+        <div class="flashcard-face flashcard-back">Número de bits que difieren entre dos palabras. Detecta d errores si d_min ≥ d+1; corrige d si d_min ≥ 2d+1.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Bit de paridad</div>
+        <div class="flashcard-face flashcard-back">Un bit que hace par/impar el total de unos. NO detecta número par de errores. Débil.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">CRC</div>
+        <div class="flashcard-face flashcard-back">Cyclic Redundancy Check. Robusto para detectar errores accidentales. NO es criptográfico.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Stop-and-Wait ARQ</div>
+        <div class="flashcard-face flashcard-back">ARQ sobre stop-and-wait. Tramas y ACKs numerados 0 y 1.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Go-Back-N</div>
+        <div class="flashcard-face flashcard-back">Si una trama falla, se retransmite ella y todas las posteriores.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Selective Repeat</div>
+        <div class="flashcard-face flashcard-back">Solo se retransmite la trama errónea. Más eficiente, requiere buffer en receptor.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">FEC</div>
+        <div class="flashcard-face flashcard-back">Forward Error Correction. Agrega redundancia para corregir sin retransmitir. Para canales sin retorno.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">CRC vs HMAC</div>
+        <div class="flashcard-face flashcard-back">CRC detecta ruido; HMAC detecta modificación maliciosa. NUNCA confundir.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-section">
+  <h2>📝 Quiz del capítulo</h2>
+  <p style="color:var(--text-mute);margin-top:0;">Respondé y revelá las respuestas al final.</p>
+  <form id="quiz-form-12-control-de-flujo-y-errores" class="quiz-form" data-chapter="12-control-de-flujo-y-errores">
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 1</div>
+      <div class="q-text">Para corregir 2 errores por bloque, la distancia de Hamming mínima del código debe ser:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-0" value="0" />
+          2
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-0" value="1" />
+          3
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-0" value="2" />
+          5
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-0" value="3" />
+          4
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Para corregir d errores se necesita d_min ≥ 2d + 1. Con d=2: 2×2+1 = 5.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2</div>
+      <div class="q-text">Un atacante intercepta un paquete con CRC, lo modifica y recalcula el CRC correctamente. ¿Detecta el receptor el ataque?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-1" value="0" />
+          Sí, el CRC siempre detecta modificación
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-1" value="1" />
+          No, porque CRC no es criptográfico — para integridad frente a adversarios hay que usar HMAC o hash criptográfico
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-1" value="2" />
+          Solo si el paquete está cifrado
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-1" value="3" />
+          Depende del polinomio
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> CRC sirve solo para detectar errores accidentales (ruido). Un atacante con conocimiento del polinomio puede modificar y recalcular el CRC sin problema. Para integridad frente a adversarios → HMAC.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 3</div>
+      <div class="q-text">En Go-Back-N, si la trama 5 llega con error y ya se enviaron hasta la 8:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-2" value="0" />
+          Solo se retransmite la 5
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-2" value="1" />
+          Se retransmiten la 5, 6, 7 y 8
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-2" value="2" />
+          Se reinicia desde la trama 0
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-2" value="3" />
+          El receptor descarta toda la conexión
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Go-Back-N retransmite la errónea Y todas las posteriores; el receptor las había descartado al no estar la 5. Selective Repeat solo retransmitiría la 5.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 4</div>
+      <div class="q-text">FEC (Forward Error Correction) es indispensable en:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-3" value="0" />
+          Redes LAN cableadas modernas
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-3" value="1" />
+          Canales sin retorno o con retardo enorme (satélite, broadcasting)
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-3" value="2" />
+          TCP siempre
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-12-control-de-flujo-y-errores-3" value="3" />
+          Redes WiFi exclusivamente
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Cuando no hay canal de retorno (broadcasting) o el retardo es enorme (satélite), no podés pedir retransmisión — corregís en el receptor con la redundancia que ya viene en la trama.</div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="checkQuiz('quiz-form-12-control-de-flujo-y-errores')">Corregir quiz</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('quiz-form-12-control-de-flujo-y-errores')">Reiniciar</button>
+    </div>
+    <div id="score-quiz-form-12-control-de-flujo-y-errores"></div>
+  </form>
+</section>
+
+<nav class="chapter-nav">
+  <a href="11-equipamiento.html"><div class="nav-dir">← Anterior</div>
+        <div class="nav-title">Equipamiento: Hub, Bridge, Switch, Router, Firewall</div></a>
+  <a href="apendice-herramientas.html" class="next"><div class="nav-dir">Siguiente →</div>
+        <div class="nav-title">Apéndice — Herramientas de Ciberseguridad</div></a>
+</nav>
+
+<footer>
+  Resumen interactivo basado en el apunte <em>Introducción a las Comunicaciones (v2)</em>.<br/>
+  Hecho con 🦈 para estudiar mejor · 2026
+</footer>
+<script src="../app.js"></script>
+</body>
+</html>

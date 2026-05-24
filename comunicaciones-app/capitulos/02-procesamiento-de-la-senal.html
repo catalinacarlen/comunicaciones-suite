@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPÍTULO 02 — Procesamiento de la Señal · Comunicaciones</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-badge">COM</span>
+      <span>Comunicaciones · Resumen interactivo</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="">Inicio</a>
+      <a href="../capitulos.html" class="active">Capítulos</a>
+      <a href="../practica.html" class="">Práctica</a>
+      <a href="../parciales.html" class="">Parciales</a>
+    </div>
+  </div>
+</nav>
+
+<header class="chapter-header">
+  <div class="chapter-header-inner">
+    <div class="eyebrow">CAPÍTULO 02 📊</div>
+    <h1>Procesamiento de la Señal</h1>
+  </div>
+</header>
+
+<article class="chapter-content">
+<h1 id="capítulo-2-procesamiento-de-la-señal">CAPÍTULO 2 — PROCESAMIENTO
+DE LA SEÑAL</h1>
+<h2
+id="cómo-viaja-la-información-desde-que-se-genera-hasta-el-destino">2.1
+¿Cómo viaja la información desde que se genera hasta el destino?</h2>
+<ol type="1">
+<li><strong>Generación (abstracta)</strong> — Una persona habla, un
+sensor lee, una cámara captura. La información todavía es una idea, un
+sonido, una imagen.</li>
+<li><strong>Descripción (símbolos)</strong> — Se representa esa
+información en algún formato físico o eléctrico (ondas de voz,
+variaciones de voltaje, píxeles).</li>
+<li><strong>Codificación</strong> (el corazón del proceso) — adapta la
+señal al canal:
+<ul>
+<li><strong>Codificación de fuente</strong> — busca
+<strong>eficiencia</strong>. Elimina información redundante para que el
+mensaje ocupe menos espacio o ancho de banda (compresión: MP3, JPEG,
+H.264). Si la fuente es analógica (voz), también hace la conversión
+A/D.</li>
+<li><strong>Cifrado</strong> <em>(opcional pero clave para ciber)</em> —
+evita que el mensaje sea entendido por usuarios no autorizados y
+previene que se introduzcan mensajes falsos.</li>
+<li><strong>Codificación de canal</strong> — busca
+<strong>robustez</strong>. Añade redundancia controlada (bits extra)
+para que el receptor pueda detectar o corregir errores que introduce el
+canal.</li>
+<li><strong>Modulación</strong> — adapta la señal digital al medio
+físico, “montándola” sobre una onda portadora.</li>
+</ul></li>
+<li><strong>Transmisión</strong> — La señal viaja por el canal (cobre,
+fibra, aire). El canal siempre introduce ruido e interferencia — es
+inevitable.</li>
+<li><strong>Demodulación</strong> — El receptor separa la información de
+la portadora.</li>
+<li><strong>Decodificación de canal</strong> — Usando la redundancia
+añadida, el sistema detecta y corrige errores.</li>
+<li><strong>Decodificación de fuente</strong> — Se revierte la
+compresión.</li>
+<li><strong>Entrega al usuario destino</strong> — El parlante reproduce
+el audio, la pantalla muestra el video.</li>
+</ol>
+<blockquote>
+<p><strong>Paradoja útil de recordar</strong>: primero eliminamos
+redundancia (compresión) y después añadimos redundancia controlada
+(protección contra errores). Son capas con propósitos distintos.</p>
+</blockquote>
+<h2 id="implicancias-de-seguridad">2.2 🛡️ Implicancias de seguridad</h2>
+<ul>
+<li>El <strong>cifrado</strong> convive con la codificación pero
+resuelve un problema diferente: codificación de fuente protege contra
+desperdicio, codificación de canal contra ruido accidental, cifrado
+contra <strong>adversarios</strong>.</li>
+<li>Cualquier canal físico es <strong>interceptable</strong> (excepto
+fibra, que es difícil): cobre y aire son fácilmente escuchados con
+equipo barato. Por eso la confidencialidad nunca se confía al medio,
+sino al cifrado.</li>
+</ul>
+<div class="synthesis"><p>Las ocho etapas (generación → codificación de fuente → cifrado → codificación de canal → modulación → canal → demodulación → decodificación → entrega) son la columna vertebral de cualquier sistema digital. Lo que sigue en el resumen son refinamientos: los <strong>medios físicos</strong> implementan el canal, los <strong>protocolos</strong> formalizan las codificaciones, y la <strong>criptografía</strong> vive como un eslabón opcional pero crítico entre fuente y canal.</p></div>
+
+
+
+</article>
+
+<section class="flashcards-section">
+  <h2>🃏 Flashcards de este capítulo</h2>
+  <p>Hacé click en cualquier tarjeta para verla por el otro lado.</p>
+  <div class="flashcards-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Señal analógica</div>
+        <div class="flashcard-face flashcard-back">Varía de forma continua en el tiempo (ej. voz, sonido natural).</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Señal digital</div>
+        <div class="flashcard-face flashcard-back">Toma valores discretos (típicamente 0 y 1). Más robusta frente al ruido.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Teorema de Nyquist</div>
+        <div class="flashcard-face flashcard-back">Para reconstruir una señal sin pérdida hay que muestrear a una frecuencia ≥ 2× la frecuencia máxima de la señal.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">¿Por qué digital ganó?</div>
+        <div class="flashcard-face flashcard-back">Resistencia al ruido, regeneración perfecta, integración con cómputo y cifrado.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Ruido</div>
+        <div class="flashcard-face flashcard-back">Toda señal no deseada que se suma a la señal útil. Limita la capacidad real del canal.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Cuantización</div>
+        <div class="flashcard-face flashcard-back">Asignar a cada muestra un valor discreto. Introduce error de cuantización.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-section">
+  <h2>📝 Quiz del capítulo</h2>
+  <p style="color:var(--text-mute);margin-top:0;">Respondé y revelá las respuestas al final.</p>
+  <form id="quiz-form-02-procesamiento-de-la-senal" class="quiz-form" data-chapter="02-procesamiento-de-la-senal">
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 1</div>
+      <div class="q-text">Una señal de audio tiene componentes hasta 4 kHz. Según Nyquist, ¿a qué frecuencia mínima hay que muestrearla?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-0" value="0" />
+          2 kHz
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-0" value="1" />
+          4 kHz
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-0" value="2" />
+          8 kHz
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-0" value="3" />
+          16 kHz
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Nyquist exige muestrear a ≥ 2× la frecuencia máxima. 2 × 4 kHz = 8 kHz.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2</div>
+      <div class="q-text">¿Cuál es la ventaja clave de las señales digitales frente a las analógicas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-1" value="0" />
+          Siempre tienen más ancho de banda
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-1" value="1" />
+          Pueden regenerarse sin acumular ruido
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-1" value="2" />
+          No necesitan codificación
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-02-procesamiento-de-la-senal-1" value="3" />
+          Son más baratas de transmitir siempre
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Una señal digital puede regenerarse en cada repetidor recuperando los bits exactos, mientras que la analógica acumula ruido en cada amplificación.</div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="checkQuiz('quiz-form-02-procesamiento-de-la-senal')">Corregir quiz</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('quiz-form-02-procesamiento-de-la-senal')">Reiniciar</button>
+    </div>
+    <div id="score-quiz-form-02-procesamiento-de-la-senal"></div>
+  </form>
+</section>
+
+<nav class="chapter-nav">
+  <a href="01-conceptos-y-definiciones.html"><div class="nav-dir">← Anterior</div>
+        <div class="nav-title">Conceptos y Definiciones</div></a>
+  <a href="03-redes-de-datos-y-evolucion.html" class="next"><div class="nav-dir">Siguiente →</div>
+        <div class="nav-title">Redes de Datos y Evolución</div></a>
+</nav>
+
+<footer>
+  Resumen interactivo basado en el apunte <em>Introducción a las Comunicaciones (v2)</em>.<br/>
+  Hecho con 🦈 para estudiar mejor · 2026
+</footer>
+<script src="../app.js"></script>
+</body>
+</html>

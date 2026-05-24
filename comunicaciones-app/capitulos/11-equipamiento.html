@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAPÍTULO 11 — Equipamiento: Hub, Bridge, Switch, Router, Firewall · Comunicaciones</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../index.html" class="brand">
+      <span class="brand-badge">COM</span>
+      <span>Comunicaciones · Resumen interactivo</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="">Inicio</a>
+      <a href="../capitulos.html" class="active">Capítulos</a>
+      <a href="../practica.html" class="">Práctica</a>
+      <a href="../parciales.html" class="">Parciales</a>
+    </div>
+  </div>
+</nav>
+
+<header class="chapter-header">
+  <div class="chapter-header-inner">
+    <div class="eyebrow">CAPÍTULO 11 🛡️</div>
+    <h1>Equipamiento: Hub, Bridge, Switch, Router, Firewall</h1>
+  </div>
+</header>
+
+<article class="chapter-content">
+<h1
+id="capítulo-11-equipamiento-hub-bridge-switch-router-firewall">CAPÍTULO
+11 — EQUIPAMIENTO: HUB, BRIDGE, SWITCH, ROUTER, FIREWALL</h1>
+<h2 id="nic-network-interface-card">11.1 NIC (Network Interface
+Card)</h2>
+<ul>
+<li>Tarjeta de red del host.</li>
+<li>Opera en capas 1 y 2.</li>
+<li>Identificada por la <strong>MAC</strong> (Media Access Control),
+única (en teoría).</li>
+</ul>
+<h2 id="repetidor">11.2 Repetidor</h2>
+<ul>
+<li><strong>Capa 1.</strong> Amplifica y regenera la señal.</li>
+<li>Conecta solo <strong>dos</strong> segmentos.</li>
+<li>Obsoleto hoy.</li>
+</ul>
+<h2 id="hub">11.3 Hub</h2>
+<ul>
+<li>“Repetidor multipuerto”. <strong>Capa 1.</strong></li>
+<li><strong>Broadcast puro</strong>: todo lo que llega por un puerto se
+reenvía a <strong>todos</strong> los demás.</li>
+<li><strong>No distingue tráfico</strong>, no separa dominios de
+colisión.</li>
+<li>Comparte el ancho de banda entre todos los dispositivos.</li>
+<li><strong>Inseguro</strong>: cualquier dispositivo conectado puede
+sniffear todo el tráfico.</li>
+<li>Obsoleto.</li>
+</ul>
+<h2 id="bridge-puente">11.4 Bridge (puente)</h2>
+<ul>
+<li><strong>Capa 2.</strong> Conecta dos segmentos LAN.</li>
+<li>Procesa la trama hasta capa de enlace.</li>
+<li><strong>No retransmite colisiones</strong> ni tramas con error.</li>
+<li>Aprende <strong>adaptativamente</strong> las direcciones MAC
+observando el campo origen de las tramas que recibe.</li>
+<li>Mantiene una <strong>tabla de reenvío</strong> por puerto.</li>
+<li>Transparente para los hosts.</li>
+<li>Implementa el <strong>algoritmo de árbol de expansión (Spanning
+Tree, IEEE 802.1D)</strong> para evitar bucles en topologías con
+redundancia.</li>
+</ul>
+<p><strong>Por qué usar bridges:</strong> fiabilidad, rendimiento, seguridad (segmentación) y geografía.</p>
+
+<h3 id="bridge-retransmision">Lógica de retransmisión (cómo decide qué hacer con una trama)</h3>
+<p>Por cada trama que llega al puerto X:</p>
+<ol>
+<li>Busca la dirección MAC destino en su tabla de reenvío.</li>
+<li>Si <strong>no está en la tabla</strong> → la envía por <strong>todos los puertos excepto X</strong> (flooding).</li>
+<li>Si está en la tabla y está en el mismo puerto X → la descarta (ya está en ese segmento).</li>
+<li>Si está en otro puerto Y → la reenvía solo por Y (filtrado selectivo).</li>
+<li>Las tramas <strong>broadcast</strong> siempre se inundan a todos los puertos.</li>
+</ol>
+
+<h3 id="bridge-aprendizaje">Aprendizaje de direcciones</h3>
+<p>El bridge <strong>aprende</strong> observando la dirección origen de cada trama que recibe. Cuando llega una trama al puerto X desde la dirección Z, registra: "Z está en el puerto X". Cada entrada tiene un temporizador y se actualiza cada vez que se recibe tráfico de esa MAC.</p>
+
+<h3 id="bridge-spanning-tree">Árbol de expansión (Spanning Tree — IEEE 802.1D)</h3>
+<p>En redes grandes con múltiples bridges interconectados puede haber <strong>bucles</strong> (loops). Un bucle haría que las tramas broadcast circulen indefinidamente (<em>broadcast storm</em>). El algoritmo de árbol de expansión <strong>resuelve esto automáticamente</strong>:</p>
+<ul>
+<li>Cada bridge tiene un <strong>identificador único</strong>.</li>
+<li>Los bridges intercambian mensajes para <strong>elegir un root bridge</strong> (raíz).</li>
+<li>Se construye un árbol de rutas sin bucles que mantiene conectividad.</li>
+<li>Los puertos que crearían un bucle se ponen en estado <strong>bloqueado</strong>.</li>
+<li>Si un enlace cae, el árbol se recalcula automáticamente (tolerancia a fallos).</li>
+</ul>
+<blockquote><p>La motivación para tener rutas alternativas es doble: <strong>balanceo de carga</strong> y <strong>tolerancia a fallos</strong>. Spanning Tree le da lo segundo sin provocar loops.</p></blockquote>
+
+<h2 id="switch">11.5 Switch</h2>
+<p>Esencialmente un <strong>bridge multipuerto en hardware</strong>.
+<strong>Capa 2</strong> (los de capa 3 son una variante).</p>
+<p><strong>Ventajas sobre hubs y bridges:</strong> - Filtrado por MAC en
+<strong>cada puerto</strong> - Ancho de banda <strong>dedicado</strong>
+por puerto (no compartido) - Más rápido que bridges (conmuta en
+hardware) - Permite <strong>VLANs</strong> → segmentación lógica -
+Separa <strong>dominios de colisión</strong> (cada puerto = un
+dominio)</p>
+<p><strong>Tipos de conmutación interna:</strong></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Comportamiento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cut-through</strong></td>
+<td>Reenvía apenas lee la MAC destino (alta velocidad pero puede
+reenviar frames con errores)</td>
+</tr>
+<tr>
+<td><strong>Store-and-forward</strong></td>
+<td>Recibe la trama completa, valida CRC, después reenvía</td>
+</tr>
+<tr>
+<td><strong>Fragment-Free</strong></td>
+<td>Espera los primeros 64 bytes (donde ocurren la mayoría de las
+colisiones) y después reenvía</td>
+</tr>
+<tr>
+<td><strong>ATM</strong></td>
+<td>Transfiere celdas de tamaño fijo; soporta voz, video y datos con calidad garantizada</td>
+</tr>
+<tr>
+<td><strong>Switches L3</strong></td>
+<td>Conmutan también por IP (routing en hardware); combinan lo mejor de switch y router</td>
+</tr>
+</tbody>
+</table>
+<blockquote><p>💡 <strong>Hub vs Switch: diferencia clave</strong> — el hub transmite a todos (broadcast); el switch transmite solo al destinatario. En un hub, todos los dispositivos comparten el mismo ancho de banda y el mismo dominio de colisión; en un switch, cada puerto tiene su propio ancho de banda y su propio dominio de colisión.</p></blockquote>
+<ul>
+<li><strong>Capa 3.</strong> Comunica equipos de redes distintas.</li>
+<li>Busca la <strong>mejor ruta</strong> para enviar paquetes.</li>
+<li>Tareas: control de broadcast/multicast, ruteo óptimo, administración
+de tráfico, direccionamiento lógico, conexión a WAN.</li>
+<li>En cada salto reescribe MACs origen/destino pero <strong>conserva
+las IPs</strong>.</li>
+</ul>
+<h2 id="firewall">11.7 Firewall</h2>
+<p>Dispositivo de <strong>seguridad perimetral</strong>. Filtra tráfico
+según reglas.</p>
+<ul>
+<li>Pueden ser routers con ACL, equipos dedicados (Palo Alto, Fortinet,
+FortiGate) o software (iptables, pfSense).</li>
+<li>Aplicaciones: filtrado de paquetes, <strong>inspección de
+estado</strong> (stateful), filtrado de contenido,
+<strong>IDS/IPS</strong> (detección/prevención de intrusos).</li>
+<li>Operan en capas 3-4 (filtros básicos) o 7 (firewalls de aplicación /
+WAF).</li>
+</ul>
+<h2 id="tabla-comparativa">11.8 Tabla comparativa</h2>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Equipo</th>
+<th>Capa</th>
+<th>Inteligencia</th>
+<th>Separa dominios de colisión</th>
+<th>Separa dominios de broadcast</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hub</td>
+<td>1</td>
+<td>Ninguna</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Bridge</td>
+<td>2</td>
+<td>MAC</td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Switch</td>
+<td>2 (o 3)</td>
+<td>MAC (+ IP en L3)</td>
+<td>Sí</td>
+<td>Solo con VLAN</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>3</td>
+<td>IP</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Firewall</td>
+<td>3-7</td>
+<td>IP + estado + L7</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implicancias-de-seguridad-5">11.9 🛡️ Implicancias de
+seguridad</h2>
+<ul>
+<li>Un <strong>hub</strong> es un sniffer gratis. Por eso desaparecieron
+de las redes corporativas.</li>
+<li>Un <strong>switch</strong> ya impide sniffing pasivo, pero
+<strong>MAC flooding</strong> lo puede degradar a hub (fail-open).
+Mitigación: port security (limitar MACs por puerto).</li>
+<li><strong>ARP</strong> opera en capa 2 y es el primer blanco en una
+LAN: ARP spoofing permite hacer Man-In-The-Middle entre dos hosts del
+mismo segmento.</li>
+<li><strong>VLAN ≠ seguridad fuerte</strong>: separan tráfico, pero un
+atacante que controla un puerto trunk puede saltar VLANs.</li>
+<li><strong>Routers</strong> filtran por IP pero por defecto no
+inspeccionan contenido.</li>
+<li><strong>Firewalls</strong> son la primera línea de defensa, pero no
+reemplazan endpoint security ni segmentación interna (“defensa en
+profundidad”).</li>
+<li><strong>NAT</strong> no es un firewall, pero suele actuar como uno
+por accidente al ocultar IPs internas.</li>
+</ul>
+<div class="synthesis"><p>La cadena <strong>hub → bridge → switch → router → firewall</strong> es también una cadena de capas crecientes: cada equipo opera más arriba en la pila OSI y toma decisiones más inteligentes. Un hub no separa nada; un router separa redes; un firewall separa zonas de confianza. Saber qué capa procesa cada dispositivo es exactamente saber qué puede ver, qué puede filtrar y qué puede proteger.</p></div>
+
+
+
+</article>
+
+<section class="flashcards-section">
+  <h2>🃏 Flashcards de este capítulo</h2>
+  <p>Hacé click en cualquier tarjeta para verla por el otro lado.</p>
+  <div class="flashcards-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Hub</div>
+        <div class="flashcard-face flashcard-back">Capa 1. Repite cada bit a todos los puertos. Dominio de colisión único. Obsoleto.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Bridge</div>
+        <div class="flashcard-face flashcard-back">Capa 2. Conecta segmentos LAN y aprende MACs. Reduce colisiones segmentando.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Switch</div>
+        <div class="flashcard-face flashcard-back">Capa 2. Bridge multipuerto, alta velocidad. Cada puerto = dominio de colisión propio.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Router</div>
+        <div class="flashcard-face flashcard-back">Capa 3. Reenvía paquetes IP entre redes distintas usando tabla de enrutamiento.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Firewall</div>
+        <div class="flashcard-face flashcard-back">Filtra tráfico según reglas. Puede operar en capa 3-4 (stateful), o capa 7 (NGFW/WAF).</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Dominio de colisión</div>
+        <div class="flashcard-face flashcard-back">Conjunto de dispositivos que comparten el medio y pueden colisionar. Hub = 1 grande; switch = uno por puerto.</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">Dominio de broadcast</div>
+        <div class="flashcard-face flashcard-back">Hasta dónde llega un broadcast. Lo limita el router (no lo propaga).</div>
+      </div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">VLAN</div>
+        <div class="flashcard-face flashcard-back">División lógica de un switch en redes separadas. Aísla tráfico sin necesidad de hardware extra.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quiz-section">
+  <h2>📝 Quiz del capítulo</h2>
+  <p style="color:var(--text-mute);margin-top:0;">Respondé y revelá las respuestas al final.</p>
+  <form id="quiz-form-11-equipamiento" class="quiz-form" data-chapter="11-equipamiento">
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 1</div>
+      <div class="q-text">¿Qué equipo trabaja en capa 3 reenviando paquetes entre redes distintas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-0" value="0" />
+          Hub
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-0" value="1" />
+          Switch
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-11-equipamiento-0" value="2" />
+          Router
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-0" value="3" />
+          Bridge
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El router opera en capa 3, examina la IP destino y consulta su tabla de enrutamiento para reenviar el paquete a la red correcta.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2</div>
+      <div class="q-text">Un switch tiene cuántos dominios de colisión por puerto:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-1" value="0" />
+          Uno único compartido
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-11-equipamiento-1" value="1" />
+          Uno por puerto
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-1" value="2" />
+          Uno por VLAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-1" value="3" />
+          Ninguno
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Cada puerto de switch es un dominio de colisión separado — por eso el switch reemplazó al hub: termina con las colisiones.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 3</div>
+      <div class="q-text">¿Quién corta los dominios de broadcast?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-2" value="0" />
+          El hub
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-2" value="1" />
+          El switch (siempre)
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="q-11-equipamiento-2" value="2" />
+          El router
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="q-11-equipamiento-2" value="3" />
+          El cable cruzado
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El router no propaga broadcasts entre sus interfaces, así que es quien delimita los dominios de broadcast (las VLANs en switches también pero a otro nivel).</div>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <button type="button" class="btn" onclick="checkQuiz('quiz-form-11-equipamiento')">Corregir quiz</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('quiz-form-11-equipamiento')">Reiniciar</button>
+    </div>
+    <div id="score-quiz-form-11-equipamiento"></div>
+  </form>
+</section>
+
+<nav class="chapter-nav">
+  <a href="10-redes-inalambricas-wifi.html"><div class="nav-dir">← Anterior</div>
+        <div class="nav-title">Redes Inalámbricas: IEEE 802.11 (WiFi)</div></a>
+  <a href="12-control-de-flujo-y-errores.html" class="next"><div class="nav-dir">Siguiente →</div>
+        <div class="nav-title">Control de Flujo y Control de Errores</div></a>
+</nav>
+
+<footer>
+  Resumen interactivo basado en el apunte <em>Introducción a las Comunicaciones (v2)</em>.<br/>
+  Hecho con 🦈 para estudiar mejor · 2026
+</footer>
+<script src="../app.js"></script>
+</body>
+</html>
