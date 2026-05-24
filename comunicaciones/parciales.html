@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parciales · Comunicaciones</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-badge">COM</span>
+      <span>Comunicaciones · Resumen interactivo</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="">Inicio</a>
+      <a href="capitulos.html" class="">Capítulos</a>
+      <a href="practica.html" class="">Práctica</a>
+      <a href="parciales.html" class="active">Parciales</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <h1 style="color:var(--primary);font-size:2rem;margin-bottom:8px;">🎓 Parciales / Simulacros</h1>
+  <p style="color:var(--text-soft);margin-top:0;">
+    Tres simulacros tipo parcial. Cada uno tiene cronómetro opcional, puntaje y explicación de cada respuesta.
+  </p>
+
+  <h2 class="section-title">📘 Simulacro 1 — Cobertura general (12 preguntas)</h2>
+  <p style="color:var(--text-mute);font-size:0.9rem;">Una pregunta por capítulo. Tiempo sugerido: 30 min.</p>
+  <div style="margin-bottom:16px;">
+    <button class="btn btn-secondary" onclick="startTimer('timer-sim1', 30)">⏱️ Iniciar 30 min</button>
+    <span id="timer-sim1" style="margin-left:14px;font-weight:700;color:var(--primary);font-size:1.1rem;"></span>
+  </div>
+  <form id="sim1-form" class="quiz-form" data-chapter="sim1">
+    <div class="quiz-q" data-correct="0">
+      <div class="q-num">PREGUNTA 1 · Cap. 01 · Conceptos y Definiciones</div>
+      <div class="q-text">Si un canal tiene 100 Mbps de ancho de banda pero medís 60 Mbps de transferencia real, ¿qué métrica representa esos 60 Mbps?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-0" value="0" />
+          Throughput
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-0" value="1" />
+          BER
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-0" value="2" />
+          Jitter
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-0" value="3" />
+          Latencia
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El throughput es la velocidad real efectivamente medida; siempre es ≤ al ancho de banda nominal.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2 · Cap. 02 · Procesamiento de la Señal</div>
+      <div class="q-text">¿Cuál es la ventaja clave de las señales digitales frente a las analógicas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-1" value="0" />
+          Siempre tienen más ancho de banda
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-1" value="1" />
+          Pueden regenerarse sin acumular ruido
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-1" value="2" />
+          No necesitan codificación
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-1" value="3" />
+          Son más baratas de transmitir siempre
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Una señal digital puede regenerarse en cada repetidor recuperando los bits exactos, mientras que la analógica acumula ruido en cada amplificación.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 3 · Cap. 03 · Redes de Datos y Evolución</div>
+      <div class="q-text">BitTorrent es un ejemplo clásico de qué modelo de red:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-2" value="0" />
+          Cliente-servidor puro
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-2" value="1" />
+          P2P
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-2" value="2" />
+          Mainframe
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-2" value="3" />
+          Broadcast
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> BitTorrent es P2P: cada nodo descarga y a la vez sirve fragmentos a otros.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 4 · Cap. 04 · Medios Físicos</div>
+      <div class="q-text">¿Qué medio físico es inmune a interferencia electromagnética?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-3" value="0" />
+          Par trenzado UTP
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-3" value="1" />
+          Cable coaxil
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-3" value="2" />
+          Fibra óptica
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-3" value="3" />
+          WiFi
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> La fibra óptica transmite luz, no electricidad, por lo que es inmune a interferencia electromagnética.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 5 · Cap. 05 · Topologías y Tipos de Transmisión</div>
+      <div class="q-text">Un walkie-talkie donde solo uno habla a la vez es un ejemplo de:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-4" value="0" />
+          Simplex
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-4" value="1" />
+          Half-duplex
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-4" value="2" />
+          Full-duplex
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-4" value="3" />
+          Multiplex
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Half-duplex: hay comunicación bidireccional pero no simultánea — uno habla, el otro escucha, y luego se invierte.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 6 · Cap. 06 · Clasificación por Área de Cobertura</div>
+      <div class="q-text">Una empresa con oficinas en Buenos Aires, Madrid y Tokio interconectadas usa una:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-5" value="0" />
+          LAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-5" value="1" />
+          MAN
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-5" value="2" />
+          WAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-5" value="3" />
+          PAN
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Una WAN (Wide Area Network) cubre grandes distancias geográficas, conectando ciudades o países.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 7 · Cap. 07 · Protocolos y Modelo OSI</div>
+      <div class="q-text">¿En qué capa del modelo OSI opera el protocolo IP?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-6" value="0" />
+          Capa 2 - Enlace
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-6" value="1" />
+          Capa 3 - Red
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-6" value="2" />
+          Capa 4 - Transporte
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-6" value="3" />
+          Capa 7 - Aplicación
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> IP es el protocolo de la capa 3 (Red), responsable del enrutamiento entre redes.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 8 · Cap. 08 · Conmutación de Circuitos y Paquetes</div>
+      <div class="q-text">Internet utiliza conmutación de:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-7" value="0" />
+          Circuitos dedicados
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-7" value="1" />
+          Paquetes con datagramas
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-7" value="2" />
+          Mensajes completos
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-7" value="3" />
+          Circuitos virtuales fijos
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Internet (IP) usa conmutación de paquetes basada en datagramas: cada paquete viaja independiente y puede tomar rutas distintas.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 9 · Cap. 09 · ALOHA, CSMA/CD, Ethernet y 802.11</div>
+      <div class="q-text">WiFi usa CSMA/CA en lugar de CSMA/CD porque:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-8" value="0" />
+          CSMA/CA es más rápido
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-8" value="1" />
+          En radio no se pueden detectar colisiones de forma fiable
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-8" value="2" />
+          CSMA/CD está patentado
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-8" value="3" />
+          WiFi no necesita detectar colisiones
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Las antenas WiFi no pueden transmitir y escuchar a la vez con potencia útil, así que se usa evitación (CA) en lugar de detección (CD).</div>
+    </div>
+    <div class="quiz-q" data-correct="0">
+      <div class="q-num">PREGUNTA 10 · Cap. 10 · Redes Inalámbricas: IEEE 802.11 (WiFi)</div>
+      <div class="q-text">¿Qué estándar de seguridad WiFi NUNCA debería usarse hoy?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-9" value="0" />
+          WEP
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-9" value="1" />
+          WPA2
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-9" value="2" />
+          WPA3
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-9" value="3" />
+          Open con MAC filtering
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> WEP fue roto hace décadas; es trivial obtener la clave. No usarlo bajo ningún concepto.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 11 · Cap. 11 · Equipamiento: Hub, Bridge, Switch, Router, Firewall</div>
+      <div class="q-text">¿Qué equipo trabaja en capa 3 reenviando paquetes entre redes distintas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-10" value="0" />
+          Hub
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-10" value="1" />
+          Switch
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-10" value="2" />
+          Router
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-10" value="3" />
+          Bridge
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El router opera en capa 3, examina la IP destino y consulta su tabla de enrutamiento para reenviar el paquete a la red correcta.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 12 · Cap. 12 · Control de Flujo y Control de Errores</div>
+      <div class="q-text">Para corregir 2 errores por bloque, la distancia de Hamming mínima del código debe ser:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-11" value="0" />
+          2
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-11" value="1" />
+          3
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim1-11" value="2" />
+          5
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim1-11" value="3" />
+          4
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Para corregir d errores se necesita d_min ≥ 2d + 1. Con d=2: 2×2+1 = 5.</div>
+    </div>
+    <div style="margin-top:20px;">
+      <button type="button" class="btn" onclick="checkQuiz('sim1-form')">Corregir</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('sim1-form')">Reiniciar</button>
+    </div>
+    <div id="score-sim1-form"></div>
+  </form>
+
+  <h2 class="section-title">📕 Simulacro 2 — Profundidad técnica (13 preguntas)</h2>
+  <p style="color:var(--text-mute);font-size:0.9rem;">Preguntas más conceptuales y con casos. Tiempo sugerido: 35 min.</p>
+  <div style="margin-bottom:16px;">
+    <button class="btn btn-secondary" onclick="startTimer('timer-sim2', 35)">⏱️ Iniciar 35 min</button>
+    <span id="timer-sim2" style="margin-left:14px;font-weight:700;color:var(--primary);font-size:1.1rem;"></span>
+  </div>
+  <form id="sim2-form" class="quiz-form" data-chapter="sim2">
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 1 · Cap. 01 · Conceptos y Definiciones</div>
+      <div class="q-text">En una llamada VoIP entrecortada con audio que se desincroniza, ¿qué métrica es probablemente el problema principal?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-0" value="0" />
+          Ancho de banda
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-0" value="1" />
+          BER
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-0" value="2" />
+          Jitter
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-0" value="3" />
+          Codificación
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El jitter (variación de latencia) descoloca los paquetes en el tiempo y produce ese efecto de audio entrecortado.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 2 · Cap. 02 · Procesamiento de la Señal</div>
+      <div class="q-text">Una señal de audio tiene componentes hasta 4 kHz. Según Nyquist, ¿a qué frecuencia mínima hay que muestrearla?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-1" value="0" />
+          2 kHz
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-1" value="1" />
+          4 kHz
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-1" value="2" />
+          8 kHz
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-1" value="3" />
+          16 kHz
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Nyquist exige muestrear a ≥ 2× la frecuencia máxima. 2 × 4 kHz = 8 kHz.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 3 · Cap. 03 · Redes de Datos y Evolución</div>
+      <div class="q-text">¿Cuál fue la red pionera, financiada por el DoD de EE.UU., que dio origen a Internet?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-2" value="0" />
+          NSFNET
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-2" value="1" />
+          ARPANET
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-2" value="2" />
+          Ethernet
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-2" value="3" />
+          Bitnet
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> ARPANET (1969) introdujo conmutación de paquetes y luego TCP/IP, dando origen a la Internet moderna.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 4 · Cap. 04 · Medios Físicos</div>
+      <div class="q-text">Para un enlace troncal de larga distancia entre dos ciudades, ¿qué tipo de fibra es la adecuada?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-3" value="0" />
+          Multimodo
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-3" value="1" />
+          Monomodo
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-3" value="2" />
+          UTP cat 6
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-3" value="3" />
+          Coaxil
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> La fibra monomodo es la indicada para largas distancias gracias a su menor dispersión modal.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 5 · Cap. 05 · Topologías y Tipos de Transmisión</div>
+      <div class="q-text">¿Cuál es la topología más usada en LANs modernas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-4" value="0" />
+          Bus
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-4" value="1" />
+          Anillo
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-4" value="2" />
+          Estrella (con switch central)
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-4" value="3" />
+          Malla completa
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> La topología estrella con un switch central domina las LAN modernas por su robustez y facilidad de gestión.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 6 · Cap. 06 · Clasificación por Área de Cobertura</div>
+      <div class="q-text">Una red Bluetooth entre tu celular y tus auriculares es una:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-5" value="0" />
+          LAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-5" value="1" />
+          MAN
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-5" value="2" />
+          PAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-5" value="3" />
+          WAN
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> PAN (Personal Area Network) cubre apenas unos metros — Bluetooth es el caso típico.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 7 · Cap. 07 · Protocolos y Modelo OSI</div>
+      <div class="q-text">¿Qué hace el encapsulamiento al bajar por las capas?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-6" value="0" />
+          Comprime los datos en cada capa
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-6" value="1" />
+          Cifra automáticamente todo el tráfico
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-6" value="2" />
+          Cada capa agrega su propia cabecera (y a veces cola) a la unidad de datos
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-6" value="3" />
+          Convierte la señal de digital a analógica
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> En el encapsulamiento cada capa agrega su cabecera con la información de control que su par del otro lado necesita.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 8 · Cap. 08 · Conmutación de Circuitos y Paquetes</div>
+      <div class="q-text">¿Cuál es la principal ventaja de la conmutación de paquetes sobre la de circuitos?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-7" value="0" />
+          Menor latencia siempre
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-7" value="1" />
+          Mejor aprovechamiento estadístico del ancho de banda
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-7" value="2" />
+          Garantiza orden de llegada
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-7" value="3" />
+          No tiene overhead
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Al no reservar el camino, varios flujos pueden compartir los mismos enlaces estadísticamente, aprovechando mucho mejor la capacidad.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 9 · Cap. 09 · ALOHA, CSMA/CD, Ethernet y 802.11</div>
+      <div class="q-text">En CSMA/CD, ¿qué pasa al detectar una colisión?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-8" value="0" />
+          Se descarta el paquete y nunca se reintenta
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-8" value="1" />
+          Se transmite una señal jam, se espera un tiempo aleatorio (backoff exponencial) y se reintenta
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-8" value="2" />
+          Se cambia automáticamente de canal
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-8" value="3" />
+          Se baja la velocidad permanentemente
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El nodo manda una señal de jam para que todos sepan que hubo colisión, espera un tiempo aleatorio con backoff exponencial binario, y reintenta.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 10 · Cap. 10 · Redes Inalámbricas: IEEE 802.11 (WiFi)</div>
+      <div class="q-text">El SSID de una red WiFi es:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-9" value="0" />
+          La MAC del AP
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-9" value="1" />
+          El nombre legible de la red
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-9" value="2" />
+          La clave de cifrado
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-9" value="3" />
+          El canal en el que opera
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El SSID es el nombre humano de la red (ej: &#x27;MiCasa_5G&#x27;). El BSSID es la MAC del AP.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 11 · Cap. 11 · Equipamiento: Hub, Bridge, Switch, Router, Firewall</div>
+      <div class="q-text">Un switch tiene cuántos dominios de colisión por puerto:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-10" value="0" />
+          Uno único compartido
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-10" value="1" />
+          Uno por puerto
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-10" value="2" />
+          Uno por VLAN
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-10" value="3" />
+          Ninguno
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Cada puerto de switch es un dominio de colisión separado — por eso el switch reemplazó al hub: termina con las colisiones.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 12 · Cap. 12 · Control de Flujo y Control de Errores</div>
+      <div class="q-text">Un atacante intercepta un paquete con CRC, lo modifica y recalcula el CRC correctamente. ¿Detecta el receptor el ataque?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-11" value="0" />
+          Sí, el CRC siempre detecta modificación
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-11" value="1" />
+          No, porque CRC no es criptográfico — para integridad frente a adversarios hay que usar HMAC o hash criptográfico
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-11" value="2" />
+          Solo si el paquete está cifrado
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-11" value="3" />
+          Depende del polinomio
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> CRC sirve solo para detectar errores accidentales (ruido). Un atacante con conocimiento del polinomio puede modificar y recalcular el CRC sin problema. Para integridad frente a adversarios → HMAC.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 13 · Apéndice · Apéndice — Herramientas de Ciberseguridad</div>
+      <div class="q-text">¿Qué herramienta usás para capturar y analizar paquetes en vivo?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-12" value="0" />
+          nmap
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim2-12" value="1" />
+          Wireshark
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-12" value="2" />
+          nslookup
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim2-12" value="3" />
+          iptables
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Wireshark (o tcpdump en CLI) es THE sniffer de paquetes — esencial para entender qué pasa realmente en la red.</div>
+    </div>
+    <div style="margin-top:20px;">
+      <button type="button" class="btn" onclick="checkQuiz('sim2-form')">Corregir</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('sim2-form')">Reiniciar</button>
+    </div>
+    <div id="score-sim2-form"></div>
+  </form>
+
+  <h2 class="section-title">📗 Simulacro 3 — Foco en errores y seguridad (7 preguntas)</h2>
+  <p style="color:var(--text-mute);font-size:0.9rem;">Concentrado en los capítulos finales y temas críticos para ciberseguridad.</p>
+  <div style="margin-bottom:16px;">
+    <button class="btn btn-secondary" onclick="startTimer('timer-sim3', 15)">⏱️ Iniciar 15 min</button>
+    <span id="timer-sim3" style="margin-left:14px;font-weight:700;color:var(--primary);font-size:1.1rem;"></span>
+  </div>
+  <form id="sim3-form" class="quiz-form" data-chapter="sim3">
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 1 · Cap. 01 · Conceptos y Definiciones</div>
+      <div class="q-text">¿Cuál es la diferencia entre dato e información?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-0" value="0" />
+          Son sinónimos en redes
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-0" value="1" />
+          Dato es el símbolo crudo; información es el dato interpretado en un contexto
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-0" value="2" />
+          Información es analógica y dato es digital
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-0" value="3" />
+          Dato es lo que viaja, información es la señal eléctrica
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El dato es la representación cruda; cuando se le da contexto y significado, se convierte en información.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 2 · Cap. 07 · Protocolos y Modelo OSI</div>
+      <div class="q-text">Las direcciones MAC pertenecen a qué capa OSI:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-1" value="0" />
+          Capa 1
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-1" value="1" />
+          Capa 2
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-1" value="2" />
+          Capa 3
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-1" value="3" />
+          Capa 4
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Las MAC son direcciones de capa 2 (Enlace de datos), usadas para identificar nodos dentro del mismo segmento.</div>
+    </div>
+    <div class="quiz-q" data-correct="0">
+      <div class="q-num">PREGUNTA 3 · Cap. 09 · ALOHA, CSMA/CD, Ethernet y 802.11</div>
+      <div class="q-text">¿Qué eficiencia máxima teórica alcanza ALOHA puro?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-2" value="0" />
+          18%
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-2" value="1" />
+          37%
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-2" value="2" />
+          50%
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-2" value="3" />
+          80%
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> ALOHA puro alcanza apenas ~18%; ALOHA ranurado duplica a ~37%.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 4 · Cap. 11 · Equipamiento: Hub, Bridge, Switch, Router, Firewall</div>
+      <div class="q-text">¿Quién corta los dominios de broadcast?</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-3" value="0" />
+          El hub
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-3" value="1" />
+          El switch (siempre)
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-3" value="2" />
+          El router
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-3" value="3" />
+          El cable cruzado
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> El router no propaga broadcasts entre sus interfaces, así que es quien delimita los dominios de broadcast (las VLANs en switches también pero a otro nivel).</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 5 · Cap. 12 · Control de Flujo y Control de Errores</div>
+      <div class="q-text">En Go-Back-N, si la trama 5 llega con error y ya se enviaron hasta la 8:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-4" value="0" />
+          Solo se retransmite la 5
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-4" value="1" />
+          Se retransmiten la 5, 6, 7 y 8
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-4" value="2" />
+          Se reinicia desde la trama 0
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-4" value="3" />
+          El receptor descarta toda la conexión
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Go-Back-N retransmite la errónea Y todas las posteriores; el receptor las había descartado al no estar la 5. Selective Repeat solo retransmitiría la 5.</div>
+    </div>
+    <div class="quiz-q" data-correct="1">
+      <div class="q-num">PREGUNTA 6 · Cap. 12 · Control de Flujo y Control de Errores</div>
+      <div class="q-text">FEC (Forward Error Correction) es indispensable en:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-5" value="0" />
+          Redes LAN cableadas modernas
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-5" value="1" />
+          Canales sin retorno o con retardo enorme (satélite, broadcasting)
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-5" value="2" />
+          TCP siempre
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-5" value="3" />
+          Redes WiFi exclusivamente
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> Cuando no hay canal de retorno (broadcasting) o el retardo es enorme (satélite), no podés pedir retransmisión — corregís en el receptor con la redundancia que ya viene en la trama.</div>
+    </div>
+    <div class="quiz-q" data-correct="2">
+      <div class="q-num">PREGUNTA 7 · Apéndice · Apéndice — Herramientas de Ciberseguridad</div>
+      <div class="q-text">Para escanear los puertos abiertos de un host usás:</div>
+      <div class="quiz-options">
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-6" value="0" />
+          ping
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-6" value="1" />
+          traceroute
+        </label>
+        <label class="quiz-option" data-correct="1">
+          <input type="radio" name="sim3-6" value="2" />
+          nmap
+        </label>
+        <label class="quiz-option" data-correct="0">
+          <input type="radio" name="sim3-6" value="3" />
+          arp
+        </label>
+      </div>
+      <div class="quiz-explain"><strong>💡 Explicación:</strong> nmap es la herramienta estándar para escaneo de puertos y descubrimiento de hosts.</div>
+    </div>
+    <div style="margin-top:20px;">
+      <button type="button" class="btn" onclick="checkQuiz('sim3-form')">Corregir</button>
+      <button type="button" class="btn btn-secondary" onclick="resetQuiz('sim3-form')">Reiniciar</button>
+    </div>
+    <div id="score-sim3-form"></div>
+  </form>
+</main>
+
+<footer>
+  Resumen interactivo basado en el apunte <em>Introducción a las Comunicaciones (v2)</em>.<br/>
+  Hecho con 🦈 para estudiar mejor · 2026
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
