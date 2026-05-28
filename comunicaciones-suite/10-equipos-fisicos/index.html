@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipos físicos — Comunicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);transition:all .2s;margin-bottom:1.5rem}
+.back-link:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-bg)}
+header{text-align:center;padding:2rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header .num{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:1rem;letter-spacing:0.5px}
+header .num.blue{color:var(--accent-text);background:var(--accent-bg)}
+header .num.green{color:var(--success-text);background:var(--success-bg)}
+header .num.orange{color:var(--warning-text);background:var(--warning-bg)}
+header .num.red{color:var(--danger-text);background:var(--danger-bg)}
+header .num.purple{color:var(--purple-text);background:var(--purple-bg)}
+header h1{font-size:30px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px}
+header p{color:var(--text-2);font-size:14px;max-width:560px;margin:0 auto}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;position:sticky;top:0;background:var(--bg);padding:1rem 0;z-index:10;border-bottom:1px solid var(--border)}
+.nav-btn{padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all .2s;font-weight:500}
+.nav-btn:hover{background:var(--surface-alt);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.blue{background:var(--accent-bg);color:var(--accent-text)}
+.card-title .icon.green{background:var(--success-bg);color:var(--success-text)}
+.card-title .icon.orange{background:var(--warning-bg);color:var(--warning-text)}
+.card-title .icon.red{background:var(--danger-bg);color:var(--danger-text)}
+.card-title .icon.purple{background:var(--purple-bg);color:var(--purple-text)}
+.card-body{font-size:14px;color:var(--text-2);line-height:1.75}
+.card-body strong{color:var(--text);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:2rem 0 1rem;padding-left:12px;border-left:3px solid var(--accent)}
+.highlight{background:var(--warning-bg);border-left:3px solid var(--warning);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:var(--warning-text);margin:12px 0;line-height:1.6}
+.highlight.info{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent-text)}
+.highlight.purple{background:var(--purple-bg);border-left-color:var(--purple);color:var(--purple-text)}
+.highlight.success{background:var(--success-bg);border-left-color:var(--success);color:var(--success-text)}
+.highlight.danger{background:var(--danger-bg);border-left-color:var(--danger);color:var(--danger-text)}
+table{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+th{background:var(--surface-alt);color:var(--text-2);font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.green{background:var(--success-bg);color:var(--success-text)}
+.badge.orange{background:var(--warning-bg);color:var(--warning-text)}
+.badge.red{background:var(--danger-bg);color:var(--danger-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.gray{background:var(--surface-alt);color:var(--text-3)}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+.metric-label{font-size:12px;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--text)}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:1rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.step-content{flex:1;font-size:14px;color:var(--text-2);line-height:1.7}
+.step-content strong{color:var(--text);font-weight:500}
+code{font-family:var(--mono);font-size:12px;background:var(--surface-alt);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;font-size:12px;font-family:var(--mono);line-height:1.6;margin:10px 0}
+.transition{display:flex;gap:14px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0 2rem;font-size:13px;color:var(--text-2);line-height:1.7}
+.transition.from-prev{border-left:3px solid var(--text-3)}
+.transition.to-next{border-left:3px solid var(--accent);margin-top:2rem;margin-bottom:1rem}
+.transition .trans-icon{font-size:20px;flex-shrink:0;opacity:.8}
+.transition .trans-body{flex:1}
+.transition .trans-label{font-family:var(--mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.transition strong{color:var(--text);font-weight:500}
+.transition a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.transition a:hover{opacity:.8}
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text-3);font-size:12px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back-link">← Volver a la suite</a>
+
+<header>
+  <span class="num blue">APP 10 · HARDWARE</span>
+  <h1>Equipos físicos</h1>
+  <p>Síntesis hardware del temario. Hub, bridge, switch, router y firewall ordenados por capa OSI ascendente, con sus dominios de colisión y broadcast.</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('contexto')">Contexto</button>
+  <button class="nav-btn" onclick="show('intro')">NIC y Repetidor</button>
+  <button class="nav-btn" onclick="show('hub')">Hub</button>
+  <button class="nav-btn" onclick="show('bridge')">Bridge</button>
+  <button class="nav-btn" onclick="show('switch')">Switch</button>
+  <button class="nav-btn" onclick="show('router')">Router</button>
+  <button class="nav-btn" onclick="show('firewall')">Firewall</button>
+  <button class="nav-btn" onclick="show('comparativa')">Tabla comparativa</button>
+  <button class="nav-btn" onclick="show('cyber')">Implicancias de seguridad</button>
+  <button class="nav-btn" onclick="show('cierre')">Cierre</button>
+</nav>
+
+<div id="contexto" class="section active">
+<div class="transition from-prev">
+  <div class="trans-icon">←</div>
+  <div class="trans-body">
+    <span class="trans-label">De dónde venimos</span>
+    En <a href="../09-direccionamiento-ip/index.html"><strong>App 09 · Direccionamiento IP</strong></a>, se completó el recorrido por las capas inferiores del modelo OSI. Este módulo es un módulo de <strong>síntesis hardware</strong>: presenta los equipos físicos que materializan cada capa, ordenados por capa OSI ascendente. La progresión hub → bridge → switch → router → firewall puede leerse como una historia de inteligencia creciente: cada equipo toma decisiones más sofisticadas y opera más arriba en la pila.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🎯</div>Lo que se aborda en este módulo</div>
+  <div class="card-body">
+    <ul style="padding-left:20px;line-height:2;margin-top:6px">
+      <li><strong>NIC y Repetidor</strong> — capa 1: los dispositivos más básicos.</li>
+      <li><strong>Hub</strong> — capa 1, broadcast puro; obsoleto pero conceptualmente importante.</li>
+      <li><strong>Bridge</strong> — capa 2, aprendizaje adaptativo de MACs y Spanning Tree.</li>
+      <li><strong>Switch</strong> — capa 2, esencialmente un bridge multipuerto en hardware; modos de conmutación.</li>
+      <li><strong>Router</strong> — capa 3, ruteo entre redes distintas.</li>
+      <li><strong>Firewall</strong> — capas 3 a 7, seguridad perimetral y filtrado.</li>
+      <li><strong>Tabla comparativa</strong>: qué dominio separa cada equipo.</li>
+      <li>Vectores de ataque característicos por equipo y mitigaciones.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="intro" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🔌</div>NIC — Network Interface Card</div>
+  <div class="card-body">
+    La <strong>tarjeta de interfaz de red</strong> del host. Opera en las <strong>capas 1 y 2</strong>: en capa 1 transmite y recibe bits sobre el medio físico, y en capa 2 maneja la trama Ethernet y la dirección MAC. Está identificada por la <strong>dirección MAC</strong> (Media Access Control), única por diseño aunque modificable por software.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon gray">📡</div>Repetidor</div>
+  <div class="card-body">
+    Equipo de <strong>capa 1</strong>. Amplifica y regenera la señal eléctrica. Solo conecta <strong>dos segmentos</strong>. Hoy es un equipo obsoleto: su funcionalidad fue absorbida primero por los hubs (varios puertos) y posteriormente por los switches (con inteligencia de capa 2).
+  </div>
+</div>
+
+</div>
+
+<div id="hub" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon gray">📢</div>Hub</div>
+  <div class="card-body">
+    Equipo de <strong>capa 1</strong>. Conceptualmente es un "repetidor multipuerto": todo lo que llega por un puerto se replica eléctricamente a todos los demás. No tiene capacidad de discriminación de tráfico.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li><strong>Broadcast puro</strong>: cada trama que entra por un puerto se reenvía por todos los demás.</li>
+    <li><strong>No distingue tráfico</strong> ni separa dominios de colisión.</li>
+    <li>El ancho de banda se comparte entre todos los dispositivos del segmento.</li>
+    <li><strong>No ofrece ningún tipo de aislamiento de seguridad</strong>: cualquier dispositivo conectado puede capturar todo el tráfico que pasa por el hub.</li>
+    <li>Obsoleto en redes modernas.</li>
+  </ul>
+</div>
+
+<div class="highlight danger">
+  <strong>📌 Por qué desaparecieron los hubs:</strong> al replicar toda trama a todos los puertos, un hub funciona efectivamente como un sniffer abierto. Cualquier dispositivo conectado puede capturar tráfico de todos los demás. Esta característica los volvió incompatibles con cualquier exigencia mínima de seguridad y aceleró su reemplazo por switches.
+</div>
+
+</div>
+
+<div id="bridge" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🌉</div>Bridge (puente)</div>
+  <div class="card-body">
+    Equipo de <strong>capa 2</strong>. Conecta dos segmentos LAN y opera con cierta inteligencia: procesa la trama hasta el nivel de enlace.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Procesa la trama completa hasta la capa de enlace.</li>
+    <li><strong>No retransmite colisiones</strong> ni tramas con errores.</li>
+    <li>Aprende <strong>adaptativamente</strong> las direcciones MAC observando el campo origen de las tramas que recibe.</li>
+    <li>Mantiene una <strong>tabla de reenvío</strong> que asocia direcciones MAC con puertos.</li>
+    <li>Es transparente para los hosts.</li>
+    <li>Implementa el <strong>algoritmo de árbol de expansión</strong> (Spanning Tree, IEEE 802.1D) para evitar bucles en topologías con caminos redundantes.</li>
+  </ul>
+</div>
+
+<div class="highlight info">
+  <strong>Por qué tiene sentido usar bridges:</strong> mejoran fiabilidad, rendimiento, seguridad (por segmentación de tráfico) y permiten extender el alcance geográfico de una LAN.
+</div>
+
+</div>
+
+<div id="switch" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🔀</div>Switch</div>
+  <div class="card-body">
+    El switch es conceptualmente un <strong>bridge multipuerto implementado en hardware</strong>. Opera en <strong>capa 2</strong>, aunque existen variantes (los llamados <strong>switches de capa 3</strong>) que también realizan ruteo IP.
+  </div>
+</div>
+
+<h3>Ventajas sobre hubs y bridges</h3>
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Filtrado por dirección MAC en <strong>cada puerto</strong>.</li>
+    <li>Ancho de banda <strong>dedicado por puerto</strong>, no compartido como en los hubs.</li>
+    <li>Más rápido que un bridge: la conmutación se realiza directamente en hardware (ASICs).</li>
+    <li>Permite <strong>VLANs</strong>, lo que habilita segmentación lógica independiente de la topología física.</li>
+    <li>Separa <strong>dominios de colisión</strong>: cada puerto constituye un dominio independiente.</li>
+  </ul>
+</div>
+
+<h3>Modos de conmutación interna</h3>
+<div class="card">
+  <div class="card-body" style="margin-bottom:8px">Los switches utilizan diferentes estrategias para decidir cuándo reenviar una trama:</div>
+  <table>
+    <thead><tr><th>Modo</th><th>Comportamiento</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Cut-through</strong></td><td>Reenvía la trama apenas lee la MAC de destino. <span class="badge red" style="font-size:10px">Alta velocidad</span> pero puede reenviar frames con errores que solo se detectarían tras el CRC.</td></tr>
+      <tr><td><strong>Store-and-forward</strong></td><td>Recibe la trama completa, valida el CRC y solo entonces reenvía. Garantiza integridad pero introduce mayor latencia.</td></tr>
+      <tr><td><strong>Fragment-Free</strong></td><td>Espera los primeros 64 bytes (donde ocurren la mayoría de las colisiones en redes CSMA/CD) y luego reenvía. Compromiso entre los dos anteriores.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div id="router" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🗺️</div>Router</div>
+  <div class="card-body">
+    Equipo de <strong>capa 3</strong>. Su función central es interconectar <strong>redes distintas</strong>, lo que requiere comprender direcciones IP y mantener tablas de ruteo.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Busca la <strong>mejor ruta</strong> para reenviar cada paquete, según métricas configurables.</li>
+    <li>Funciones específicas: control de tráfico broadcast/multicast, <strong>ruteo óptimo</strong>, administración de tráfico, direccionamiento lógico, conexión a WAN.</li>
+    <li>En cada salto <strong>reescribe las MACs</strong> origen y destino (para el siguiente salto), pero <strong>conserva las direcciones IP</strong> origen y destino del paquete.</li>
+  </ul>
+</div>
+
+</div>
+
+<div id="firewall" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>Firewall</div>
+  <div class="card-body">
+    Dispositivo de <strong>seguridad perimetral</strong>. Su función es filtrar tráfico según reglas configuradas, decidiendo qué paquetes se permiten o se bloquean.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Pueden implementarse como routers con ACL, como equipos dedicados (<strong>Palo Alto, Fortinet, FortiGate</strong>) o como software (<strong>iptables, pfSense</strong>).</li>
+    <li>Funcionalidades típicas: filtrado de paquetes, <strong>inspección de estado</strong> (stateful), filtrado de contenido, <strong>IDS/IPS</strong> (sistemas de detección y prevención de intrusos).</li>
+    <li>Operan en <strong>capas 3 y 4</strong> (filtros básicos) o hasta <strong>capa 7</strong> (firewalls de aplicación, conocidos como WAF — Web Application Firewall).</li>
+  </ul>
+</div>
+
+</div>
+
+<div id="comparativa" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">📊</div>Tabla comparativa por capa OSI</div>
+  <div class="card-body">
+    Síntesis de qué capa procesa cada equipo y qué dominios separa. Esta tabla resume buena parte del temario del módulo.
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Equipo</th><th>Capa OSI</th><th>Inteligencia</th><th>Separa colisión</th><th>Separa broadcast</th></tr></thead>
+    <tbody>
+      <tr><td>Hub</td><td>1</td><td>Ninguna</td><td>❌ No</td><td>❌ No</td></tr>
+      <tr><td>Bridge</td><td>2</td><td>MAC</td><td>✅ Sí</td><td>❌ No</td></tr>
+      <tr><td>Switch</td><td>2 (o 3)</td><td>MAC (+ IP en switches L3)</td><td>✅ Sí</td><td>Solo con VLAN</td></tr>
+      <tr><td>Router</td><td>3</td><td>IP</td><td>✅ Sí</td><td>✅ Sí</td></tr>
+      <tr><td>Firewall</td><td>3-7</td><td>IP + estado + L7</td><td>✅ Sí</td><td>✅ Sí</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div id="cyber" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>Implicancias de seguridad por equipo</div>
+  <div class="card-body">
+    Cada equipo tiene su perfil de amenaza específico. Comprender qué puede y qué no puede hacer cada uno es central para diseñar defensas en profundidad.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Un <strong>hub</strong> ofrece visibilidad total del tráfico a cualquier dispositivo conectado. Es la razón principal por la que desapareció de las redes corporativas.</li>
+    <li>Un <strong>switch</strong> ya impide el sniffing pasivo por defecto, pero un ataque de <strong>MAC flooding</strong> puede degradarlo a comportamiento de hub (modo <em>fail-open</em>). Mitigación estándar: <strong>port security</strong> (limitar el número de MACs permitidas por puerto).</li>
+    <li><strong>ARP</strong> opera en capa 2 y suele ser el <strong>primer blanco</strong> en una LAN: el ARP spoofing permite ejecutar ataques Man-In-The-Middle entre dos hosts del mismo segmento.</li>
+    <li><strong>VLAN ≠ seguridad fuerte</strong>: las VLANs separan tráfico pero un atacante que controla un puerto trunk puede ejecutar ataques de VLAN hopping.</li>
+    <li>Los <strong>routers</strong> filtran por dirección IP, pero por defecto <strong>no inspeccionan el contenido</strong> de los paquetes.</li>
+    <li>Los <strong>firewalls</strong> son la primera línea de defensa perimetral, pero no reemplazan otros controles: la práctica recomendada es "defensa en profundidad" (combinar firewalls con endpoint security, segmentación interna, monitoreo).</li>
+    <li><strong>NAT</strong> no es un firewall, pero suele actuar como uno de manera accidental al ocultar las direcciones IP internas detrás de una IP pública.</li>
+  </ul>
+</div>
+
+<div class="highlight success">
+  <strong>📌 Síntesis del módulo:</strong> la cadena <strong>hub → bridge → switch → router → firewall</strong> es también una cadena de capas OSI crecientes: cada equipo opera más arriba en la pila y toma decisiones más sofisticadas. Un hub no separa nada; un router separa redes; un firewall separa <strong>zonas de confianza</strong>. Saber qué capa procesa cada dispositivo es exactamente saber qué puede ver, qué puede filtrar y qué puede proteger.
+</div>
+
+</div>
+
+<div id="cierre" class="section">
+<div class="transition to-next">
+  <div class="trans-icon">→</div>
+  <div class="trans-body">
+    <span class="trans-label">Hacia dónde vamos</span>
+    Con todo el temario teórico cubierto — desde los fundamentos abstractos hasta el hardware concreto —, el último módulo presenta el conjunto de herramientas que permiten observar, diagnosticar y auditar redes en la práctica. Es el cierre operativo de la suite. Continúa en <a href="../11-herramientas-y-ciberseguridad/index.html"><strong>App 11 · Herramientas y ciberseguridad</strong></a>.
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>App 10 de 11 · Suite de Comunicaciones · Universidad de Palermo</p>
+  <p style="margin-top:6px">🦈 Por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a></p>
+</footer>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
