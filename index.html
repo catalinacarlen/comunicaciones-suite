@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunicaciones — Suite de Estudio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;min-height:100vh}
+.container{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+header{text-align:center;padding:4rem 0 3rem;border-bottom:1px solid var(--border);margin-bottom:3rem;position:relative}
+header .badge-top{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--accent-text);background:var(--accent-bg);padding:5px 12px;border-radius:999px;margin-bottom:1.25rem;border:1px solid var(--accent-bg);letter-spacing:0.5px}
+header h1{font-size:42px;font-weight:600;margin-bottom:12px;letter-spacing:-1px;line-height:1.1}
+header h1 .accent{color:var(--accent)}
+header p.subtitle{color:var(--text-2);font-size:15px;max-width:580px;margin:0 auto;line-height:1.6}
+
+.section-title{font-size:14px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.25rem;padding-left:2px}
+
+.apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:3rem}
+.app-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-decoration:none;color:inherit;transition:all .2s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.app-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-2px)}
+.app-card .num{font-family:var(--mono);font-size:11px;color:var(--text-3);margin-bottom:10px;letter-spacing:0.5px}
+.app-card .icon-circle{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;flex-shrink:0}
+.app-card .icon-circle.blue{background:var(--accent-bg);color:var(--accent-text)}
+.app-card .icon-circle.green{background:var(--success-bg);color:var(--success-text)}
+.app-card .icon-circle.orange{background:var(--warning-bg);color:var(--warning-text)}
+.app-card .icon-circle.red{background:var(--danger-bg);color:var(--danger-text)}
+.app-card .icon-circle.purple{background:var(--purple-bg);color:var(--purple-text)}
+.app-card .icon-circle.gray{background:var(--surface-alt);color:var(--text-2)}
+.app-card h3{font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3}
+.app-card p{font-size:13px;color:var(--text-2);line-height:1.55;flex:1}
+.app-card .arrow{margin-top:14px;font-size:13px;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:6px;transition:gap .2s}
+.app-card:hover .arrow{gap:10px}
+
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.tag{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;background:var(--surface-alt);color:var(--text-3);border:1px solid var(--border)}
+
+.about{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;margin-bottom:2rem}
+.about h2{font-size:16px;font-weight:600;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.about h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+.about p{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:8px}
+.about p:last-child{margin-bottom:0}
+.about strong{color:var(--text);font-weight:500}
+
+.flow{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:2rem}
+.flow h3{font-size:14px;font-weight:500;color:var(--text-3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem}
+.flow-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--text-2);line-height:1.8}
+.flow-line .step{padding:4px 10px;background:var(--surface-alt);border-radius:6px;color:var(--text);font-weight:500;border:1px solid var(--border)}
+.flow-line .arrow{color:var(--text-3);font-size:14px}
+
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:2rem;color:var(--text-3);font-size:12px}
+footer p{margin-bottom:4px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+
+@media(max-width:640px){
+  header h1{font-size:32px}
+  .apps-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <span class="badge-top">UNIVERSIDAD DE PALERMO · CIBERSEGURIDAD</span>
+  <h1>Comunicaciones<br><span class="accent">Suite de estudio</span></h1>
+  <p class="subtitle">Apuntes Redes y Comunicaciones por Catalina Carlen — Universidad de Palermo</p>
+</header>
+
+<div class="about">
+  <h2><span class="dot"></span>Sobre esta suite</h2>
+  <p>Once mini-aplicaciones independientes que cubren el temario del primer parcial de Comunicaciones. Cada una es <strong>autocontenida</strong>: se abre sin servidor, no requiere conexión adicional, y puede compartirse como un único archivo HTML.</p>
+  <p>Las apps siguen un orden pedagógico ascendente: parten de conceptos abstractos, descienden al medio físico, suben al modelo OSI, y desde ahí abordan los temas específicos por capa, hasta cerrar con equipamiento y herramientas. Cada módulo abre con un bloque de continuidad respecto al anterior y cierra anticipando el siguiente, sosteniendo un hilo conductor a lo largo de toda la materia.</p>
+</div>
+
+<div class="flow">
+  <h3>Hilo conductor del temario</h3>
+  <div class="flow-line">
+    <span class="step">Fundamentos</span>
+    <span class="arrow">→</span>
+    <span class="step">Capa física</span>
+    <span class="arrow">→</span>
+    <span class="step">Arquitectura</span>
+    <span class="arrow">→</span>
+    <span class="step">Evolución</span>
+    <span class="arrow">→</span>
+    <span class="step">Modelo OSI</span>
+    <span class="arrow">→</span>
+    <span class="step">Conmutación</span>
+    <span class="arrow">→</span>
+    <span class="step">Capa 2 en detalle</span>
+    <span class="arrow">→</span>
+    <span class="step">Capa 3 (IP)</span>
+    <span class="arrow">→</span>
+    <span class="step">Equipos</span>
+    <span class="arrow">→</span>
+    <span class="step">Herramientas</span>
+  </div>
+</div>
+
+<div class="section-title">El temario completo</div>
+<div class="apps-grid">
+
+  <a href="01-conceptos-y-definiciones/index.html" class="app-card">
+    <div class="num">APP 01 · FUNDAMENTOS</div>
+    <div class="icon-circle purple">📐</div>
+    <h3>Conceptos y Definiciones</h3>
+    <p>Vocabulario base de comunicaciones: componentes, primitivas, tareas. Introduce la tríada CIA como marco para evaluar protocolos a lo largo de la suite.</p>
+    <div class="tag-row">
+      <span class="tag">CIA</span><span class="tag">Glosario</span><span class="tag">Primitivas</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="02-medios-y-senal/index.html" class="app-card">
+    <div class="num">APP 02 · CAPA 1</div>
+    <div class="icon-circle orange">📡</div>
+    <h3>Medios físicos y procesamiento de la señal</h3>
+    <p>Las ocho etapas del viaje de la información, los tres medios físicos clásicos (coaxial, par trenzado, fibra óptica) y los parámetros de evaluación del cableado.</p>
+    <div class="tag-row">
+      <span class="tag">Fibra</span><span class="tag">UTP</span><span class="tag">Modulación</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="03-topologias-y-cobertura/index.html" class="app-card">
+    <div class="num">APP 03 · ARQUITECTURA</div>
+    <div class="icon-circle blue">🔗</div>
+    <h3>Topologías, transmisión y cobertura</h3>
+    <p>Cómo se organizan físicamente los nodos (estrella, malla, anillo, bus), los modos de transmisión (simplex/duplex) y las escalas PAN, LAN, MAN, WAN con su modelo jerárquico.</p>
+    <div class="tag-row">
+      <span class="tag">LAN</span><span class="tag">Duplex</span><span class="tag">Jerárquico</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="04-redes-y-evolucion/index.html" class="app-card">
+    <div class="num">APP 04 · CONTEXTO</div>
+    <div class="icon-circle green">🌍</div>
+    <h3>Redes de datos y evolución</h3>
+    <p>La cronología que llevó de TDM al dominio de IP, pasando por SDH y ATM. Explica por qué IP terminó dominando sobre alternativas técnicamente superiores.</p>
+    <div class="tag-row">
+      <span class="tag">TDM</span><span class="tag">ATM</span><span class="tag">IP</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="05-protocolos-y-osi/index.html" class="app-card">
+    <div class="num">APP 05 · MODELO</div>
+    <div class="icon-circle purple">🏛️</div>
+    <h3>Protocolos y modelo OSI</h3>
+    <p>El marco conceptual central. Las 7 capas, las subcapas MAC y LLC, el modelo TCP/IP comparado, TCP vs UDP, encapsulación y unidades de datos por capa.</p>
+    <div class="tag-row">
+      <span class="tag">OSI</span><span class="tag">TCP/IP</span><span class="tag">Encapsulación</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="06-conmutacion/index.html" class="app-card">
+    <div class="num">APP 06 · TRANSPORTE</div>
+    <div class="icon-circle orange">🔀</div>
+    <h3>Conmutación de circuitos y paquetes</h3>
+    <p>Las dos filosofías para mover información a través de la red. Conmutación de circuitos (PSTN) versus paquetes, datagramas versus circuitos virtuales, y estrategias de encaminamiento.</p>
+    <div class="tag-row">
+      <span class="tag">Circuitos</span><span class="tag">Datagramas</span><span class="tag">Ruteo</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="07-aloha-ethernet-wifi/index.html" class="app-card">
+    <div class="num">APP 07 · CAPA 2 — MAC</div>
+    <div class="icon-circle red">📶</div>
+    <h3>ALOHA, CSMA/CD, Ethernet y WiFi</h3>
+    <p>La evolución del control de acceso al medio: Aloha → CSMA → Ethernet → 802.11. Incluye la trama Ethernet, CSMA/CA y el problema del nodo escondido en WiFi.</p>
+    <div class="tag-row">
+      <span class="tag">Ethernet</span><span class="tag">802.11</span><span class="tag">WPA</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="08-control-flujo-y-errores/index.html" class="app-card">
+    <div class="num">APP 08 · CAPA 2 — LLC</div>
+    <div class="icon-circle green">🔐</div>
+    <h3>Control de flujo y errores</h3>
+    <p>La otra subcapa de enlace: cómo evitar saturar al receptor y cómo detectar y recuperar errores. Stop-and-Wait, ventana deslizante, CRC, paridad, FEC y mecanismos ARQ.</p>
+    <div class="tag-row">
+      <span class="tag">CRC</span><span class="tag">ARQ</span><span class="tag">FEC</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="09-direccionamiento-ip/index.html" class="app-card">
+    <div class="num">APP 09 · CAPA 3</div>
+    <div class="icon-circle blue">🌐</div>
+    <h3>Direccionamiento IP</h3>
+    <p>La capa de red al detalle. IPv4, IPv6, clases, máscaras, subnetting, CIDR, NAT e IPSec. Con ejemplos prácticos de identificación y diagramas del datagrama.</p>
+    <div class="tag-row">
+      <span class="tag">IPv4</span><span class="tag">IPv6</span><span class="tag">CIDR</span><span class="tag">IPSec</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="10-equipos-fisicos/index.html" class="app-card">
+    <div class="num">APP 10 · HARDWARE</div>
+    <div class="icon-circle blue">🛡️</div>
+    <h3>Equipos físicos</h3>
+    <p>Síntesis hardware del temario. Hub, bridge, switch, router y firewall ordenados por capa OSI ascendente, con sus dominios de colisión y broadcast.</p>
+    <div class="tag-row">
+      <span class="tag">Switch</span><span class="tag">Router</span><span class="tag">Firewall</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+  <a href="11-herramientas-y-ciberseguridad/index.html" class="app-card">
+    <div class="num">APP 11 · BLUE TEAM</div>
+    <div class="icon-circle red">🧰</div>
+    <h3>Herramientas y ciberseguridad</h3>
+    <p>El toolkit defensivo que aplica todo lo anterior. Ping, traceroute, Wireshark, nmap, aircrack-ng, Burp Suite, mapeados a la capa OSI que observa cada uno.</p>
+    <div class="tag-row">
+      <span class="tag">Wireshark</span><span class="tag">nmap</span><span class="tag">aircrack</span>
+    </div>
+    <div class="arrow">Abrir app →</div>
+  </a>
+
+</div>
+
+<footer>
+  <p>Material basado en los apuntes de Comunicaciones — Universidad de Palermo</p>
+  <p style="margin-top:8px">🦈 Hecho por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a> · <a href="https://github.com/catalinacarlen/blue-team-notes" target="_blank">Ver en GitHub</a></p>
+</footer>
+
+</div>
+</body>
+</html>
