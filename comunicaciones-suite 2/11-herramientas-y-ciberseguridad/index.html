@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herramientas y ciberseguridad — Comunicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);transition:all .2s;margin-bottom:1.5rem}
+.back-link:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-bg)}
+header{text-align:center;padding:2rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header .num{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:1rem;letter-spacing:0.5px}
+header .num.blue{color:var(--accent-text);background:var(--accent-bg)}
+header .num.green{color:var(--success-text);background:var(--success-bg)}
+header .num.orange{color:var(--warning-text);background:var(--warning-bg)}
+header .num.red{color:var(--danger-text);background:var(--danger-bg)}
+header .num.purple{color:var(--purple-text);background:var(--purple-bg)}
+header h1{font-size:30px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px}
+header p{color:var(--text-2);font-size:14px;max-width:560px;margin:0 auto}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;position:sticky;top:0;background:var(--bg);padding:1rem 0;z-index:10;border-bottom:1px solid var(--border)}
+.nav-btn{padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all .2s;font-weight:500}
+.nav-btn:hover{background:var(--surface-alt);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.blue{background:var(--accent-bg);color:var(--accent-text)}
+.card-title .icon.green{background:var(--success-bg);color:var(--success-text)}
+.card-title .icon.orange{background:var(--warning-bg);color:var(--warning-text)}
+.card-title .icon.red{background:var(--danger-bg);color:var(--danger-text)}
+.card-title .icon.purple{background:var(--purple-bg);color:var(--purple-text)}
+.card-body{font-size:14px;color:var(--text-2);line-height:1.75}
+.card-body strong{color:var(--text);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:2rem 0 1rem;padding-left:12px;border-left:3px solid var(--accent)}
+.highlight{background:var(--warning-bg);border-left:3px solid var(--warning);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:var(--warning-text);margin:12px 0;line-height:1.6}
+.highlight.info{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent-text)}
+.highlight.purple{background:var(--purple-bg);border-left-color:var(--purple);color:var(--purple-text)}
+.highlight.success{background:var(--success-bg);border-left-color:var(--success);color:var(--success-text)}
+.highlight.danger{background:var(--danger-bg);border-left-color:var(--danger);color:var(--danger-text)}
+table{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+th{background:var(--surface-alt);color:var(--text-2);font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.green{background:var(--success-bg);color:var(--success-text)}
+.badge.orange{background:var(--warning-bg);color:var(--warning-text)}
+.badge.red{background:var(--danger-bg);color:var(--danger-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.gray{background:var(--surface-alt);color:var(--text-3)}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+.metric-label{font-size:12px;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--text)}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:1rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.step-content{flex:1;font-size:14px;color:var(--text-2);line-height:1.7}
+.step-content strong{color:var(--text);font-weight:500}
+code{font-family:var(--mono);font-size:12px;background:var(--surface-alt);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;font-size:12px;font-family:var(--mono);line-height:1.6;margin:10px 0}
+.transition{display:flex;gap:14px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0 2rem;font-size:13px;color:var(--text-2);line-height:1.7}
+.transition.from-prev{border-left:3px solid var(--text-3)}
+.transition.to-next{border-left:3px solid var(--accent);margin-top:2rem;margin-bottom:1rem}
+.transition .trans-icon{font-size:20px;flex-shrink:0;opacity:.8}
+.transition .trans-body{flex:1}
+.transition .trans-label{font-family:var(--mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.transition strong{color:var(--text);font-weight:500}
+.transition a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.transition a:hover{opacity:.8}
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text-3);font-size:12px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back-link">← Volver a la suite</a>
+
+<header>
+  <span class="num red">APP 11 · BLUE TEAM</span>
+  <h1>Herramientas y ciberseguridad</h1>
+  <p>El toolkit operativo que aplica todo lo estudiado. Cada herramienta mapeada a la capa OSI sobre la que opera.</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('contexto')">Contexto</button>
+  <button class="nav-btn" onclick="show('intro')">Introducción</button>
+  <button class="nav-btn" onclick="show('diagnostico')">Diagnóstico</button>
+  <button class="nav-btn" onclick="show('analisis')">Análisis</button>
+  <button class="nav-btn" onclick="show('auditoria')">Auditoría</button>
+  <button class="nav-btn" onclick="show('firewalls')">Firewalls</button>
+  <button class="nav-btn" onclick="show('cierre')">Mapa OSI de herramientas</button>
+</nav>
+
+<div id="contexto" class="section active">
+<div class="transition from-prev">
+  <div class="trans-icon">←</div>
+  <div class="trans-body">
+    <span class="trans-label">De dónde venimos</span>
+    En <a href="../10-equipos-fisicos/index.html"><strong>App 10 · Equipos físicos</strong></a>, se completó el recorrido teórico-conceptual del temario. Este último módulo presenta el <strong>toolkit operativo</strong>: las herramientas estándar para observar, diagnosticar y auditar redes. Cada herramienta se mapea a la capa OSI sobre la que opera, lo que cierra el hilo conductor de la suite — el modelo OSI no es solo un esquema teórico, es el mapa que organiza el trabajo práctico cotidiano en ciberseguridad.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🎯</div>Lo que se aborda en este módulo</div>
+  <div class="card-body">
+    <ul style="padding-left:20px;line-height:2;margin-top:6px">
+      <li><strong>Herramientas de diagnóstico</strong>: ping, traceroute, arp, nslookup/dig, netstat/ss.</li>
+      <li><strong>Herramientas de análisis</strong>: tcpdump y Wireshark (sniffers), nmap (escáner de puertos).</li>
+      <li><strong>Herramientas de auditoría</strong>: aircrack-ng (WiFi), Burp Suite y OWASP ZAP (HTTP/HTTPS).</li>
+      <li><strong>Firewalls como herramienta</strong>: iptables, nftables, pfSense.</li>
+      <li><strong>Mapeo final</strong>: qué herramienta usar para observar cada capa OSI.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="intro" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🧰</div>El toolkit estándar</div>
+  <div class="card-body">
+    La caja de herramientas presentada en este módulo es el conjunto que aparece transversalmente a lo largo de la formación en ciberseguridad. No es exhaustiva: es el set mínimo para arrancar y entender qué ocurre en una red. Cada herramienta opera en una capa o función específica, y combinadas proveen visibilidad completa sobre una infraestructura.
+  </div>
+</div>
+
+</div>
+
+<div id="diagnostico" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">📡</div>ping</div>
+  <div class="card-body">
+    Verificación básica de <strong>conectividad ICMP</strong>. Envía un mensaje Echo Request y espera el correspondiente Echo Reply. Una respuesta exitosa indica conectividad de capa 3 (IP) hasta el destino.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🗺️</div>traceroute / tracert</div>
+  <div class="card-body">
+    Mapeo del <strong>camino IP</strong> hasta un destino. Utiliza el campo TTL incremental: cuando un router decrementa TTL a 0, descarta el paquete y envía un mensaje <strong>ICMP Time Exceeded</strong> que delata su existencia.<br><br>
+    El comando se llama <strong>traceroute</strong> en Linux/macOS y <strong>tracert</strong> en Windows.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🔍</div>arp -a</div>
+  <div class="card-body">
+    Inspección de la <strong>tabla ARP</strong> local: qué direcciones IP se han resuelto a qué MACs en el segmento. Útil para detectar <strong>ARP spoofing</strong>: una MAC duplicada o un cambio inesperado en la asociación IP-MAC suele ser un indicador de ataque.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🌐</div>nslookup / dig</div>
+  <div class="card-body">
+    Consultas al servicio <strong>DNS</strong>. <strong>dig</strong> (disponible en Linux/macOS) es más potente y configurable; <strong>nslookup</strong> es la herramienta clásica multiplataforma. Son indispensables para diagnosticar problemas de resolución de nombres y verificar registros DNS.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">📊</div>netstat / ss</div>
+  <div class="card-body">
+    Visualización de <strong>conexiones TCP/UDP activas</strong> en el host local. <strong>ss</strong> es la herramienta moderna y rápida en Linux; <strong>netstat</strong> sigue disponible en la mayoría de los sistemas.<br><br>
+    Resultan particularmente útiles para detectar <strong>backdoors</strong> — procesos no autorizados que escuchan en puertos inusuales — y para auditar las conexiones de un equipo sospechado de estar comprometido.
+  </div>
+</div>
+
+</div>
+
+<div id="analisis" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🦈</div>tcpdump y Wireshark</div>
+  <div class="card-body">
+    <strong>Analizadores de paquetes</strong> (sniffers). Son las herramientas más importantes para entender el funcionamiento real de una red.<br><br>
+    <strong>tcpdump</strong> es la versión de línea de comandos, adecuada para entornos sin interfaz gráfica (servidores, sesiones remotas). <strong>Wireshark</strong> ofrece una interfaz gráfica con análisis profundo, filtros configurables y disectores para cientos de protocolos.<br><br>
+    Ambas exponen lo que ocurre en la red capa por capa, byte por byte. Permiten verificar empíricamente cualquier protocolo estudiado en la suite.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🔎</div>nmap</div>
+  <div class="card-body">
+    <strong>Escáner de puertos y herramienta de descubrimiento de hosts</strong>. Es el estándar de facto en reconocimiento de redes. Permite identificar qué hosts están activos, qué puertos tienen abiertos, qué servicios corren tras ellos, e incluso inferir sistemas operativos.<br><br>
+    Tiene un doble uso: tanto defensivo (auditoría interna, detección de servicios no autorizados) como ofensivo (reconocimiento previo a un ataque). Por su capacidad, en muchos entornos su uso está regulado.
+  </div>
+</div>
+
+</div>
+
+<div id="auditoria" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">📶</div>aircrack-ng</div>
+  <div class="card-body">
+    Suite de herramientas para <strong>auditoría de redes WiFi</strong>. Incluye utilidades para capturar handshakes WPA, ejecutar ataques de desautenticación, intentar romper claves débiles, entre otras funciones.<br><br>
+    Requiere placas de red en <strong>modo monitor</strong> (no todas las placas comerciales lo soportan). Es la herramienta clásica para evaluar la robustez de configuraciones inalámbricas.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🕷️</div>Burp Suite y OWASP ZAP</div>
+  <div class="card-body">
+    <strong>Proxies de interceptación HTTP/HTTPS</strong>. Permiten posicionarse entre el navegador y el sitio web para inspeccionar, modificar y reenviar las peticiones y respuestas.<br><br>
+    <strong>Burp Suite</strong> es comercial, con una versión Community gratuita y limitada. <strong>OWASP ZAP</strong> es la alternativa de código abierto. Ambas son indispensables para auditoría de aplicaciones web.
+  </div>
+</div>
+
+</div>
+
+<div id="firewalls" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>iptables, nftables y pfSense</div>
+  <div class="card-body">
+    <strong>Implementaciones de firewall</strong> de uso extendido:
+    <ul style="padding-left:20px;margin-top:8px;line-height:1.9">
+      <li><strong>iptables</strong> — herramienta clásica de Linux, basada en el framework netfilter del kernel.</li>
+      <li><strong>nftables</strong> — sucesor moderno de iptables, con la misma idea conceptual pero sintaxis renovada y mejor desempeño.</li>
+      <li><strong>pfSense</strong> — distribución BSD orientada a appliances, incluye firewall, routing, VPN, IDS y otras funciones integradas. Suele desplegarse como sistema dedicado en hardware.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="cierre" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🎓</div>Cómo se conecta con todo el temario</div>
+  <div class="card-body">
+    Cada herramienta es un "ojo" sobre una capa específica del modelo OSI. Conocer qué capa observa cada una permite <strong>diagnosticar problemas metódicamente</strong>: si una conexión falla, se sube por las capas verificando cada una con la herramienta correspondiente.
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Si se quiere observar…</th><th>Herramienta</th><th>Capa OSI</th></tr></thead>
+    <tbody>
+      <tr><td>Si un host responde por IP</td><td><code>ping</code></td><td>3 (ICMP)</td></tr>
+      <tr><td>Qué routers hay entre origen y destino</td><td><code>traceroute</code></td><td>3</td></tr>
+      <tr><td>La tabla ARP local</td><td><code>arp -a</code></td><td>2-3</td></tr>
+      <tr><td>Si la resolución DNS funciona</td><td><code>dig</code> / <code>nslookup</code></td><td>7</td></tr>
+      <tr><td>Conexiones abiertas en el host local</td><td><code>ss</code> / <code>netstat</code></td><td>4</td></tr>
+      <tr><td>Qué ocurre byte a byte en el tráfico</td><td>Wireshark / tcpdump</td><td>1-7</td></tr>
+      <tr><td>Qué puertos están abiertos en un host remoto</td><td><code>nmap</code></td><td>4</td></tr>
+      <tr><td>Vulnerabilidades de WiFi</td><td>aircrack-ng</td><td>2 (802.11)</td></tr>
+      <tr><td>Tráfico HTTP/HTTPS detallado</td><td>Burp Suite</td><td>7</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="highlight success">
+  <strong>📌 Cierre de la suite:</strong> con este toolkit y todo lo estudiado en los diez módulos anteriores se dispone del bagaje conceptual y práctico para entender cualquier red, diagnosticar incidentes y auditar configuraciones. El temario completo del primer parcial queda cubierto.
+</div>
+
+<div class="transition to-next">
+  <div class="trans-icon">🏁</div>
+  <div class="trans-body">
+    <span class="trans-label">Fin del recorrido</span>
+    Suite completada. Para volver al índice general y revisar otras apps, retornar al <a href="../index.html"><strong>hub de la suite</strong></a>.
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p>App 11 de 11 · Suite de Comunicaciones · Universidad de Palermo</p>
+  <p style="margin-top:6px">🦈 Por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a></p>
+</footer>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

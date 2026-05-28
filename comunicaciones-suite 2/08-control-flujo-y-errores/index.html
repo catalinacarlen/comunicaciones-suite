@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de flujo y errores — Comunicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);transition:all .2s;margin-bottom:1.5rem}
+.back-link:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-bg)}
+header{text-align:center;padding:2rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header .num{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:1rem;letter-spacing:0.5px}
+header .num.blue{color:var(--accent-text);background:var(--accent-bg)}
+header .num.green{color:var(--success-text);background:var(--success-bg)}
+header .num.orange{color:var(--warning-text);background:var(--warning-bg)}
+header .num.red{color:var(--danger-text);background:var(--danger-bg)}
+header .num.purple{color:var(--purple-text);background:var(--purple-bg)}
+header h1{font-size:30px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px}
+header p{color:var(--text-2);font-size:14px;max-width:560px;margin:0 auto}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;position:sticky;top:0;background:var(--bg);padding:1rem 0;z-index:10;border-bottom:1px solid var(--border)}
+.nav-btn{padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all .2s;font-weight:500}
+.nav-btn:hover{background:var(--surface-alt);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.blue{background:var(--accent-bg);color:var(--accent-text)}
+.card-title .icon.green{background:var(--success-bg);color:var(--success-text)}
+.card-title .icon.orange{background:var(--warning-bg);color:var(--warning-text)}
+.card-title .icon.red{background:var(--danger-bg);color:var(--danger-text)}
+.card-title .icon.purple{background:var(--purple-bg);color:var(--purple-text)}
+.card-body{font-size:14px;color:var(--text-2);line-height:1.75}
+.card-body strong{color:var(--text);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:2rem 0 1rem;padding-left:12px;border-left:3px solid var(--accent)}
+.highlight{background:var(--warning-bg);border-left:3px solid var(--warning);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:var(--warning-text);margin:12px 0;line-height:1.6}
+.highlight.info{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent-text)}
+.highlight.purple{background:var(--purple-bg);border-left-color:var(--purple);color:var(--purple-text)}
+.highlight.success{background:var(--success-bg);border-left-color:var(--success);color:var(--success-text)}
+.highlight.danger{background:var(--danger-bg);border-left-color:var(--danger);color:var(--danger-text)}
+table{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+th{background:var(--surface-alt);color:var(--text-2);font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.green{background:var(--success-bg);color:var(--success-text)}
+.badge.orange{background:var(--warning-bg);color:var(--warning-text)}
+.badge.red{background:var(--danger-bg);color:var(--danger-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.gray{background:var(--surface-alt);color:var(--text-3)}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+.metric-label{font-size:12px;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--text)}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:1rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.step-content{flex:1;font-size:14px;color:var(--text-2);line-height:1.7}
+.step-content strong{color:var(--text);font-weight:500}
+code{font-family:var(--mono);font-size:12px;background:var(--surface-alt);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;font-size:12px;font-family:var(--mono);line-height:1.6;margin:10px 0}
+.transition{display:flex;gap:14px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0 2rem;font-size:13px;color:var(--text-2);line-height:1.7}
+.transition.from-prev{border-left:3px solid var(--text-3)}
+.transition.to-next{border-left:3px solid var(--accent);margin-top:2rem;margin-bottom:1rem}
+.transition .trans-icon{font-size:20px;flex-shrink:0;opacity:.8}
+.transition .trans-body{flex:1}
+.transition .trans-label{font-family:var(--mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.transition strong{color:var(--text);font-weight:500}
+.transition a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.transition a:hover{opacity:.8}
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text-3);font-size:12px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back-link">← Volver a la suite</a>
+
+<header>
+  <span class="num green">APP 08 · CAPA 2 — LLC</span>
+  <h1>Control de flujo y errores</h1>
+  <p>La otra subcapa de enlace: cómo evitar saturar al receptor y cómo detectar y recuperar errores. Stop-and-Wait, ventana deslizante, CRC, paridad, FEC y mecanismos ARQ.</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('contexto')">Contexto</button>
+  <button class="nav-btn" onclick="show('marco')">Marco general</button>
+  <button class="nav-btn" onclick="show('flujo')">Control de flujo</button>
+  <button class="nav-btn" onclick="show('errores')">Control de errores</button>
+  <button class="nav-btn" onclick="show('deteccion')">Detección (CRC)</button>
+  <button class="nav-btn" onclick="show('arq')">ARQ</button>
+  <button class="nav-btn" onclick="show('conectando')">Conexiones transversales</button>
+  <button class="nav-btn" onclick="show('cyber')">Implicancias de seguridad</button>
+  <button class="nav-btn" onclick="show('cierre')">Cierre</button>
+</nav>
+
+<div id="contexto" class="section active">
+<div class="transition from-prev">
+  <div class="trans-icon">←</div>
+  <div class="trans-body">
+    <span class="trans-label">De dónde venimos</span>
+    En <a href="../07-aloha-ethernet-wifi/index.html"><strong>App 07 · ALOHA, Ethernet y WiFi</strong></a>, se cubrió la subcapa <strong>MAC</strong>: cómo varios dispositivos comparten el medio sin destruirse mutuamente la información. Este módulo aborda la otra subcapa de Enlace, <strong>LLC</strong> (Logical Link Control), introducida formalmente en App 05. Aquí se estudian los mecanismos que garantizan que lo transmitido llegue bien y en orden: control de flujo, detección de errores, recuperación. Aunque estos conceptos operan en la capa de enlace, los mismos principios reaparecen en el nivel de transporte (TCP), por lo que el módulo tiene relevancia transversal en toda la suite.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🎯</div>Lo que se aborda en este módulo</div>
+  <div class="card-body">
+    <ul style="padding-left:20px;line-height:2;margin-top:6px">
+      <li>Marco general: funciones que debe cumplir la capa de enlace.</li>
+      <li><strong>Control de flujo</strong>: Stop-and-Wait, Sliding Window (ventana deslizante), piggybacking, RNR.</li>
+      <li>Tipos de errores y los dos enfoques generales para tratarlos: <strong>FEC</strong> versus <strong>ARQ</strong>.</li>
+      <li>Detección de errores: codificación por bloques, distancia de Hamming, paridad y <strong>CRC</strong>.</li>
+      <li>Mecanismos ARQ: <strong>Stop-and-Wait, Go-Back-N, Selective Repeat</strong>.</li>
+      <li>Conexión transversal: cómo estos conceptos reaparecen en TCP (capa 4).</li>
+      <li>Implicancias de seguridad: por qué CRC no es integridad criptográfica.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="marco" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🎯</div>Funciones de la capa de enlace</div>
+  <div class="card-body">
+    Para que dos estaciones se comuniquen efectivamente no basta con disponer del cableado: la capa de enlace debe coordinar el intercambio mediante un conjunto de funciones específicas. La subcapa LLC, definida por IEEE 802.2, las implementa.
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li><strong>Sincronización de tramas</strong> — reconocer principio y fin de cada unidad transmitida.</li>
+    <li><strong>Control de flujo</strong> — evitar que el emisor sature al receptor.</li>
+    <li><strong>Control de errores</strong> — detectar y, cuando es posible, corregir alteraciones del canal.</li>
+    <li><strong>Direccionamiento</strong> — identificar emisor y receptor inequívocamente.</li>
+    <li><strong>Control de datos</strong> — distinguir información de control de los datos del usuario.</li>
+    <li><strong>Manejo de conexiones</strong> — iniciar, mantener y cerrar la comunicación.</li>
+  </ul>
+</div>
+
+</div>
+
+<div id="flujo" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🚦</div>Control de flujo</div>
+  <div class="card-body">
+    El control de flujo coordina el intercambio para que el emisor <strong>no sobrecargue al receptor</strong>, previniendo el desbordamiento de buffer (<em>buffer overflow</em>).<br><br>
+    El receptor dispone de un buffer de recepción de tamaño finito. Si el emisor envía datos más rápido de lo que el receptor puede procesarlos, el buffer se llena y las tramas siguientes son descartadas, <strong>aun cuando lleguen sin errores</strong>.
+  </div>
+</div>
+
+<h3>Dos tiempos clave en el análisis</h3>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><div class="icon orange">⏱️</div>Tiempo de transmisión</div>
+    <div class="card-body">Tiempo que demanda al emisor <strong>poner todos los bits</strong> de una trama en el medio. Es proporcional al tamaño de la trama.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon purple">🌐</div>Tiempo de propagación</div>
+    <div class="card-body">Tiempo que tarda un bit en <strong>viajar del emisor al receptor</strong>. Depende de la distancia y del medio físico.</div>
+  </div>
+</div>
+
+<h3>Stop-and-Wait — el mecanismo más simple</h3>
+<div class="card">
+  <div class="step"><div class="step-num">1</div><div class="step-content">El emisor envía una trama y <strong>espera</strong>.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-content">El receptor envía un <strong>ACK</strong> (acuse de recibo + indicación de disponibilidad para la próxima).</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-content">El emisor inicia un <strong>timer</strong>. Si el ACK llega antes del timeout, envía la siguiente. Si no, asume pérdida y retransmite.</div></div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🔢</div>Mecanismo anti-duplicados</div>
+  <div class="card-body">
+    Tramas y ACKs se numeran alternadamente con <code>0</code> y <code>1</code>:
+    <ul style="padding-left:20px;margin-top:6px;line-height:1.9">
+      <li>El emisor mantiene una variable <code>S</code> (última trama enviada).</li>
+      <li>El receptor mantiene una variable <code>R</code> (próxima esperada).</li>
+      <li>Los ACKs indican el número de la <strong>siguiente</strong> trama esperada, no la recibida.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🔁</div>Piggybacking</div>
+  <div class="card-body">
+    Cuando ambas estaciones tienen datos para enviarse mutuamente, el ACK se "monta" sobre la trama de datos que viaja en sentido contrario. Esta optimización <strong>ahorra ancho de banda y una transmisión</strong>.
+  </div>
+</div>
+
+<div class="highlight danger">
+  <strong>Desventaja estructural de Stop-and-Wait:</strong> solo una trama puede estar en tránsito al mismo tiempo. Esto resulta ineficiente en enlaces de larga distancia o alta velocidad, donde el emisor pasa más tiempo esperando que transmitiendo.
+</div>
+
+<h3>Sliding Window (ventana deslizante)</h3>
+<div class="card">
+  <div class="card-body">
+    Permite tener <strong>múltiples tramas en tránsito simultáneamente</strong>, sin esperar el ACK individual de cada una.
+  </div>
+  <ul style="padding-left:20px;line-height:1.9;margin-top:10px">
+    <li>Enlace <strong>full-duplex</strong>.</li>
+    <li>Tramas numeradas con un campo de <code>k</code> bits → numeración módulo <code>2^k</code>.</li>
+    <li>El emisor puede enviar hasta <strong>N = 2^k − 1</strong> tramas sin esperar ACK → este número es el <strong>tamaño de ventana</strong>.</li>
+    <li>El receptor dispone de un buffer del tamaño de la ventana.</li>
+    <li>Cada ACK confirma <strong>acumulativamente</strong> todas las tramas hasta cierto número.</li>
+  </ul>
+</div>
+
+<h3>Las dos ventanas: emisor y receptor</h3>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><div class="icon blue">📤</div>Ventana de envío</div>
+    <div class="card-body">
+      Tramas que el emisor puede transmitir o ya transmitió y espera ACK.
+      <ul style="padding-left:20px;margin-top:6px">
+        <li>Borde <strong>derecho</strong> avanza al enviar una trama.</li>
+        <li>Borde <strong>izquierdo</strong> avanza al recibir un ACK.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon green">📥</div>Ventana de recepción</div>
+    <div class="card-body">
+      Tramas que el receptor está dispuesto a aceptar dentro de su buffer disponible.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">⏸️</div>RNR (Receive Not Ready)</div>
+  <div class="card-body">
+    Si el receptor necesita pausar la recepción (por ejemplo, porque su buffer se está llenando), confirma lo recibido pero solicita al emisor que detenga la transmisión. Para reanudar, envía un ACK normal.
+  </div>
+</div>
+
+<div class="highlight info">
+  <strong>📌 Sobre por qué N = 2^k − 1 y no 2^k:</strong> se necesita reservar un número para distinguir el estado "no recibí ninguna trama" del estado "recibí todas las posibles". Sin ese margen, habría ambigüedad sobre qué confirma un ACK determinado.
+</div>
+
+</div>
+
+<div id="errores" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">⚠️</div>Control de errores</div>
+  <div class="card-body">
+    El canal nunca es perfecto: introduce ruido, interferencia y atenuación que alteran los bits transmitidos. La probabilidad de error depende del medio: los <strong>canales de radio móvil</strong> son los más susceptibles, mientras que la fibra óptica es notablemente más confiable.
+  </div>
+</div>
+
+<h3>Tipos de errores</h3>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><div class="icon red">❌</div>Trama perdida</div>
+    <div class="card-body">No llega al destino.</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon orange">🔀</div>Trama dañada</div>
+    <div class="card-body">Llega con bits modificados respecto al original.</div>
+  </div>
+</div>
+
+<h3>Dos enfoques generales</h3>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><div class="icon purple">🛠️</div>FEC — Forward Error Correction</div>
+    <div class="card-body">
+      El receptor <strong>corrige por sí mismo</strong> los errores utilizando la redundancia incluida en la trama. Útil cuando retransmitir es caro o imposible: enlaces satelitales, broadcasting, fibra submarina.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon blue">🔁</div>ARQ — Automatic Repeat Request</div>
+    <div class="card-body">
+      El receptor <strong>detecta el error y solicita retransmisión</strong>. Más eficiente cuando existe un canal de retorno disponible y los errores son ocasionales.
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="deteccion" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🔍</div>Codificación por bloques: la idea base</div>
+  <div class="card-body">
+    Toda detección y corrección de errores se apoya en un principio común: <strong>agregar redundancia controlada</strong> al mensaje. La redundancia permite al receptor identificar cuando algo cambió y, en algunos casos, recuperar el original.
+  </div>
+</div>
+
+<div class="card">
+  <div class="step"><div class="step-num">1</div><div class="step-content">Se parte de un bloque de <strong>k</strong> bits de datos.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-content">Se agregan <strong>r</strong> bits de redundancia calculados a partir de los datos.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-content">Se transmite la palabra código (<strong>codeword</strong>) de <strong>n = k + r</strong> bits.</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-content">De <code>2^n</code> codewords posibles, solo <code>2^k</code> son válidos. El resto, si llegan, indican error.</div></div>
+</div>
+
+<h3>Los cuatro escenarios posibles en el receptor</h3>
+<div class="card">
+  <div class="step"><div class="step-num">✓</div><div class="step-content">Palabra válida igual a la enviada → <strong>sin error</strong>.</div></div>
+  <div class="step"><div class="step-num">✓</div><div class="step-content">Hubo error, pero la redundancia permite <strong>detectarlo y corregirlo</strong>.</div></div>
+  <div class="step"><div class="step-num">!</div><div class="step-content">Error <strong>detectable pero no corregible</strong> → se solicita retransmisión.</div></div>
+  <div class="step"><div class="step-num">✗</div><div class="step-content">El error coincide casualmente con otra palabra válida → <strong>error no detectado (caso patológico)</strong>.</div></div>
+</div>
+
+<div class="highlight info">
+  <strong>Tasa del código:</strong> <code>k/n</code>. Mide cuánto ancho de banda extra consume la protección. Una tasa cercana a 1 implica menos overhead pero también menos capacidad de corrección.
+</div>
+
+<h3>Códigos de bloque lineales</h3>
+<div class="card">
+  <div class="card-body">
+    Una propiedad útil para el cálculo: el <strong>XOR de dos palabras código válidas</strong> da como resultado otra palabra código válida. Esto simplifica notablemente las implementaciones.
+  </div>
+</div>
+
+<h3>Distancia de Hamming</h3>
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li><strong>Entre dos palabras:</strong> <code>d(v1, v2)</code> = número de bits en que difieren.</li>
+    <li><strong>De un código:</strong> la distancia mínima entre cualquier par de palabras válidas del código.</li>
+  </ul>
+</div>
+
+<div class="highlight purple">
+  <strong>📌 Reglas clave de la teoría de códigos:</strong><br>
+  • Para <strong>detectar</strong> <code>d</code> errores → distancia mínima ≥ <code>d + 1</code><br>
+  • Para <strong>corregir</strong> <code>d</code> errores → distancia mínima ≥ <code>2d + 1</code>
+</div>
+
+<h3>Bit de paridad</h3>
+<div class="card">
+  <div class="card-body">
+    Es el mecanismo más simple de detección. Se agrega un bit al final del bloque que hace que el total de unos sea par (paridad par) o impar (paridad impar).
+  </div>
+  <div class="highlight danger" style="margin-top:10px">
+    <strong>Limitación crítica:</strong> no detecta un número <strong>par</strong> de errores. Si dos bits cambian simultáneamente, la paridad se mantiene invariante. Solo resulta útil en canales muy poco ruidosos.
+  </div>
+</div>
+
+<h3>CRC — Cyclic Redundancy Check</h3>
+<div class="card">
+  <div class="card-body">
+    Mecanismo de detección de errores ampliamente utilizado en redes de datos. Mucho más robusto que la paridad, y eficientemente implementable en hardware.
+  </div>
+  <div class="step"><div class="step-num">1</div><div class="step-content">El emisor toma el bloque M de k bits y lo interpreta como un número binario.</div></div>
+  <div class="step"><div class="step-num">2</div><div class="step-content">Lo divide por un divisor P (<strong>polinomio fijo</strong> de r+1 bits) acordado entre emisor y receptor.</div></div>
+  <div class="step"><div class="step-num">3</div><div class="step-content">El resto de esa división (de r bits) se denomina <strong>FCS</strong> (Frame Check Sequence).</div></div>
+  <div class="step"><div class="step-num">4</div><div class="step-content">Se transmite <strong>datos + FCS</strong> (k + r bits), construido para ser divisible exactamente por P.</div></div>
+  <div class="step"><div class="step-num">5</div><div class="step-content">El receptor divide la trama recibida por el mismo P:<br>• Si el resto es 0 → sin errores detectables.<br>• Si el resto es ≠ 0 → hubo error → descartar o solicitar retransmisión.</div></div>
+</div>
+
+<h3>Errores que CRC detecta</h3>
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>Todos los errores de <strong>1 bit</strong>.</li>
+    <li>Todos los errores de <strong>2 bits</strong> si P tiene al menos 3 términos en 1.</li>
+    <li>Cualquier número <strong>impar</strong> de errores si P contiene el factor <code>(x + 1)</code>.</li>
+    <li>Cualquier ráfaga de longitud menor que el FCS.</li>
+    <li>La gran mayoría de ráfagas largas (con muy baja probabilidad de pasar desapercibidas).</li>
+  </ul>
+</div>
+
+<div class="highlight danger">
+  🛡️ <strong>Punto crítico para ciberseguridad:</strong> el CRC <strong>no es un mecanismo criptográfico</strong>. Está diseñado para detectar errores accidentales causados por ruido, no para proteger contra modificación deliberada. Un atacante con conocimiento del polinomio puede modificar los datos y recalcular un CRC válido sin ser detectado. Para integridad frente a adversarios se utilizan <strong>funciones hash criptográficas</strong> (SHA-256, BLAKE2) o <strong>códigos MAC</strong> (HMAC).
+</div>
+
+</div>
+
+<div id="arq" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🔁</div>Mecanismos ARQ: tres variantes</div>
+  <div class="card-body">
+    ARQ (Automatic Repeat Request) tiene tres implementaciones clásicas, ordenadas de menor a mayor sofisticación.
+  </div>
+</div>
+
+<h3>a) Stop-and-Wait ARQ</h3>
+<div class="card">
+  <div class="card-body">
+    Manejo de errores sobre el mecanismo Stop-and-Wait. Tramas y ACKs se numeran con 0 y 1.
+  </div>
+  <ul style="padding-left:20px;line-height:1.9;margin-top:10px">
+    <li><strong>Trama perdida</strong> → no llega ACK → vence timeout → retransmisión.</li>
+    <li><strong>ACK perdido</strong> → emisor retransmite → receptor detecta duplicado por la numeración y reenvía ACK.</li>
+    <li><strong>Trama dañada</strong> → receptor la descarta sin enviar ACK → vence timeout → retransmisión.</li>
+  </ul>
+  <div class="card-body" style="margin-top:8px">Simple pero lento, especialmente en enlaces de larga distancia.</div>
+</div>
+
+<h3>b) Go-Back-N (vuelta atrás N)</h3>
+<div class="card">
+  <div class="card-body">
+    Combina ventana deslizante con un manejo de errores simple:
+  </div>
+  <ul style="padding-left:20px;line-height:1.9;margin-top:10px">
+    <li>El emisor envía tramas secuencialmente sin esperar ACK individual.</li>
+    <li>Si una trama llega bien → el receptor envía <strong>RR (Receive Ready)</strong> con el número de la próxima trama esperada.</li>
+    <li>Si una trama llega con error → el receptor envía <strong>REJ (Reject)</strong> y descarta esa trama y todas las posteriores.</li>
+    <li>El emisor retransmite la trama errónea <strong>y todas las posteriores</strong>.</li>
+  </ul>
+  <div class="highlight" style="margin-top:10px">
+    <strong>Compromiso:</strong> desperdicia tramas correctas que fueron descartadas, pero el receptor se mantiene simple — no necesita reordenar.
+  </div>
+</div>
+
+<h3>c) Selective Repeat (rechazo selectivo)</h3>
+<div class="card">
+  <div class="card-body">
+    Optimización del anterior: <strong>solo se retransmite la trama errónea</strong>.
+  </div>
+  <ul style="padding-left:20px;line-height:1.9;margin-top:10px">
+    <li>El receptor detecta error → envía <strong>SREJ (Selective Reject)</strong> indicando únicamente esa trama.</li>
+    <li>El emisor retransmite solamente la trama señalada.</li>
+    <li>El receptor guarda en buffer las tramas correctas posteriores y reordena al recibir la retransmisión.</li>
+  </ul>
+  <div class="highlight" style="margin-top:10px">
+    <strong>Compromiso inverso al de Go-Back-N:</strong> mejor uso del ancho de banda, pero el receptor requiere mayor capacidad de buffer y lógica más compleja.
+  </div>
+</div>
+
+</div>
+
+<div id="conectando" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🔗</div>Cómo se conecta con el resto de la materia</div>
+  <div class="card-body">
+    Conviene cerrar el módulo articulando los puntos con el resto de la suite:
+  </div>
+</div>
+
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>El <strong>control de flujo y el control de errores</strong> son funciones de la <strong>capa de enlace</strong> (capa 2 OSI), específicamente de la subcapa LLC presentada en App 05.</li>
+    <li>El <strong>bandwidth-delay product</strong> (producto ancho de banda × retardo) justifica por qué las ventanas grandes son necesarias en redes rápidas y de larga distancia.</li>
+    <li><strong>CRC</strong> es la herramienta concreta detrás de la función "detección de errores" mencionada en App 05.</li>
+    <li><strong>ARQ</strong> implementa la "recuperación entre fallos" mencionada también en App 05.</li>
+    <li>En el modelo TCP/IP, <strong>TCP</strong> implementa una versión sofisticada de ventana deslizante en la <strong>capa de transporte</strong> (capa 4), no en la de enlace. Los mismos principios aparecen en distintas capas: la subcapa LLC los aplica entre nodos vecinos; TCP los aplica <strong>extremo a extremo</strong>.</li>
+  </ul>
+</div>
+
+</div>
+
+<div id="cyber" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>Implicancias de seguridad</div>
+  <div class="card-body">
+    Cuatro puntos donde el control de flujo y de errores se cruza con la seguridad.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🔓</div>CRC vs HMAC</div>
+  <div class="card-body">
+    Repetido por importante: <strong>detección de ruido ≠ integridad criptográfica</strong>. CRC protege contra accidentes (ruido del canal); HMAC protege contra adversarios deliberados (modificación maliciosa).
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🔁</div>Replay attacks</div>
+  <div class="card-body">
+    Un atacante puede capturar una trama válida y <strong>reenviarla posteriormente</strong>, intentando que sea aceptada de nuevo. Los protocolos seguros usan <strong>nonces</strong> (números usados una sola vez) o <strong>números de secuencia firmados</strong> para distinguir lo "fresco" de lo replayed.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🎲</div>TCP sequence number prediction (caso Mitnick)</div>
+  <div class="card-body">
+    En la década de 1990, Kevin Mitnick demostró que si los <strong>números de secuencia</strong> de TCP eran predecibles, un atacante podía <strong>inyectar segmentos</strong> en una conexión existente. Hoy se generan aleatoriamente para mitigar este ataque, pero el principio sigue siendo relevante.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon red">💀</div>Slowloris y SYN flood</div>
+  <div class="card-body">
+    Ataques de denegación de servicio que <strong>explotan el control de flujo y conexión de TCP</strong>: abren miles de conexiones a medio establecer y las mantienen colgadas, agotando los recursos del servidor. Es el lado oscuro de los mecanismos de espera y reserva que estudiamos en este módulo.
+  </div>
+</div>
+
+<div class="highlight success">
+  <strong>📌 Síntesis del módulo:</strong> el control de flujo evita que el emisor sature al receptor; el control de errores se ocupa de que lo que llegue, llegue correctamente. <strong>CRC</strong> detecta errores accidentales, <strong>ARQ</strong> los recupera vía retransmisión, <strong>FEC</strong> los corrige sin necesidad de retransmitir. Los mismos principios reaparecen en capas distintas — LLC entre nodos vecinos, TCP extremo a extremo — porque son patrones universales del transporte confiable de datos.
+</div>
+
+</div>
+
+<div id="cierre" class="section">
+<div class="transition to-next">
+  <div class="trans-icon">→</div>
+  <div class="trans-body">
+    <span class="trans-label">Hacia dónde vamos</span>
+    Con la capa 2 completamente cubierta (MAC en App 07, LLC en este módulo), la suite sube a la capa 3: cómo se asignan direcciones lógicas que permiten ruteo entre redes distintas. Es el módulo más extenso sobre un protocolo específico, con ejemplos prácticos de identificación de direcciones, máscaras de subred y CIDR. Continúa en <a href="../09-direccionamiento-ip/index.html"><strong>App 09 · Direccionamiento IP</strong></a>.
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>App 08 de 11 · Suite de Comunicaciones · Universidad de Palermo</p>
+  <p style="margin-top:6px">🦈 Por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a></p>
+</footer>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

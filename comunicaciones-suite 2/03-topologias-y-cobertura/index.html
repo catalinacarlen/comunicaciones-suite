@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topologías, transmisión y cobertura — Comunicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);transition:all .2s;margin-bottom:1.5rem}
+.back-link:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-bg)}
+header{text-align:center;padding:2rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header .num{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:1rem;letter-spacing:0.5px}
+header .num.blue{color:var(--accent-text);background:var(--accent-bg)}
+header .num.green{color:var(--success-text);background:var(--success-bg)}
+header .num.orange{color:var(--warning-text);background:var(--warning-bg)}
+header .num.red{color:var(--danger-text);background:var(--danger-bg)}
+header .num.purple{color:var(--purple-text);background:var(--purple-bg)}
+header h1{font-size:30px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px}
+header p{color:var(--text-2);font-size:14px;max-width:560px;margin:0 auto}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;position:sticky;top:0;background:var(--bg);padding:1rem 0;z-index:10;border-bottom:1px solid var(--border)}
+.nav-btn{padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all .2s;font-weight:500}
+.nav-btn:hover{background:var(--surface-alt);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.blue{background:var(--accent-bg);color:var(--accent-text)}
+.card-title .icon.green{background:var(--success-bg);color:var(--success-text)}
+.card-title .icon.orange{background:var(--warning-bg);color:var(--warning-text)}
+.card-title .icon.red{background:var(--danger-bg);color:var(--danger-text)}
+.card-title .icon.purple{background:var(--purple-bg);color:var(--purple-text)}
+.card-body{font-size:14px;color:var(--text-2);line-height:1.75}
+.card-body strong{color:var(--text);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:2rem 0 1rem;padding-left:12px;border-left:3px solid var(--accent)}
+.highlight{background:var(--warning-bg);border-left:3px solid var(--warning);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:var(--warning-text);margin:12px 0;line-height:1.6}
+.highlight.info{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent-text)}
+.highlight.purple{background:var(--purple-bg);border-left-color:var(--purple);color:var(--purple-text)}
+.highlight.success{background:var(--success-bg);border-left-color:var(--success);color:var(--success-text)}
+.highlight.danger{background:var(--danger-bg);border-left-color:var(--danger);color:var(--danger-text)}
+table{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+th{background:var(--surface-alt);color:var(--text-2);font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.green{background:var(--success-bg);color:var(--success-text)}
+.badge.orange{background:var(--warning-bg);color:var(--warning-text)}
+.badge.red{background:var(--danger-bg);color:var(--danger-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.gray{background:var(--surface-alt);color:var(--text-3)}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+.metric-label{font-size:12px;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--text)}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:1rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.step-content{flex:1;font-size:14px;color:var(--text-2);line-height:1.7}
+.step-content strong{color:var(--text);font-weight:500}
+code{font-family:var(--mono);font-size:12px;background:var(--surface-alt);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;font-size:12px;font-family:var(--mono);line-height:1.6;margin:10px 0}
+.transition{display:flex;gap:14px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0 2rem;font-size:13px;color:var(--text-2);line-height:1.7}
+.transition.from-prev{border-left:3px solid var(--text-3)}
+.transition.to-next{border-left:3px solid var(--accent);margin-top:2rem;margin-bottom:1rem}
+.transition .trans-icon{font-size:20px;flex-shrink:0;opacity:.8}
+.transition .trans-body{flex:1}
+.transition .trans-label{font-family:var(--mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.transition strong{color:var(--text);font-weight:500}
+.transition a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.transition a:hover{opacity:.8}
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text-3);font-size:12px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back-link">← Volver a la suite</a>
+
+<header>
+  <span class="num blue">APP 03 · ARQUITECTURA</span>
+  <h1>Topologías, transmisión y cobertura</h1>
+  <p>Cómo se organizan los nodos entre sí: topologías geométricas, modos de transmisión, escalas PAN/LAN/MAN/WAN y modelo jerárquico de tres capas.</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('contexto')">Contexto</button>
+  <button class="nav-btn" onclick="show('topologias')">Topologías</button>
+  <button class="nav-btn" onclick="show('transmision')">Modos de transmisión</button>
+  <button class="nav-btn" onclick="show('cobertura')">PAN/LAN/MAN/WAN</button>
+  <button class="nav-btn" onclick="show('jerarquico')">Modelo jerárquico</button>
+  <button class="nav-btn" onclick="show('cyber')">Implicancias de seguridad</button>
+  <button class="nav-btn" onclick="show('cierre')">Cierre</button>
+</nav>
+
+<div id="contexto" class="section active">
+<div class="transition from-prev">
+  <div class="trans-icon">←</div>
+  <div class="trans-body">
+    <span class="trans-label">De dónde venimos</span>
+    En <a href="../02-medios-y-senal/index.html"><strong>App 02 · Medios físicos</strong></a>, se estudiaron los tres medios físicos (coaxial, par trenzado, fibra óptica) y las ocho etapas que atraviesa la información antes de viajar por ellos. Este módulo da el siguiente paso: cómo se organizan varios nodos al conectarse mediante esos medios. Una red no es solo "un cable" — es una <strong>estructura</strong> de nodos enlazados según patrones que tienen consecuencias prácticas en costo, redundancia y resistencia a fallos.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🎯</div>Lo que se aborda en este módulo</div>
+  <div class="card-body">
+    <ul style="padding-left:20px;line-height:2;margin-top:6px">
+      <li>Las cuatro <strong>topologías clásicas</strong> (estrella, malla, anillo, bus), con sus trade-offs en costo, redundancia y comportamiento ante fallas.</li>
+      <li>Los cuatro <strong>modos de transmisión</strong>: simplex, half duplex, full duplex y full-full duplex.</li>
+      <li>Los tres <strong>tipos de conexión</strong>: punto a punto, multipunto y conmutadas.</li>
+      <li>La clasificación por <strong>área de cobertura</strong>: PAN, LAN, MAN, WAN.</li>
+      <li>El <strong>modelo jerárquico de tres capas</strong> usado en diseño de LAN corporativa.</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="topologias" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🗺️</div>Las cuatro topologías clásicas</div>
+  <div class="card-body">
+    La <strong>topología</strong> describe cómo están conectados físicamente los nodos entre sí — el "mapa" de la red. Cada forma plantea compromisos específicos entre costo de cableado, redundancia, escalabilidad y comportamiento ante fallas. La elección de topología es una decisión arquitectónica de fondo que condiciona qué protocolos resultan viables.
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><div class="icon blue">⭐</div>Estrella</div>
+    <div class="card-body">
+      Todos los nodos se conectan a un <strong>dispositivo central</strong> (hub o switch). Es la topología <strong>más utilizada en LAN actualmente</strong>.<br><br>
+      <strong>Comportamiento ante fallas:</strong> si cae un nodo periférico, solo ese se ve afectado. Si cae el dispositivo central, cae toda la red.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon purple">🕸️</div>Malla</div>
+    <div class="card-body">
+      Todos los nodos conectados con todos los demás. Ofrece <strong>la mayor redundancia posible</strong>.<br><br>
+      <strong>Limitación:</strong> el número de enlaces crece de forma cuadrática con el número de nodos, por lo que es <strong>impracticable a escala grande</strong>. Su uso típico son los <strong>backbones de Internet</strong>, donde la redundancia justifica el costo.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon orange">🔄</div>Anillo</div>
+    <div class="card-body">
+      Cada nodo está conectado al siguiente formando un <strong>bucle cerrado</strong>. Los mensajes viajan en una sola dirección.<br><br>
+      <strong>Comportamiento ante fallas:</strong> si un nodo falla, puede interrumpir toda la red. La variante <strong>anillo doble</strong> (con dos sentidos de propagación) mitiga este problema.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon gray">━</div>Bus</div>
+    <div class="card-body">
+      Todos los dispositivos comparten un <strong>único cable</strong>. Cada nodo escucha el tráfico y procesa solo los mensajes dirigidos a su dirección.<br><br>
+      <strong>Comportamiento ante fallas:</strong> si el cable principal falla, cae toda la red. <strong>En desuso en redes modernas</strong>; fue común en las primeras Ethernet (10Base-2).
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="transmision" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">↔️</div>Modos de transmisión</div>
+  <div class="card-body">
+    El <strong>modo de transmisión</strong> describe cuántos sentidos puede tener el flujo de información entre dos extremos y si pueden ser simultáneos. Hay cuatro categorías que cubren los casos posibles.
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Modo</th><th>Descripción</th><th>Ejemplo típico</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Simplex</strong></td><td>Un solo sentido de transmisión</td><td>Radio AM, televisión broadcast</td></tr>
+      <tr><td><strong>Half Duplex</strong></td><td>Ambos sentidos posibles, pero <strong>no simultáneos</strong></td><td>Walkie-talkie</td></tr>
+      <tr><td><strong>Full Duplex</strong></td><td>Ambos sentidos <strong>simultáneos</strong></td><td>Llamada telefónica, conexión Ethernet moderna</td></tr>
+      <tr><td><strong>Full-Full Duplex</strong></td><td>Transmisión y recepción simultáneas, <strong>no necesariamente con la misma contraparte</strong></td><td>Videoconferencia con múltiples participantes</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>Tipos de conexión</h3>
+<div class="card">
+  <div class="card-body" style="margin-bottom:8px">El tipo de conexión describe cuántos nodos comparten un mismo enlace y qué reglas regulan su uso.</div>
+  <table>
+    <thead><tr><th>Tipo</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Punto a punto</strong></td><td>Canal entre exactamente <strong>dos</strong> nodos. Ambos en igualdad de condiciones.</td></tr>
+      <tr><td><strong>Multipunto</strong></td><td>Varios nodos comparten un mismo medio. Todos pueden "verse". Se necesitan reglas explícitas para coordinar el acceso al canal.</td></tr>
+      <tr><td><strong>Conmutadas</strong></td><td>La información viaja a través de nodos intermedios que la encaminan hacia el destino.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="highlight info">
+  <strong>Las tres dimensiones combinadas:</strong> topología (geometría), modo de transmisión (cómo se usa el canal) y tipo de conexión (cuántos nodos lo comparten) definen conjuntamente <strong>cómo se comporta la red frente a fallos, congestión y crecimiento</strong>. Estas tres decisiones también determinan dónde tiene sentido colocar redundancias, controles de acceso y mecanismos de seguridad.
+</div>
+
+</div>
+
+<div id="cobertura" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">📏</div>Clasificación por área de cobertura</div>
+  <div class="card-body">
+    PAN, LAN, MAN y WAN no son tecnologías sino <strong>escalas</strong> de red. Cada escala impone compromisos distintos entre velocidad, costo, administración y protocolos aplicables. Un dispositivo Bluetooth, un campus universitario y la red de un banco internacional son tres mundos con problemas distintos, aunque compartan la lógica IP de fondo.
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Red</th><th>Alcance</th><th>Características principales</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge blue">PAN</span><br><small>Personal</small></td>
+        <td>~10 metros</td>
+        <td>Dispositivos personales (celular, smartwatch, auriculares). <strong>Bluetooth (IEEE 802.15)</strong>. Bajo costo y consumo energético.</td>
+      </tr>
+      <tr>
+        <td><span class="badge green">LAN</span><br><small>Local</small></td>
+        <td>Edificio o campus</td>
+        <td>Una sola organización. <strong>Altas velocidades</strong>. Tecnologías: Ethernet, WiFi, históricamente Token Ring y FDDI.</td>
+      </tr>
+      <tr>
+        <td><span class="badge orange">MAN</span><br><small>Metropolitana</small></td>
+        <td>Ciudad</td>
+        <td>Entre LAN y WAN. Aparece cuando una empresa necesita <strong>conectar varios edificios</strong>. Tecnologías: MetroEthernet, redes inalámbricas urbanas.</td>
+      </tr>
+      <tr>
+        <td><span class="badge purple">WAN</span><br><small>Wide</small></td>
+        <td>Países, continentes</td>
+        <td>Recurre a <strong>operadores (carriers)</strong> como Telefónica o Claro. Conecta LANs y MANs distantes. Tecnologías históricas: X.25, Frame Relay, ATM.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div id="jerarquico" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🏢</div>Modelo jerárquico de tres capas</div>
+  <div class="card-body">
+    Para diseñar redes LAN corporativas se emplea un <strong>modelo de tres capas</strong> que separa responsabilidades funcionales. La separación tiene una doble utilidad: simplifica el escalamiento (cada capa crece según su lógica) y define <strong>dónde colocar los controles de seguridad</strong>, principio conocido como defensa en profundidad.
+  </div>
+</div>
+
+<div class="grid3">
+  <div class="card">
+    <div class="card-title"><div class="icon blue">👥</div>Access Layer</div>
+    <div class="card-body">
+      <strong>Punto de conexión de los usuarios finales.</strong><br><br>
+      Equipos de bajo costo y alta densidad de puertos. Se aplican aquí <strong>filtrado MAC, segmentación, VPN</strong> y otras políticas de borde.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon orange">⚖️</div>Distribution Layer</div>
+    <div class="card-body">
+      <strong>Agregación y políticas.</strong><br><br>
+      Routing entre VLAN, aplicación de <strong>ACLs, filtros, encripción y QoS</strong>. Concentra las decisiones de control de tráfico.
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><div class="icon green">🚀</div>Core Layer</div>
+    <div class="card-body">
+      <strong>Backbone de alta velocidad.</strong><br><br>
+      Transporte rápido entre bloques de la red. Baja latencia, redundancia, y la regla explícita de <strong>no realizar trabajos pesados</strong> (filtrado, encripción) — esos van a Distribution.
+    </div>
+  </div>
+</div>
+
+<div class="highlight info">
+  <strong>Filosofía del modelo:</strong> los filtros y ACLs se colocan <strong>cerca del usuario</strong> (Access), la segmentación y QoS <strong>en el medio</strong> (Distribution), y el transporte queda <strong>limpio en el núcleo</strong> (Core). Si un atacante compromete un host de Access, no debería poder llegar al Core sin pasar por los filtros de Distribution. Es defensa en profundidad aplicada a la topología.
+</div>
+
+</div>
+
+<div id="cyber" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>Vectores de ataque por escala de red</div>
+  <div class="card-body">
+    Las distintas escalas tienen perfiles de amenaza muy diferentes. Comprender en qué escala se opera define qué controles son prioritarios.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">📱</div>PAN / Bluetooth</div>
+  <div class="card-body">
+    Vulnerable a ataques específicos del estándar:
+    <ul style="padding-left:20px;margin-top:6px;line-height:1.9">
+      <li><strong>Bluejacking</strong> — envío no solicitado de mensajes a dispositivos cercanos.</li>
+      <li><strong>Bluesnarfing</strong> — acceso no autorizado a contactos, calendario o archivos.</li>
+      <li>Ataques a dispositivos <strong>sin parches de seguridad</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">🏢</div>LAN: el perímetro de mayor confianza</div>
+  <div class="card-body">
+    La LAN se considera tradicionalmente el "perímetro de mayor confianza", pero es también donde un atacante interno tiene <strong>mayor capacidad de daño</strong>:
+    <ul style="padding-left:20px;margin-top:6px;line-height:1.9">
+      <li><strong>ARP spoofing</strong> — suplantación del gateway para interceptar tráfico.</li>
+      <li><strong>MAC flooding</strong> — saturación de la tabla CAM del switch para degradarlo a comportamiento de hub.</li>
+    </ul>
+    Estos ataques se detallan en módulos posteriores.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🌐</div>WAN: zona no confiable</div>
+  <div class="card-body">
+    La WAN se considera tradicionalmente <strong>"untrusted"</strong>; por eso el tráfico entre sitios se cifra con <strong>VPN/IPSec</strong>. La premisa operativa: cualquier dato que cruce una WAN sin cifrar debe asumirse interceptado.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🛡️</div>El modelo jerárquico como herramienta defensiva</div>
+  <div class="card-body">
+    El modelo Access / Distribution / Core no es solo de diseño: es una herramienta de <strong>segmentación de seguridad</strong>. Comprometer un host de Access no debería implicar acceso al Core sin atravesar los filtros de Distribution. Es la aplicación práctica del principio de defensa en profundidad.
+  </div>
+</div>
+
+<div class="highlight success">
+  <strong>📌 Síntesis del módulo:</strong> tres dimensiones describen la forma de una red — <strong>topología, modo de transmisión, tipo de conexión</strong> — y una cuarta su escala (PAN/LAN/MAN/WAN). El modelo jerárquico aplica todo eso al diseño interno de una red corporativa, definiendo dónde se posicionan los controles de seguridad.
+</div>
+
+</div>
+
+<div id="cierre" class="section">
+<div class="transition to-next">
+  <div class="trans-icon">→</div>
+  <div class="trans-body">
+    <span class="trans-label">Hacia dónde vamos</span>
+    Con los componentes (App 01), los medios (App 02) y las topologías (este módulo) en lugar, queda por entender cómo evolucionaron históricamente las técnicas para usar esos medios. La cronología TDM → ATM → IP es el siguiente hilo y explica por qué la red que se estudia hoy tiene la forma que tiene. Continúa en <a href="../04-redes-y-evolucion/index.html"><strong>App 04 · Redes de datos y evolución</strong></a>.
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>App 03 de 11 · Suite de Comunicaciones · Universidad de Palermo</p>
+  <p style="margin-top:6px">🦈 Por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a></p>
+</footer>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redes de datos y evolución — Comunicaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--surface:#fff;--surface-alt:#f4f3ef;--border:#e4e3de;
+  --text:#1a1a1a;--text-2:#5c5b57;--text-3:#8a8985;
+  --accent:#2563eb;--accent-bg:#eff5ff;--accent-text:#1e40af;
+  --success:#10b981;--success-bg:#ecfdf5;--success-text:#065f46;
+  --warning:#f59e0b;--warning-bg:#fffbeb;--warning-text:#92400e;
+  --danger:#ef4444;--danger-bg:#fef2f2;--danger-text:#991b1b;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#5b21b6;
+  --radius:10px;--radius-lg:14px;
+  --font:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#111110;--surface:#1c1c1a;--surface-alt:#252522;--border:#333330;
+    --text:#ededeb;--text-2:#a3a39f;--text-3:#6b6b67;
+    --accent:#60a5fa;--accent-bg:#1e293b;--accent-text:#93c5fd;
+    --success:#34d399;--success-bg:#0c1f17;--success-text:#6ee7b7;
+    --warning:#fbbf24;--warning-bg:#1f1a0c;--warning-text:#fcd34d;
+    --danger:#f87171;--danger-bg:#1f0c0c;--danger-text:#fca5a5;
+    --purple:#a78bfa;--purple-bg:#1a1528;--purple-text:#c4b5fd;
+  }
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1.5rem 4rem}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface);transition:all .2s;margin-bottom:1.5rem}
+.back-link:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-bg)}
+header{text-align:center;padding:2rem 0 2rem;border-bottom:1px solid var(--border);margin-bottom:2rem}
+header .num{font-family:var(--mono);font-size:11px;padding:4px 12px;border-radius:999px;display:inline-block;margin-bottom:1rem;letter-spacing:0.5px}
+header .num.blue{color:var(--accent-text);background:var(--accent-bg)}
+header .num.green{color:var(--success-text);background:var(--success-bg)}
+header .num.orange{color:var(--warning-text);background:var(--warning-bg)}
+header .num.red{color:var(--danger-text);background:var(--danger-bg)}
+header .num.purple{color:var(--purple-text);background:var(--purple-bg)}
+header h1{font-size:30px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px}
+header p{color:var(--text-2);font-size:14px;max-width:560px;margin:0 auto}
+nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;position:sticky;top:0;background:var(--bg);padding:1rem 0;z-index:10;border-bottom:1px solid var(--border)}
+.nav-btn{padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text-2);font-size:13px;font-family:var(--font);cursor:pointer;transition:all .2s;font-weight:500}
+.nav-btn:hover{background:var(--surface-alt);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.section{display:none;animation:fadeIn .3s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1rem;transition:box-shadow .2s}
+.card:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.card-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.card-title .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.card-title .icon.blue{background:var(--accent-bg);color:var(--accent-text)}
+.card-title .icon.green{background:var(--success-bg);color:var(--success-text)}
+.card-title .icon.orange{background:var(--warning-bg);color:var(--warning-text)}
+.card-title .icon.red{background:var(--danger-bg);color:var(--danger-text)}
+.card-title .icon.purple{background:var(--purple-bg);color:var(--purple-text)}
+.card-body{font-size:14px;color:var(--text-2);line-height:1.75}
+.card-body strong{color:var(--text);font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:640px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+h3{font-size:16px;font-weight:600;color:var(--text);margin:2rem 0 1rem;padding-left:12px;border-left:3px solid var(--accent)}
+.highlight{background:var(--warning-bg);border-left:3px solid var(--warning);padding:12px 16px;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:var(--warning-text);margin:12px 0;line-height:1.6}
+.highlight.info{background:var(--accent-bg);border-left-color:var(--accent);color:var(--accent-text)}
+.highlight.purple{background:var(--purple-bg);border-left-color:var(--purple);color:var(--purple-text)}
+.highlight.success{background:var(--success-bg);border-left-color:var(--success);color:var(--success-text)}
+.highlight.danger{background:var(--danger-bg);border-left-color:var(--danger);color:var(--danger-text)}
+table{width:100%;font-size:13px;border-collapse:collapse;margin:8px 0}
+th{background:var(--surface-alt);color:var(--text-2);font-weight:500;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:12px;font-weight:500}
+.badge.blue{background:var(--accent-bg);color:var(--accent-text)}
+.badge.green{background:var(--success-bg);color:var(--success-text)}
+.badge.orange{background:var(--warning-bg);color:var(--warning-text)}
+.badge.red{background:var(--danger-bg);color:var(--danger-text)}
+.badge.purple{background:var(--purple-bg);color:var(--purple-text)}
+.badge.gray{background:var(--surface-alt);color:var(--text-3)}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+.metric-label{font-size:12px;color:var(--text-3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-value{font-size:24px;font-weight:600;color:var(--text)}
+.step{display:flex;gap:14px;align-items:flex-start;margin-bottom:1rem}
+.step-num{width:30px;height:30px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.step-content{flex:1;font-size:14px;color:var(--text-2);line-height:1.7}
+.step-content strong{color:var(--text);font-weight:500}
+code{font-family:var(--mono);font-size:12px;background:var(--surface-alt);padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+pre{background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;font-size:12px;font-family:var(--mono);line-height:1.6;margin:10px 0}
+.transition{display:flex;gap:14px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin:1rem 0 2rem;font-size:13px;color:var(--text-2);line-height:1.7}
+.transition.from-prev{border-left:3px solid var(--text-3)}
+.transition.to-next{border-left:3px solid var(--accent);margin-top:2rem;margin-bottom:1rem}
+.transition .trans-icon{font-size:20px;flex-shrink:0;opacity:.8}
+.transition .trans-body{flex:1}
+.transition .trans-label{font-family:var(--mono);font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;display:block}
+.transition strong{color:var(--text);font-weight:500}
+.transition a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent)}
+.transition a:hover{opacity:.8}
+footer{text-align:center;padding-top:3rem;border-top:1px solid var(--border);margin-top:3rem;color:var(--text-3);font-size:12px}
+footer a{color:var(--text-2);text-decoration:none;border-bottom:1px dashed var(--text-3)}
+footer a:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="../index.html" class="back-link">← Volver a la suite</a>
+
+<header>
+  <span class="num green">APP 04 · CONTEXTO</span>
+  <h1>Redes de datos y evolución</h1>
+  <p>Cronología de las técnicas de transporte: TDM, fibra/SDH, ATM e IP. Por qué IP terminó dominando sobre alternativas técnicamente más sofisticadas.</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="show('contexto')">Contexto</button>
+  <button class="nav-btn" onclick="show('que-es')">Qué es networking</button>
+  <button class="nav-btn" onclick="show('tdm')">TDM</button>
+  <button class="nav-btn" onclick="show('sdh')">Fibra y SDH</button>
+  <button class="nav-btn" onclick="show('atm')">ATM</button>
+  <button class="nav-btn" onclick="show('ip')">IP</button>
+  <button class="nav-btn" onclick="show('internet')">Internet y organismos</button>
+  <button class="nav-btn" onclick="show('cyber')">Implicancias de seguridad</button>
+  <button class="nav-btn" onclick="show('cierre')">Cierre</button>
+</nav>
+
+<div id="contexto" class="section active">
+<div class="transition from-prev">
+  <div class="trans-icon">←</div>
+  <div class="trans-body">
+    <span class="trans-label">De dónde venimos</span>
+    En <a href="../03-topologias-y-cobertura/index.html"><strong>App 03 · Topologías y cobertura</strong></a>, se vieron los patrones físicos de conexión y la clasificación por escalas. Este módulo aporta la <strong>perspectiva histórica</strong> que explica por qué la red moderna tiene la forma que tiene. La cronología de las técnicas de transporte de información — TDM, fibra/SDH, ATM, IP — no es trivia académica: cada paso resolvió una limitación concreta del anterior, y entender la secuencia ilumina por qué IP, una tecnología inicialmente académica, terminó dominando sobre alternativas técnicamente más sofisticadas.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🎯</div>Lo que se aborda en este módulo</div>
+  <div class="card-body">
+    <ul style="padding-left:20px;line-height:2;margin-top:6px">
+      <li>La definición operativa de <strong>red de computadoras</strong> y la idea de comunicación nodo-a-nodo.</li>
+      <li><strong>TDM</strong> (Time Division Multiplexing) y las normas T1/E1 — la primera idea de compartir un canal.</li>
+      <li>El salto al medio físico de la <strong>fibra óptica</strong> y la jerarquía <strong>SDH</strong>.</li>
+      <li><strong>ATM</strong> como respuesta a las ineficiencias de TDM sobre fibra.</li>
+      <li><strong>IP</strong>: la red de datagramas que terminó dominando, y por qué.</li>
+      <li>El marco institucional: organismos de estandarización (ISO, IEEE, IETF, ICANN, registros regionales).</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div id="que-es" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🌍</div>Qué es una red de computadoras</div>
+  <div class="card-body">
+    La definición operativa que adopta el apunte proviene de Donahue (<em>Network Warrior</em>, 2007):
+  </div>
+  <div class="highlight info">
+    "Dos o más computadoras conectadas de alguna manera por la cual son capaces de intercambiar información."
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    En networking, lo importante no es la marca de los dispositivos, sino que <strong>todos hablen el mismo protocolo</strong>. Esa propiedad — la interoperabilidad por estandarización — es la que permite que Internet sea una red de redes heterogéneas.<br><br>
+    En una red de datos, la comunicación <strong>no es directa</strong> entre dos extremos: la información viaja <strong>saltando de nodo en nodo</strong> hasta el destino.
+  </div>
+  <pre>[PC A] → [Nodo 1] → [Nodo 2] → [Nodo 3] → [PC B]</pre>
+  <div class="card-body" style="margin-top:8px">Esta característica — el ruteo por saltos — es la que permite que la red escale a millones de nodos, pero también introduce los problemas de encaminamiento y los puntos donde un atacante puede insertarse.</div>
+</div>
+
+</div>
+
+<div id="tdm" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">⏱️</div>TDM — compartir el cable en el tiempo</div>
+  <div class="card-body">
+    Antes de TDM, cada comunicación telefónica requería <strong>su propio cable físico</strong> de punta a punta. Este esquema era insostenible a escala urbana: cada nuevo usuario implicaba un nuevo par de cobre dedicado.<br><br>
+    <strong>Time Division Multiplexing</strong> resolvió el desperdicio físico con una idea simple: usar un único cable para múltiples comunicaciones, asignando a cada una <strong>una "ranura de tiempo"</strong> (time slot) de microsegundos de forma cíclica. Desde la perspectiva de cada usuario, el canal parece dedicado; en realidad, está siendo compartido por turnos.
+  </div>
+</div>
+
+<h3>Funcionamiento</h3>
+<div class="card">
+  <ul style="padding-left:20px;line-height:2">
+    <li>El canal se divide en <strong>ranuras de tiempo fijas</strong> (time slots).</li>
+    <li>Cada comunicación ocupa una ranura, de forma cíclica.</li>
+    <li>Cada usuario tiene la <strong>ilusión</strong> de disponer del canal completo, cuando en realidad lo comparte por turnos.</li>
+  </ul>
+</div>
+
+<h3>Las dos normas históricas</h3>
+<div class="card">
+  <table>
+    <thead><tr><th>Norma</th><th>Estructura</th><th>Velocidad agregada</th><th>Región de uso</th></tr></thead>
+    <tbody>
+      <tr><td><strong>T1</strong> (americana)</td><td>24 canales de voz de 64 kbps</td><td><strong>1,544 Mbps</strong></td><td>Estados Unidos</td></tr>
+      <tr><td><strong>E1</strong> (europea)</td><td>30 canales de datos + 2 de control</td><td><strong>2,048 Mbps</strong></td><td>Argentina, Europa</td></tr>
+    </tbody>
+  </table>
+  <div class="card-body" style="margin-top:8px">
+    <strong>Medio físico:</strong> cobre con <strong>PCM</strong> (Pulse Code Modulation).
+  </div>
+</div>
+
+<div class="highlight danger">
+  <strong>Limitación crítica de TDM:</strong> la ranura queda <strong>reservada aunque no se use</strong>. En una llamada con silencios, ese tiempo se desperdicia. Adicionalmente, como las ranuras son fijas, la <strong>velocidad de cada usuario también lo es</strong>. Estas dos limitaciones serán las que justifiquen, décadas más tarde, el reemplazo por tecnologías de paquetes.
+</div>
+
+</div>
+
+<div id="sdh" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">💡</div>Fibra óptica y SDH — el salto del medio físico</div>
+  <div class="card-body">
+    A medida que el tráfico creció, TDM siguió siendo conceptualmente válido pero el <strong>cobre se quedó corto</strong> en capacidad. La fibra óptica no fue una nueva técnica de multiplexar, sino un <strong>medio físico mejor</strong>: transmite luz en lugar de electricidad, lo que permite velocidades y distancias mucho mayores con menor atenuación.<br><br>
+    La transición a fibra exigió organizar la nueva capacidad disponible en una jerarquía estandarizada — esa es la función de SDH.
+  </div>
+</div>
+
+<h3>Jerarquía SDH</h3>
+<div class="card">
+  <div class="card-body" style="margin-bottom:10px">
+    <strong>Synchronous Digital Hierarchy</strong> define niveles de velocidad sobre fibra. Cada nivel cuadruplica aproximadamente el anterior:
+  </div>
+  <table>
+    <thead><tr><th>Nivel</th><th>Velocidad</th></tr></thead>
+    <tbody>
+      <tr><td><strong>STM-1</strong> (primer nivel)</td><td>155 Mb/s</td></tr>
+      <tr><td><strong>STM-4</strong></td><td>622 Mb/s</td></tr>
+      <tr><td><strong>STM-16</strong></td><td>2,5 Gb/s</td></tr>
+      <tr><td><strong>STM-64</strong></td><td>10 Gb/s</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="highlight purple">
+  <strong>Punto conceptual:</strong> SDH sigue siendo <strong>TDM en su lógica de funcionamiento</strong>, solo que opera sobre fibra y a velocidades mucho mayores. La filosofía de ranuras de tiempo reservadas no cambió — solo cambió el medio sobre el que se aplica. Es un ejemplo de cómo el medio físico y la técnica de multiplexar son dimensiones independientes.
+</div>
+
+</div>
+
+<div id="atm" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">⚡</div>ATM — atacar el desperdicio de TDM</div>
+  <div class="card-body">
+    Con la fibra disponible, el ancho de banda dejó de ser el problema, pero TDM seguía <strong>desperdiciándolo</strong> con sus ranuras fijas. A esto se sumó la aparición de nuevos tipos de tráfico — datos y video — que no encajaban bien con la rigidez heredada de la telefonía analógica.<br><br>
+    <strong>ATM (Asynchronous Transfer Mode)</strong> rompió con TDM al sustituir las ranuras fijas por <strong>celdas de longitud fija y corta</strong> que se envían solo cuando hay datos para transmitir.
+  </div>
+</div>
+
+<h3>TDM vs ATM</h3>
+<div class="card">
+  <table>
+    <thead><tr><th>TDM</th><th>ATM</th></tr></thead>
+    <tbody>
+      <tr><td>Ranuras de tiempo <strong>fijas</strong></td><td><strong>Celdas</strong> de longitud fija y corta enviadas solo cuando hay datos</td></tr>
+      <tr><td>Canal reservado durante toda la sesión</td><td>No hay canal fijo: cada celda viaja independiente</td></tr>
+      <tr><td>Infraestructuras separadas para voz, datos y video</td><td>Voz + datos + video sobre la <strong>misma red</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    Las celdas viajan por <strong>Virtual Paths</strong> (subdivididos en <strong>Virtual Channels</strong>) que se establecen al inicio de la sesión. Es decir: conmutación de paquetes (las celdas), pero con <strong>circuitos virtuales</strong> que conservan algo de la lógica de circuitos. ATM corre nativamente sobre fibra y fue concebido como solución unificada para todos los tipos de tráfico.
+  </div>
+</div>
+
+</div>
+
+<div id="ip" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon green">🏆</div>IP — la red de datagramas que dominó</div>
+  <div class="card-body">
+    ATM era técnicamente brillante: ofrecía garantías de calidad de servicio, multiplexación eficiente y soporte unificado para voz/datos/video. Pero era <strong>caro y complejo</strong>. Mientras tanto, <strong>IP</strong> crecía desde el ámbito académico con una filosofía radicalmente más simple — y terminó imponiéndose por razones que no son puramente técnicas.
+  </div>
+</div>
+
+<h3>Las cinco características clave de IP</h3>
+<div class="card">
+  <table>
+    <thead><tr><th>Característica</th><th>Detalle</th></tr></thead>
+    <tbody>
+      <tr><td><strong>No orientado a conexión</strong></td><td>Cada paquete viaja independiente y puede tomar rutas distintas hacia el destino.</td></tr>
+      <tr><td><strong>Tamaño máximo</strong></td><td>65.535 bytes teóricos; en la práctica, el MTU típico es ~1500 bytes (Ethernet). Paquetes mayores se <strong>fragmentan</strong>.</td></tr>
+      <tr><td><strong>TTL (Time To Live)</strong></td><td>Contador que se decrementa en cada nodo. Al llegar a 0, el paquete se descarta y el router envía un <strong>ICMP Time Exceeded</strong>. Este mecanismo es lo que hace funcionar a <code>traceroute</code>.</td></tr>
+      <tr><td><strong>Direccionamiento</strong></td><td><strong>IPv4</strong>: 32 bits. <strong>IPv6</strong>: 128 bits.</td></tr>
+      <tr><td><strong>Mejor esfuerzo (best effort)</strong></td><td>No garantiza entrega, orden ni tiempo. La confiabilidad se delega a capas superiores (TCP).</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="highlight info">
+  <strong>Por qué se impuso IP:</strong> por <strong>simplicidad y escalabilidad</strong>, no por superioridad técnica en cada métrica específica. Su modelo "best-effort" y la independencia del medio físico permitieron que se desplegara sobre cualquier infraestructura existente. Hoy es la base de toda comunicación digital moderna.
+</div>
+
+<h3>Dos ejes ortogonales en la evolución</h3>
+<div class="card">
+  <div class="card-body" style="margin-bottom:10px">
+    Conviene separar dos ejes que aparecen mezclados en esta historia:
+  </div>
+  <table>
+    <thead><tr><th>Eje</th><th>Evolución</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Medio físico</strong></td><td>Cobre PCM → Fibra óptica</td></tr>
+      <tr><td><strong>Técnica de multiplexar</strong></td><td>TDM (ranuras fijas) → ATM (celdas) → IP (paquetes independientes)</td></tr>
+    </tbody>
+  </table>
+  <div class="card-body" style="margin-top:10px">
+    Son <strong>ortogonales</strong>: hoy IP corre típicamente sobre fibra, pero también funciona sobre cobre o radio. TDM puede correr sobre cobre (T1/E1) o sobre fibra (SDH). El medio físico y la técnica de multiplexación son decisiones independientes que se combinan.
+  </div>
+</div>
+
+</div>
+
+<div id="internet" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">🌐</div>Qué es Internet</div>
+  <div class="card-body">
+    Internet se define operativamente como una <strong>red de redes</strong>: una red conectada a otra de manera continua y simultánea, formando un sistema global.<br><br>
+    Es una plataforma mundial de comunicaciones multimedia basada en dos pilares:
+    <ul style="padding-left:20px;margin-top:8px;line-height:1.9">
+      <li><strong>Protocolo IP</strong> — proporciona direccionamiento numérico.</li>
+      <li><strong>DNS</strong> (Domain Name System) — provee direccionamiento por nombres legibles por humanos.</li>
+    </ul>
+    Permite el intercambio de información (voz, datos, video) en tiempo real o diferido, desde terminales fijas y móviles.
+  </div>
+</div>
+
+<h3>Organismos de estandarización</h3>
+<div class="card">
+  <div class="card-body" style="margin-bottom:10px">
+    Para que dispositivos de fabricantes distintos (Windows, Linux, macOS, Android, iOS) puedan comunicarse — <strong>compatibilidad e interoperabilidad</strong> —, los protocolos deben estar formalmente estandarizados. La red global es sostenida por un ecosistema de organismos con roles específicos:
+  </div>
+  <table>
+    <thead><tr><th>Organismo</th><th>Rol</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ISO</strong></td><td>International Organization for Standardization. Publicó el modelo OSI.</td></tr>
+      <tr><td><strong>IEEE</strong></td><td>Estándares 802.x: Ethernet, WiFi, Bluetooth, entre otros.</td></tr>
+      <tr><td><strong>IETF</strong></td><td>Internet Engineering Task Force — publica las <strong>RFCs</strong> (Request for Comments). Define TCP/IP, HTTP, DNS y la mayoría de los protocolos de Internet.</td></tr>
+      <tr><td><strong>ICANN / IANA</strong></td><td>Coordinación global de DNS y asignación de direcciones IP.</td></tr>
+      <tr><td><strong>LACNIC, ARIN, RIPE NCC, APNIC, AfriNIC</strong></td><td>Registros regionales de asignación de IPs. LACNIC corresponde a Latinoamérica.</td></tr>
+      <tr><td><strong>NIC Argentina</strong></td><td>Administración del dominio <code>.ar</code>.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<div id="cyber" class="section">
+
+<div class="card">
+  <div class="card-title"><div class="icon red">🛡️</div>El origen académico de IP y sus consecuencias</div>
+  <div class="card-body">
+    La historia narrada en este módulo explica un punto fundamental para la perspectiva blue-team: <strong>IP nació en un entorno académico de confianza mutua</strong>. ATM, por contraste, surgió en un contexto telefónico tradicional, con un modelo de circuitos identificados y facturación por uso.<br><br>
+    El triunfo de IP dejó como herencia una red global flexible pero <strong>sin autenticación ni cifrado nativos</strong>. Toda la seguridad que existe sobre Internet hoy son capas añadidas <em>a posteriori</em>: IPSec, TLS, DNSSEC. Esta característica retoma el punto introducido en App 01 sobre la tríada CIA.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon orange">⚠️</div>"Best-effort" significa ausencia de garantías</div>
+  <div class="card-body">
+    <strong>Best-effort</strong> es un concepto técnico con implicancias de seguridad: IP no asume confianza ni provee garantías. Cualquier propiedad de la tríada CIA debe ser provista por capas superiores.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon purple">🎯</div>DNS como blanco crítico</div>
+  <div class="card-body">
+    El DNS se convierte en un blanco prioritario para atacantes. Si se compromete la resolución de nombres (mediante <strong>cache poisoning</strong> o <strong>hijacking</strong>), un usuario puede terminar conectado al servidor del atacante creyendo que está accediendo a su banco legítimo.<br><br>
+    <strong>DNSSEC</strong> fue diseñado para mitigar este problema agregando autenticidad e integridad a las respuestas DNS, pero su despliegue global es incompleto.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title"><div class="icon blue">📍</div>ICMP: doble uso</div>
+  <div class="card-body">
+    <strong>ICMP</strong> (TTL Exceeded, Echo Reply, Destination Unreachable, etc.) es la base de herramientas diagnósticas legítimas (<code>ping</code>, <code>traceroute</code>) y también de <strong>reconocimiento ofensivo</strong>. Muchas configuraciones de firewall restringen ICMP por esta dualidad.
+  </div>
+</div>
+
+<div class="highlight success">
+  <strong>📌 Síntesis del módulo:</strong> TDM, fibra, ATM e IP no fueron tecnologías rivales sino respuestas sucesivas al mismo problema: cómo mover más información de forma más eficiente. La consolidación de IP como técnica de multiplexación dominante define la red en la que opera la seguridad informática hoy: una red simple, escalable, diseñada para confianza mutua — donde la seguridad se construye por capas superpuestas (TLS, IPSec, DNSSEC), no en la base.
+</div>
+
+</div>
+
+<div id="cierre" class="section">
+<div class="transition to-next">
+  <div class="trans-icon">→</div>
+  <div class="trans-body">
+    <span class="trans-label">Hacia dónde vamos</span>
+    La historia de TDM/ATM/IP introdujo el vocabulario informal de "capas" y "protocolos". El siguiente módulo formaliza ese vocabulario presentando el modelo OSI, que es el marco conceptual sobre el cual se discute el resto de la materia. Es el módulo más estructural de la suite. Continúa en <a href="../05-protocolos-y-osi/index.html"><strong>App 05 · Protocolos y modelo OSI</strong></a>.
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>App 04 de 11 · Suite de Comunicaciones · Universidad de Palermo</p>
+  <p style="margin-top:6px">🦈 Por <a href="https://github.com/catalinacarlen" target="_blank">Catalina Carlen</a></p>
+</footer>
+
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
