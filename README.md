@@ -1,3 +1,68 @@
+# Comunicaciones - Study Suite
+
+Interactive study material for the **Networks and Communications** course in the Cybersecurity program at Universidad de Palermo, Buenos Aires.
+
+**[View live suite](https://catalinacarlen.github.io/comunicaciones-suite/index.html)**
+
+---
+
+## About
+
+Eleven self-contained HTML mini-apps covering the full course syllabus. Each module runs without a server, requires no internet connection beyond the initial load, and can be shared as a single HTML file.
+
+The apps follow an ascending pedagogical order - from abstract concepts down to the physical medium, back up through the OSI model, and finally to concrete tools - with each module opening where the previous one left off.
+
+---
+
+## Modules
+
+| # | Module | Key topics |
+|---|--------|------------|
+| 01 | **Concepts and Definitions** | Core vocabulary, communication primitives, CIA triad |
+| 02 | **Physical media and signal processing** | Coaxial, twisted pair, fiber optics, modulation, the 8 stages of data transmission |
+| 03 | **Topologies, transmission and coverage** | Star, mesh, ring, bus; simplex/duplex; PAN, LAN, MAN, WAN; hierarchical model |
+| 04 | **Data networks and evolution** | TDM, SDH, ATM, IP dominance; why IP won over technically superior alternatives |
+| 05 | **Protocols and the OSI model** | The 7 layers, MAC and LLC sublayers, TCP/IP comparison, TCP vs UDP, encapsulation per layer |
+| 06 | **Circuit and packet switching** | PSTN vs packets, datagrams vs virtual circuits, routing strategies |
+| 07 | **ALOHA, CSMA/CD, Ethernet and WiFi** | Evolution of media access control, Ethernet frame, CSMA/CA, hidden node problem, WPA |
+| 08 | **Flow and error control** | Stop-and-Wait, sliding window, CRC, parity, FEC, ARQ mechanisms |
+| 09 | **IP addressing** | IPv4, IPv6, classes, masks, subnetting, CIDR, NAT, IPSec |
+| 10 | **Physical equipment** | Hub, bridge, switch, router, and firewall ordered by OSI layer; collision and broadcast domains |
+| 11 | **Tools and cybersecurity** | Ping, traceroute, Wireshark, nmap, aircrack-ng, Burp Suite; each tool mapped to its OSI layer |
+
+### Thread through the syllabus
+
+```
+Fundamentals -> Physical layer -> Architecture -> Evolution -> OSI model
+    -> Switching -> Layer 2 (MAC) -> Layer 2 (LLC) -> Layer 3 (IP) -> Equipment -> Tools
+```
+
+---
+
+## Tech
+
+- Pure HTML/CSS/JS, no dependencies or frameworks
+- No build step, no server - every file opens directly in the browser
+- Automatic dark mode via `prefers-color-scheme`
+- Mobile responsive
+
+---
+
+## Local use
+
+```bash
+git clone https://github.com/catalinacarlen/comunicaciones-suite
+# open index.html in the browser, or any module directly
+open index.html
+```
+
+---
+
+Made by [Catalina Carlen](https://github.com/catalinacarlen) - Universidad de Palermo, Cybersecurity
+
+---
+---
+
 # Comunicaciones - Suite de Estudio
 
 Material interactivo para la materia **Redes y Comunicaciones** de la carrera de Ciberseguridad en la Universidad de Palermo.
