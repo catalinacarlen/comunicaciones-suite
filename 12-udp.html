@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 12 · Protocolo UDP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="12">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 12 · Segundo parcial · Capa de transporte II</p>
+    <h1>Protocolo UDP</h1>
+    <p class="lead">El protocolo liviano y sin conexión de la capa de transporte: lo que NO hace TCP, su datagrama de 8 bytes, por qué streaming y juegos lo prefieren, y la comparación definitiva TCP vs. UDP.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#udp">¿Qué es UDP?</a></li>
+      <li><a href="#nohace">Lo que UDP NO hace</a></li>
+      <li><a href="#caracteristicas">Características</a></li>
+      <li><a href="#datagrama">El datagrama UDP</a></li>
+      <li><a href="#cuando">¿Cuándo usar UDP?</a></li>
+      <li><a href="#comparacion">TCP vs. UDP</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="udp">¿Qué es UDP?</h2>
+  <p>UDP (User Datagram Protocol, <strong>RFC 768</strong>, 1980) ofrece la misma segmentación y rearmado que TCP, pero <strong>sin confiabilidad ni control de flujo</strong>. Es un protocolo de <strong>máximo esfuerzo (best effort)</strong>: "poco confiable" porque no hay acuse de recibo. Sus únicas tareas reales son <strong>encapsular el mensaje</strong> (con puertos origen/destino) y <strong>pasarlo a IP</strong>.</p>
+  <div class="box catedra">
+    <span class="tag">Analogía de cátedra</span>
+    <p class="mb0">UDP es como enviar una <strong>carta simple sin registrar</strong>: el emisor no sabe si el receptor la recibió, y el correo no hace seguimiento ni avisa si no llega. TCP, en cambio, sería una carta certificada con acuse de recibo.</p>
+  </div>
+
+  <h2 class="section" id="nohace">Lo que UDP NO hace</h2>
+  <div class="grid">
+    <div class="card"><strong>No establece conexión</strong><p class="muted mb0">Empaqueta y envía directamente.</p></div>
+    <div class="card"><strong>No garantiza entrega</strong><p class="muted mb0">Sin garantías de que llegue.</p></div>
+    <div class="card"><strong>No usa ACK</strong><p class="muted mb0">Sin reconocimientos.</p></div>
+    <div class="card"><strong>No retransmite</strong><p class="muted mb0">No detecta ni recupera pérdidas.</p></div>
+    <div class="card"><strong>No ordena</strong><p class="muted mb0">Los datos pueden llegar fuera de secuencia.</p></div>
+    <div class="card"><strong>No controla el flujo</strong><p class="muted mb0">Ni gestiona la congestión.</p></div>
+  </div>
+
+  <h2 class="section" id="caracteristicas">Características</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Característica</th><th>Qué significa</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sin conexión</strong></td><td>No establece sesión antes de enviar; está "basado en transacciones".</td></tr>
+        <tr><td><strong>Entrega no confiable</strong></td><td>No asegura la entrega ni retransmite lo perdido/dañado.</td></tr>
+        <tr><td><strong>Reconstrucción no ordenada</strong></td><td>Entrega los datos en el orden en que llegan, sin reordenar.</td></tr>
+        <tr><td><strong>Sin control de flujo</strong></td><td>Si el destino se satura, descarta datos.</td></tr>
+        <tr><td><strong>Sin estado (stateless)</strong></td><td>Ni cliente ni servidor hacen seguimiento de la sesión.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Importante <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Que UDP no sea confiable <strong>no lo hace inferior</strong>: simplemente esas funciones no las da la capa de transporte. Si la aplicación necesita confiabilidad, <strong>la implementa ella misma</strong> (ej. <span class="mono">TFTP</span> tiene sus propios ACK y control de errores sobre UDP).</p>
+  </div>
+
+  <h2 class="section" id="datagrama">El datagrama UDP</h2>
+  <p>El header UDP tiene solo <strong>8 bytes</strong> (vs. 20 de TCP): puerto origen, puerto destino, longitud y checksum. Esa baja sobrecarga es justamente su ventaja. Su PDU se llama <strong>datagrama</strong>. No hay número de secuencia, por eso no puede reordenar.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  PO["Puerto origen<br/>2 B"] --> PD["Puerto destino<br/>2 B"] --> L["Longitud<br/>2 B"] --> C["Checksum<br/>2 B"] --> D["DATOS"]
+    </pre>
+    <div class="cap">Header UDP: 8 bytes en total</div>
+  </div>
+
+  <h2 class="section" id="cuando">¿Cuándo usar UDP?</h2>
+  <p>Cuando <strong>el rendimiento importa más que la fiabilidad</strong>, en intercambios "cortos y relevantes", tráfico multicast, o cuando la app maneja su propia confiabilidad. Tres tipos de aplicaciones ideales:</p>
+  <ul>
+    <li>Toleran cierta pérdida pero <strong>no toleran demoras</strong> (VoIP, video, IPTV, juegos en línea).</li>
+    <li>Transacciones <strong>solicitud-respuesta simples</strong> (DNS, DHCP, SNMP).</li>
+    <li>Comunicaciones unidireccionales o que gestionan la confiabilidad por sí mismas (TFTP).</li>
+  </ul>
+  <div class="box catedra">
+    <span class="tag">Protocolos que usan UDP</span>
+    <p class="mb0"><strong>DNS</strong> (también puede usar TCP), <strong>DHCP</strong>, <strong>SNMP</strong>, <strong>RIP</strong>, <strong>TFTP</strong>, <strong>VoIP</strong> y juegos en línea. Si TCP detectara la pérdida y retransmitiera, las demoras arruinarían el audio/video en vivo: por eso eligen UDP.</p>
+  </div>
+
+  <h2 class="section" id="comparacion">TCP vs. UDP (la tabla del parcial)</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Aspecto</th><th>TCP</th><th>UDP</th></tr></thead>
+      <tbody>
+        <tr><td>Conexión</td><td>Orientado a conexión (handshake)</td><td>Sin conexión</td></tr>
+        <tr><td>Confiabilidad</td><td>Confiable (ACK + retransmisión)</td><td>No confiable (best effort)</td></tr>
+        <tr><td>Orden</td><td>Garantiza el orden (nº de secuencia)</td><td>No garantiza orden</td></tr>
+        <tr><td>Control de flujo</td><td>Sí (ventana)</td><td>No</td></tr>
+        <tr><td>Estado</td><td>Con estado (stateful)</td><td>Sin estado (stateless)</td></tr>
+        <tr><td>Header</td><td>20 bytes</td><td>8 bytes</td></tr>
+        <tr><td>Velocidad</td><td>Más lento (sobrecarga)</td><td>Más rápido (liviano)</td></tr>
+        <tr><td>Usos</td><td>Web, mail, FTP, BD</td><td>VoIP, video, DNS, DHCP, juegos</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Regla mental</span>
+    <p class="mb0"><strong>¿Necesitás que TODO llegue exacto?</strong> → TCP. <strong>¿Necesitás que llegue RÁPIDO y tolerás perder algo?</strong> → UDP. Repasá TCP en el <a href="11-tcp.html">Cap. 11</a> y los servicios que se apoyan en cada uno en el <a href="13-capa-aplicacion.html">Cap. 13</a>.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 12 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['12'], { chapter: '12' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['12'], { chapter: '12' });
+</script>
+</body>
+</html>

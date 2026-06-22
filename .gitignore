@@ -1,2 +1,7 @@
 # macOS
 .DS_Store
+
+.fuse_hidden*
+
+# Material de cátedra (© Universidad de Palermo, no publicar)
+*.pdf

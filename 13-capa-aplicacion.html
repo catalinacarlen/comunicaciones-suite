@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 13 · Capa de aplicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="13">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 13 · Segundo parcial</p>
+    <h1>Capa de aplicación y aplicaciones distribuidas</h1>
+    <p class="lead">La capa que toca el usuario: DHCP, DNS, HTTP/HTTPS, FTP y el correo (SMTP/POP/IMAP). Cada servicio, su puerto y si corre sobre TCP o UDP.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#capa">La capa de aplicación</a></li>
+      <li><a href="#puertos">Servicios y puertos</a></li>
+      <li><a href="#dhcp">DHCP</a></li>
+      <li><a href="#dns">DNS</a></li>
+      <li><a href="#http">HTTP / HTTPS</a></li>
+      <li><a href="#correo">Correo: SMTP, POP, IMAP</a></li>
+      <li><a href="#ftp">FTP</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="capa">La capa de aplicación</h2>
+  <p>Es la <strong>capa 7</strong>, la superior de OSI y TCP/IP. Proporciona la <strong>interfaz</strong> entre las aplicaciones que usamos y la red. En TCP/IP agrupa las tres capas superiores de OSI (aplicación, presentación, sesión). Distingue:</p>
+  <ul>
+    <li><strong>Aplicaciones</strong> reconocidas por la red: los programas que usa la gente (navegador, cliente de mail).</li>
+    <li><strong>Servicios</strong> de la capa de aplicación: programas que preparan los datos para la red (transferencia de archivos, cola de impresión), transparentes para el usuario.</li>
+  </ul>
+  <div class="box tip">
+    <span class="tag">Aplicación, servicio y protocolo <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Un mismo nombre puede referirse a las tres cosas: "Telnet" es la <strong>aplicación</strong>, el <strong>servicio</strong> y el <strong>protocolo</strong>. La aplicación crea el mensaje, el servicio da la interfaz con la red y el protocolo define las reglas y formatos.</p>
+  </div>
+
+  <h2 class="section" id="puertos">Servicios y puertos (memorizar)</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Servicio</th><th>Protocolo de transporte</th><th>Puerto</th></tr></thead>
+      <tbody>
+        <tr><td>DNS</td><td>TCP / <strong>UDP</strong></td><td class="mono">53</td></tr>
+        <tr><td>HTTP</td><td>TCP</td><td class="mono">80</td></tr>
+        <tr><td>HTTPS</td><td>TCP</td><td class="mono">443</td></tr>
+        <tr><td>SMTP</td><td>TCP</td><td class="mono">25</td></tr>
+        <tr><td>POP3</td><td>TCP</td><td class="mono">110</td></tr>
+        <tr><td>Telnet</td><td>TCP</td><td class="mono">23</td></tr>
+        <tr><td>DHCP</td><td>UDP</td><td class="mono">67 / 68</td></tr>
+        <tr><td>FTP</td><td>TCP</td><td class="mono">20 (datos) / 21 (control)</td></tr>
+        <tr><td>TFTP</td><td>UDP</td><td class="mono">69</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="dhcp">DHCP — Dynamic Host Configuration Protocol</h2>
+  <p>Servicio <strong>cliente/servidor (sobre UDP)</strong> que asigna automáticamente parámetros de configuración de red (IP, máscara, gateway, DNS). El servidor tiene una lista de IPs y las asigna conforme quedan libres, sabiendo quién tuvo cada IP, cuánto tiempo y a quién se la asignó después.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Método de asignación</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Automática</strong></td><td>IP permanente al cliente.</td></tr>
+        <tr><td><strong>Dinámica</strong></td><td>IP por un tiempo limitado; <em>el único que permite reutilizar</em> direcciones liberadas.</td></tr>
+        <tr><td><strong>Manual</strong></td><td>El admin asigna la IP; DHCP solo la transmite.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">El proceso DORA</span>
+    <p class="mb0">El intercambio cliente-servidor: <strong>D</strong>iscover → <strong>O</strong>ffer → <strong>R</strong>equest → <strong>A</strong>ck. (En las slides: DHCP Discover, Offer, Request, Ack/Nack, Inform).</p>
+  </div>
+
+  <h2 class="section" id="dns">DNS — Domain Name System</h2>
+  <p>La <strong>"guía telefónica de Internet"</strong>: traduce nombres de dominio (<span class="mono">www.palermo.edu</span>) a direcciones IP y viceversa, porque las personas usan nombres pero la red usa direcciones binarias. Usa una <strong>base de datos distribuida</strong> con estructura de <strong>árbol jerárquico</strong>.</p>
+  <div class="box">
+    <span class="tag">Por qué DNS <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Antes, ARPANET usaba un único archivo <span class="mono">hosts.txt</span> que cada host bajaba cada noche — <strong>no escalable</strong>. DNS lo reemplazó con administración distribuida y jerárquica. El nombre completo es el <strong>FQDN</strong> (Fully Qualified Domain Name), análogo a una ruta absoluta en un filesystem.</p>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Concepto</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Zona</strong></td><td>Porción del espacio de nombres administrada por un servidor.</td></tr>
+        <tr><td><strong>Servidor primario</strong></td><td>Tiene los datos de la zona en archivos locales (modificación centralizada).</td></tr>
+        <tr><td><strong>Servidor secundario</strong></td><td>Obtiene los datos del primario por transferencia de zona (redundancia).</td></tr>
+        <tr><td><strong>Solo-caché</strong></td><td>No es autoritario; solo cachea consultas y respuestas.</td></tr>
+        <tr><td><strong>Forwarder</strong></td><td>Servidor autorizado a hacer consultas externas (Internet) por seguridad.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tipos de consulta: <strong>recursiva</strong> (el servidor debe dar la respuesta final, típica cliente→servidor), <strong>iterativa</strong> (da la mejor respuesta que tiene, servidor→servidor) e <strong>inversa</strong> (IP→nombre, usa <span class="mono">in-addr.arpa</span>). TLDs: gTLD (.com, .net, .edu, .org, .gov, .mil) y ccTLD (códigos de país ISO-3166).</p>
+
+  <h2 class="section" id="http">HTTP / HTTPS</h2>
+  <p>HTTP (HyperText Transfer Protocol) transmite hipertexto (HTML y multimedia) en la web. Es orientado a transacciones con esquema <strong>petición-respuesta</strong> cliente-servidor, y <strong>sin estado (stateless)</strong>. El recurso se identifica por su <strong>URL</strong>.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Método</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">GET</td><td>Devuelve el recurso de la URL.</td></tr>
+        <tr><td class="mono">HEAD</td><td>Como GET pero solo la cabecera (sin cuerpo).</td></tr>
+        <tr><td class="mono">POST</td><td>Envía información del cliente (formularios).</td></tr>
+        <tr><td class="mono">PUT</td><td>Envía un recurso del cliente al servidor.</td></tr>
+        <tr><td class="mono">DELETE</td><td>Borra el recurso.</td></tr>
+        <tr><td class="mono">OPTIONS / TRACE / CONNECT</td><td>Negociación, depuración y túneles (proxy/SSL).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Cookies y estado <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Como HTTP no maneja persistencia, usa <strong>cookies</strong>: fragmentos guardados en el navegador a pedido del servidor, recuperables en visitas posteriores (control de usuarios, preferencias, hábitos). En ciberseguridad, las cookies de sesión son un objetivo clásico de robo (XSS / session hijacking), y por eso importa <strong>HTTPS</strong> (HTTP sobre SSL/TLS, puerto 443).</p>
+  </div>
+
+  <h2 class="section" id="correo">Correo electrónico: SMTP, POP, IMAP</h2>
+  <p>Esquema cliente-servidor con tres agentes: <strong>MUA</strong> (Mail User Agent, el cliente), <strong>MTA</strong> (Mail Transfer Agent, el servidor que transfiere) y <strong>MDA</strong> (Mail Delivery Agent, deja el correo en el buzón).</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Protocolo</th><th>Rol</th><th>Puerto</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SMTP</strong></td><td>Envío / salida (MUA→MTA y MTA→MTA). Conexión TCP.</td><td class="mono">25</td></tr>
+        <tr><td><strong>POP3</strong></td><td>Recepción: descarga y suele borrar del servidor.</td><td class="mono">110</td></tr>
+        <tr><td><strong>IMAP</strong></td><td>Recepción: organiza en carpetas en el servidor, conserva estado.</td><td class="mono">143</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">SMTP en detalle</span>
+    <p class="mb0">Tres fases: <strong>handshaking</strong> (HELO), <strong>transferencia</strong> (MAIL FROM, RCPT TO, DATA — el mensaje termina con una línea con un solo ".") y <strong>cierre</strong> (QUIT). Mensajes en ASCII de 7 bits. Las respuestas llevan código: <span class="mono">4xx</span> error temporal, <span class="mono">5xx</span> error permanente. <strong>MIME</strong> permite adjuntos y ASCII extendido (codificación base64 / quoted-printable).</p>
+  </div>
+
+  <h2 class="section" id="ftp">FTP — File Transfer Protocol</h2>
+  <p>Transferencia de archivos entre hosts remotos (modelo cliente/servidor). Usa <strong>TCP</strong> con <strong>dos conexiones</strong>: <span class="mono">puerto 21</span> de <strong>control</strong> (navegar directorios, comandos) y <span class="mono">puerto 20</span> de <strong>datos</strong> (transferencia). Modos activo/pasivo, transferencia ASCII/binaria.</p>
+  <div class="box">
+    <span class="tag">FTP vs. TFTP</span>
+    <p class="mb0"><strong>FTP</strong> (RFC 959) sobre <strong>TCP</strong>: fiable, con carpetas. <strong>TFTP</strong> (RFC 1350) sobre <strong>UDP</strong> (puerto 69): muy simple, no fiable, sin carpetas ni encriptación, para archivos chicos. Cierra el círculo con la elección TCP/UDP de los <a href="11-tcp.html">Cap. 11</a> y <a href="12-udp.html">12</a>.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 13 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['13'], { chapter: '13' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['13'], { chapter: '13' });
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 11 · Protocolo TCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="11">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 11 · Segundo parcial · Capa de transporte I</p>
+    <h1>Protocolo TCP</h1>
+    <p class="lead">El protocolo confiable de la capa de transporte: puertos y sockets, el three-way handshake, el segmento TCP, la entrega ordenada con números de secuencia y el control de flujo por ventana.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#transporte">La capa de transporte</a></li>
+      <li><a href="#puertos">Puertos y sockets</a></li>
+      <li><a href="#tcp">TCP: características</a></li>
+      <li><a href="#handshake">Three-way handshake</a></li>
+      <li><a href="#cierre">Cierre de conexión</a></li>
+      <li><a href="#segmento">El segmento TCP</a></li>
+      <li><a href="#flujo">Control de flujo y secuencia</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="transporte">La capa de transporte</h2>
+  <p>Su tarea es entregar datos de la máquina origen a la destino de forma que se puedan <strong>rearmar correctamente</strong> (transmisión punto a punto). Responsabilidades: rastrear cada comunicación individual entre aplicaciones, dividir en <strong>segmentos</strong> y reunificarlos, e identificar la aplicación correspondiente. Los protocolos son <strong>TCP</strong> (confiable), <strong>UDP</strong> (liviano) y <strong>SCTP</strong>.</p>
+
+  <h2 class="section" id="puertos">Puertos y sockets</h2>
+  <p>Un <strong>puerto</strong> identifica la aplicación o proceso en el dispositivo. Rangos:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Rango</th><th>Tipo</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">0 – 1023</td><td>Well Known</td><td>Servicios estándar, asignados por IANA (HTTP 80, etc.).</td></tr>
+        <tr><td class="mono">1024 – 49151</td><td>Registered</td><td>Registrados por empresas/organizaciones.</td></tr>
+        <tr><td class="mono">49152 – 65535</td><td>Efímeros</td><td>Usados por los programas cliente.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Socket</span>
+    <p class="mb0">Un <strong>socket</strong> es el método de comunicación entre programas; cada extremo tiene uno.<br><span class="mono">Socket = Dirección IP + número de puerto</span>. Tipos: <strong>Stream</strong> (TCP, fiable y ordenado), <strong>Datagram</strong> (UDP, sin conexión) y <strong>RAW</strong> (envío directo de paquetes IP).</p>
+  </div>
+
+  <h2 class="section" id="tcp">TCP — Transmission Control Protocol</h2>
+  <p>Definido en la <strong>RFC 793</strong> (1981). Es <strong>orientado a la conexión</strong>, <strong>bidireccional</strong>, <strong>confiable (reliable)</strong> y de <strong>flujo de bytes (byte-stream)</strong>. Garantiza que los datos lleguen <strong>exactos y en el orden correcto</strong>.</p>
+  <div class="box tip">
+    <span class="tag">¿Por qué es confiable? PAR <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">TCP usa <strong>PAR</strong> (Positive Acknowledgment with Re-transmission): reenvía los datos hasta "escuchar" que el otro los recibió bien. Las 3 operaciones básicas: <strong>seguimiento</strong> de segmentos enviados, <strong>acuse de recibo (ACK)</strong> y <strong>retransmisión</strong> de lo no confirmado. Solo se reenvía la parte perdida, no todo el mensaje.</p>
+  </div>
+  <div class="box warn">
+    <span class="tag">El costo de la confiabilidad</span>
+    <p class="mb0">Toda esta confiabilidad genera <strong>sobrecarga</strong>: más datos de control (header de <strong>20 bytes</strong> vs. los 8 de UDP) y posibles demoras. Hay un <em>trade-off</em> entre confiabilidad y carga sobre la red. Por eso TCP es un protocolo <strong>con estado (stateful)</strong>: hace seguimiento del estado de la sesión.</p>
+  </div>
+  <p>Aplicaciones que usan TCP: navegadores web (HTTP), correo electrónico, transferencia de archivos (FTP), bases de datos — todo lo que necesita que <strong>todos los datos lleguen completos</strong>.</p>
+
+  <h2 class="section" id="handshake">Establecimiento: el three-way handshake</h2>
+  <p>Antes de transmitir datos, TCP <strong>negocia y establece una conexión</strong> intercambiando 3 segmentos (solo cabecera, sin datos):</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant C as Cliente
+  participant S as Servidor
+  C->>S: 1) SYN (seq = x)
+  S->>C: 2) SYN + ACK (seq = y, ack = x+1)
+  C->>S: 3) ACK (ack = y+1)
+  Note over C,S: Conexión establecida → comienzan los datos
+    </pre>
+    <div class="cap">Three-way handshake: SYN → SYN/ACK → ACK</div>
+  </div>
+  <ol>
+    <li><strong>SYN:</strong> el cliente pide conexión e informa su número de secuencia inicial.</li>
+    <li><strong>SYN + ACK:</strong> el servidor confirma y manda su propio número de secuencia.</li>
+    <li><strong>ACK:</strong> el cliente confirma → conexión establecida.</li>
+  </ol>
+  <div class="box">
+    <span class="tag">Conexión con ciberseguridad <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Entender el handshake es clave en seguridad: el ataque <strong>SYN flood</strong> (DoS) abusa del paso 1 enviando muchos SYN sin completar el ACK, agotando los recursos del servidor. El escaneo de puertos con <span class="mono">nmap</span> también se basa en manipular estos flags (SYN scan).</p>
+  </div>
+
+  <h2 class="section" id="cierre">Cierre de conexión</h2>
+  <p>El cierre usa <strong>4 segmentos</strong> (es full-duplex, se cierra cada sentido por separado): <strong>FIN → ACK</strong> de un lado, y <strong>FIN → ACK</strong> del otro. Quien envía el último ACK espera un tiempo (<strong>TIME-WAIT</strong>) por si se pierde y hay que reenviarlo.</p>
+
+  <h2 class="section" id="segmento">El segmento TCP</h2>
+  <p>El header TCP tiene una parte fija de <strong>20 bytes</strong> y una opcional de hasta 40. Campos clave: puerto origen/destino, <strong>número de secuencia</strong>, <strong>número de ACK</strong>, flags (SYN, ACK, FIN…), <strong>tamaño de ventana</strong> (16 bits) y checksum.</p>
+  <div class="box">
+    <span class="tag">Número de secuencia inicial (ISN)</span>
+    <p class="mb0">Para no confundir segmentos de conexiones viejas ("reencarnaciones"), se usa un <strong>ISN</strong> de 32 bits generado por un reloj cuyo bit menos significativo se incrementa cada ~4 µs. El espacio de secuencia va de 0 a 2³²−1.</p>
+  </div>
+
+  <h2 class="section" id="flujo">Control de flujo y entrega en orden</h2>
+  <p>TCP numera y secuencia los segmentos para <strong>rearmarlos en orden</strong> aunque lleguen por rutas distintas. Usa una variante de <strong>ventana deslizante</strong> (ver <a href="05-control-flujo.html">Cap. 5</a>) pero contando <strong>bytes</strong>, no tramas. El ACK es <strong>acumulativo</strong>: un ACK de X significa "recibí todo hasta X−1".</p>
+  <div class="box catedra">
+    <span class="tag">Tamaño de ventana (window size)</span>
+    <p class="mb0">Campo de 16 bits que indica cuántos bytes puede aceptar el receptor. Se acuerda en el handshake. Si el receptor se satura o la red se congestiona, <strong>achica la ventana</strong> → baja la tasa de transmisión, evitando pérdidas y retransmisiones. Así TCP equilibra velocidad y confiabilidad.</p>
+  </div>
+  <div class="box tip">
+    <span class="tag">Comparación adelantada</span>
+    <p class="mb0">Todo lo contrario de TCP es <strong>UDP</strong> (<a href="12-udp.html">Cap. 12</a>): sin conexión, sin estado, sin control de flujo, header de solo 8 bytes — rápido pero sin garantías.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 11 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['11'], { chapter: '11' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['11'], { chapter: '11' });
+</script>
+</body>
+</html>

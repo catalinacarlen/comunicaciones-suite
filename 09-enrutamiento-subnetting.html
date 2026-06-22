@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 9 · Subnetting y subredes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="09">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 9 · Segundo parcial · Enrutamiento I</p>
+    <h1>Subnetting y subredes</h1>
+    <p class="lead">Cómo dividir una red en subredes más chicas: la máscara de subred, el AND lógico, el cálculo paso a paso de subredes y hosts, y la calculadora que te resuelve los ejercicios del parcial.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#que-es">Qué es el subnetting</a></li>
+      <li><a href="#mascara">La máscara de subred</a></li>
+      <li><a href="#and">El AND lógico</a></li>
+      <li><a href="#formula">Fórmulas clave</a></li>
+      <li><a href="#calc">Calculadora de subnetting</a></li>
+      <li><a href="#pasos">Subnetting paso a paso</a></li>
+      <li><a href="#misma">¿Misma subred?</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="que-es">¿Qué es el subnetting?</h2>
+  <p><strong>Subnetting</strong> es dividir una red en dos o más redes más pequeñas. Se diseñó para resolver la escasez de direcciones IP y permite <strong>compartir una dirección de red entre varias redes físicas</strong>. Beneficios:</p>
+  <ul>
+    <li>Uso eficiente de direcciones IP (no desperdiciar).</li>
+    <li>Reducir el tráfico y los <strong>dominios de broadcast</strong> (menos CPU, más velocidad).</li>
+    <li>Dividir según la estructura de la organización.</li>
+    <li>Agregar un nivel jerárquico <strong>invisible para las redes externas</strong>.</li>
+    <li>Más seguridad (filtros de paquetes entre subredes).</li>
+  </ul>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  A["Sin subnetting<br/>RED | HOST"] --> B["Con subnetting<br/>RED | SUBRED | HOST"]
+    </pre>
+    <div class="cap">El campo SUBRED se le quita a HOST; significado local (RFC 950)</div>
+  </div>
+
+  <h2 class="section" id="mascara">La máscara de subred</h2>
+  <p>La <strong>máscara</strong> es un número de 32 bits que indica qué bits de la IP son <strong>red</strong> (bits en 1) y cuáles son <strong>host</strong> (bits en 0). Se puede escribir en decimal (<span class="mono">255.255.255.0</span>) o como prefijo CIDR (<span class="mono">/24</span> = 24 bits en 1).</p>
+  <div class="box catedra">
+    <span class="tag">Direcciones que NO se pueden usar</span>
+    <p class="mb0">No se pueden usar los valores <strong>todos 0</strong> ni <strong>todos 1</strong> en el campo host: <em>todos 0</em> = la red, <em>todos 1</em> = broadcast. Por eso se restan 2 al calcular hosts útiles.</p>
+  </div>
+
+  <h2 class="section" id="and">El AND lógico</h2>
+  <p>Para obtener la dirección de red/subred se hace un <strong>AND bit a bit</strong> entre la IP y la máscara:</p>
+  <div class="term">
+    <div class="ln"><span class="cy">IP    </span> 168.176.1.50  = 10101000.10110000.00000001.00110010</div>
+    <div class="ln"><span class="cy">MÁSC  </span> 255.255.255.0 = 11111111.11111111.11111111.00000000</div>
+    <div class="ln"><span class="cmt">───────────────────────── AND ─────────────────────────</span></div>
+    <div class="ln"><span class="pmt">RED   </span> 168.176.1.0   = 10101000.10110000.00000001.00000000</div>
+  </div>
+
+  <h2 class="section" id="formula">Fórmulas clave</h2>
+  <div class="box tip">
+    <span class="tag">Memorizá esto para el parcial</span>
+    <p>Si tomás <strong>s</strong> bits para subred y quedan <strong>h</strong> bits para host:</p>
+    <p style="font-family:var(--font-mono)">Nº de subredes = 2<sup>s</sup>　·　Nº de hosts útiles = 2<sup>h</sup> − 2</p>
+    <p class="mb0"><strong>Regla mental:</strong> cada bit más de máscara = <strong>el doble de subredes</strong> y <strong>la mitad de hosts</strong> (y viceversa). Truco del salto: <span class="mono">256 − (octeto de máscara)</span> = tamaño de bloque de cada subred.</p>
+  </div>
+
+  <div class="calc" id="calc">
+    <h4>🧮 Calculadora de subnetting</h4>
+    <p class="muted" style="font-size:0.88rem;margin:0">Ingresá una IP y un prefijo CIDR (/8 a /30). Te devuelve red, broadcast, rango de hosts y cantidades.</p>
+    <div class="calc-row">
+      <div><label for="snip">Dirección IP</label><input type="text" id="snip" value="192.168.1.50" placeholder="ej. 204.15.5.0"></div>
+      <div><label for="sncidr">Prefijo /</label><input type="number" id="sncidr" min="1" max="32" value="27"></div>
+      <button class="btn btn-primary" onclick="calcSubnet()">Calcular</button>
+    </div>
+    <div class="calc-out" id="out-subnet"><span class="cmt"># el resultado aparecerá acá</span></div>
+  </div>
+
+  <h2 class="section" id="pasos">Subnetting paso a paso (ejemplo de cátedra)</h2>
+  <div class="box catedra">
+    <span class="tag">Ejemplo 1: clase C con 3 bits de subred</span>
+    <p>Dada <span class="mono">204.15.5.0 /24</span>, crear subredes usando <strong>3 bits</strong>:</p>
+    <ol>
+      <li>3 bits → <span class="mono">11100000 = 224</span> → máscara extendida <span class="mono">255.255.255.224</span> (/27).</li>
+      <li>Nº de subredes = 2³ = <strong>8</strong>.</li>
+      <li>Quedan 5 bits de host → 2⁵ − 2 = <strong>30 hosts</strong> por subred.</li>
+      <li>Subredes: <span class="mono">.0, .32, .64, .96, .128, .160, .192, .224</span> (saltan de a 32).</li>
+    </ol>
+    <p class="mb0">Primera subred <span class="mono">204.15.5.0/27</span> → hosts del .1 al .30, broadcast .31.</p>
+  </div>
+  <div class="box">
+    <span class="tag">Comparación de máscaras (ejemplo 2)</span>
+    <p class="mb0"><span class="mono">/27 (255.255.255.224)</span> → 8 subredes × 30 hosts. <span class="mono">/28 (255.255.255.240)</span> → 16 subredes × 14 hosts. <em>Más bits de máscara = más subredes, menos hosts.</em></p>
+  </div>
+
+  <h2 class="section" id="misma">¿Están en la misma subred?</h2>
+  <p>Para saber si dos hosts están en la misma subred, se hace el AND de cada IP con la máscara y se comparan las direcciones de red resultantes (ejemplo de cátedra):</p>
+  <div class="box catedra">
+    <span class="tag">Ejemplo 3</span>
+    <p class="mb0">¿<span class="mono">172.16.17.30</span> y <span class="mono">172.16.28.15</span> con máscara <span class="mono">255.255.240.0</span> están juntas?<br>AND de ambas → <span class="mono">172.16.16.0</span> en los dos casos → <strong>sí, misma subred</strong>. (Podés verificarlo con la calculadora de arriba usando /20.)</p>
+  </div>
+  <div class="box tip">
+    <span class="tag">Conexión <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Esto es solo "subnetting clásico" (todas las subredes iguales). Cuando cada subred necesita un tamaño distinto, se usa <strong>VLSM</strong> → <a href="10-vlsm-cidr.html">Cap. 10</a>. El enrutamiento que decide a dónde mandar cada datagrama se basa en las <strong>tablas de ruteo</strong>, que pueden ser estáticas o dinámicas.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 9 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+
+  function calcSubnet() {
+    const out = document.getElementById('out-subnet');
+    const ipStr = document.getElementById('snip').value.trim();
+    const cidr = parseInt(document.getElementById('sncidr').value, 10);
+    const p = ipStr.split('.');
+    if (p.length !== 4 || p.some(x => !/^\d+$/.test(x) || +x < 0 || +x > 255)) { out.innerHTML = '<span class="cmt"># IPv4 inválida</span>'; return; }
+    if (!(cidr >= 1 && cidr <= 32)) { out.innerHTML = '<span class="cmt"># prefijo entre /1 y /32</span>'; return; }
+    const ipInt = p.reduce((a, x) => (a << 8 >>> 0) + (+x), 0) >>> 0;
+    const maskInt = cidr === 0 ? 0 : (0xFFFFFFFF << (32 - cidr)) >>> 0;
+    const net = (ipInt & maskInt) >>> 0;
+    const bcast = (net | (~maskInt >>> 0)) >>> 0;
+    const hostBits = 32 - cidr;
+    const totalHosts = Math.pow(2, hostBits);
+    const usable = hostBits >= 1 ? totalHosts - 2 : 0;
+    const fmt = n => [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+    const maskStr = fmt(maskInt);
+    const first = usable > 0 ? fmt((net + 1) >>> 0) : '—';
+    const last = usable > 0 ? fmt((bcast - 1) >>> 0) : '—';
+    out.innerHTML =
+      `<span class="k">IP / prefijo</span>   = <span class="v">${ipStr}/${cidr}</span>\n` +
+      `<span class="k">máscara</span>       = ${maskStr}\n` +
+      `<span class="k">red (subred)</span>  = <span class="hl">${fmt(net)}</span>\n` +
+      `<span class="k">broadcast</span>     = <span class="hl">${fmt(bcast)}</span>\n` +
+      `<span class="k">rango hosts</span>   = ${first}  →  ${last}\n` +
+      `<span class="k">hosts útiles</span>  = <span class="v">${usable.toLocaleString()}</span>  (2^${hostBits} − 2)\n` +
+      `<span class="k">tamaño bloque</span> = ${totalHosts.toLocaleString()} direcciones`;
+  }
+  calcSubnet();
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['09'], { chapter: '09' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['09'], { chapter: '09' });
+</script>
+</body>
+</html>

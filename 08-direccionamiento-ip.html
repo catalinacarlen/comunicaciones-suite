@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 8 · Direccionamiento IP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="08">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 8 · Segundo parcial</p>
+    <h1>Direccionamiento IP</h1>
+    <p class="lead">El sistema de direcciones que hace funcionar Internet: IPv4 de 32 bits, las clases A/B/C/D/E, direcciones especiales y privadas, notación CIDR y el salto a IPv6.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#ip">El protocolo IP</a></li>
+      <li><a href="#datagrama">El datagrama</a></li>
+      <li><a href="#direcciones">Direcciones IP</a></li>
+      <li><a href="#clases">Clases A, B, C, D, E</a></li>
+      <li><a href="#calc-ip">Calculadora de clase IP</a></li>
+      <li><a href="#especiales">Direcciones especiales y privadas</a></li>
+      <li><a href="#cidr">Notación CIDR</a></li>
+      <li><a href="#ipv6">IPv6</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="ip">El protocolo IP</h2>
+  <p>IP (Internet Protocol, RFC 791) es el corazón de la <strong>capa de Internet</strong>. Provee el servicio de entrega de paquetes sobre el que se construye todo. Es <strong>abierto</strong> (interconecta fabricantes), <strong>independiente del medio</strong> físico y define un esquema de direccionamiento amplio y común.</p>
+  <div class="box catedra">
+    <span class="tag">Dos características clave de IP</span>
+    <p class="mb0"><strong>Connectionless:</strong> no hace handshake antes de transmitir (cada paquete viaja independiente). <strong>Unreliable:</strong> no detecta ni corrige errores — eso lo hacen otros protocolos como <a href="11-tcp.html">TCP</a>. IP solo define el datagrama, el direccionamiento, y mueve datos entre acceso a red y transporte.</p>
+  </div>
+
+  <h2 class="section" id="datagrama">El datagrama</h2>
+  <p>El <strong>datagrama</strong> es el formato de paquete de IP. Las primeras 5-6 palabras de 32 bits son el <strong>header</strong> (control); el <strong>IHL</strong> indica su longitud. Campos importantes:</p>
+  <ul>
+    <li><strong>Versión:</strong> actual = 4.</li>
+    <li><strong>TTL</strong> (Time To Live): se decrementa en cada salto; al llegar a 0 se descarta (evita loops infinitos).</li>
+    <li><strong>Protocolo:</strong> qué se encapsula (TCP, UDP…).</li>
+    <li><strong>Direcciones origen y destino</strong> (32 bits cada una).</li>
+    <li><strong>Fragmentación:</strong> ocurre al pasar de un MTU mayor a uno menor.</li>
+  </ul>
+
+  <h2 class="section" id="direcciones">Direcciones IP</h2>
+  <p>Identifican unívocamente un <strong>punto de acceso (interfaz)</strong> a la red — un router o host multi-homed tiene varias. Son números de <strong>32 bits</strong> en notación decimal con puntos (ej. <span class="mono">123.3.45.77</span>). Se dividen en parte de <strong>RED</strong> (asignada por autoridad/ISP, usada para rutear) y parte de <strong>HOST</strong> (asignada localmente, identifica la interfaz).</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  DEC["Decimal<br/>128.223.254.10"] --- BIN["Binario<br/>10000000.11011111.11111110.00001010"] --- HEX["Hex<br/>80.DF.FE.0A"]
+    </pre>
+    <div class="cap">La misma dirección en tres representaciones</div>
+  </div>
+
+  <h2 class="section" id="clases">Clases A, B, C, D, E</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Clase</th><th>Bits iniciales</th><th>1er octeto</th><th>Rango</th><th>Redes / Hosts</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A</strong></td><td class="mono">0</td><td class="mono">1–126</td><td class="mono">0.0.0.0 – 127.255.255.255</td><td>126 / 16.777.214</td></tr>
+        <tr><td><strong>B</strong></td><td class="mono">10</td><td class="mono">128–191</td><td class="mono">128.0.0.0 – 191.255.255.255</td><td>16.382 / 65.534</td></tr>
+        <tr><td><strong>C</strong></td><td class="mono">110</td><td class="mono">192–223</td><td class="mono">192.0.0.0 – 223.255.255.255</td><td>2.097.150 / 254</td></tr>
+        <tr><td><strong>D</strong> (multicast)</td><td class="mono">1110</td><td class="mono">224–239</td><td class="mono">224.0.0.0 – 239.255.255.255</td><td>—</td></tr>
+        <tr><td><strong>E</strong> (experimental)</td><td class="mono">11110</td><td class="mono">240–247</td><td class="mono">240.0.0.0 – 247.255.255.255</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Truco del primer octeto <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Identificás la clase mirando solo el <strong>primer octeto</strong>: <span class="mono">1–126</span> = A, <span class="mono">128–191</span> = B, <span class="mono">192–223</span> = C, <span class="mono">224–239</span> = D, <span class="mono">240+</span> = E. Ojo: <span class="mono">127.x.x.x</span> está reservado para <strong>loopback</strong>, por eso clase A llega solo hasta 126.</p>
+  </div>
+
+  <div class="calc" id="calc-ip">
+    <h4>🧮 Identificador de clase IP</h4>
+    <p class="muted" style="font-size:0.88rem;margin:0">Ingresá una IPv4 y obtené su clase, división red/host, si es privada y su forma binaria.</p>
+    <div class="calc-row">
+      <div><label for="ipin">Dirección IPv4</label><input type="text" id="ipin" value="172.16.5.20" placeholder="ej. 192.168.1.10"></div>
+      <button class="btn btn-primary" onclick="calcIP()">Analizar</button>
+    </div>
+    <div class="calc-out" id="out-ip"><span class="cmt"># el análisis aparecerá acá</span></div>
+  </div>
+
+  <h2 class="section" id="especiales">Direcciones especiales y privadas</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Dirección</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">Bits de host = 0</td><td>Identifica la <strong>red</strong> (ej. 128.223.254.0/24).</td></tr>
+        <tr><td class="mono">Bits de host = 1</td><td><strong>Broadcast dirigido</strong> a esa red (ej. 128.223.254.255).</td></tr>
+        <tr><td class="mono">255.255.255.255</td><td><strong>Broadcast local/limitado</strong>.</td></tr>
+        <tr><td class="mono">0.0.0.0</td><td>Mi propio host (durante el arranque).</td></tr>
+        <tr><td class="mono">127.0.0.1</td><td><strong>Loopback</strong>: procesos en la misma máquina; nunca se propaga a la red.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Direcciones privadas (memorizar)</span>
+    <p class="mb0"><span class="mono">10.0.0.0 – 10.255.255.255</span> (una clase A)<br><span class="mono">172.16.0.0 – 172.31.255.255</span> (16 clases B)<br><span class="mono">192.168.0.0 – 192.168.255.255</span> (256 clases C)<br>No se rutean en Internet; se usan dentro de LANs con NAT.</p>
+  </div>
+
+  <h2 class="section" id="cidr">Notación CIDR (prefijo)</h2>
+  <p>La <strong>máscara</strong> también se expresa como la cantidad de bits a 1, agregada con "/". Ejemplo: <span class="mono">255.255.255.0</span> tiene 24 bits a 1 → <span class="mono">128.223.254.10/24</span>.</p>
+  <div class="box warn">
+    <span class="tag">¡Las clases ya no importan!</span>
+    <p class="mb0">En los 90 se pasó a <strong>direccionamiento classless</strong>: <strong>CIDR</strong> (los routers no asumen /8, /16, /24) y <strong>VLSM</strong> (las subredes pueden tener distinto tamaño). El esquema con clases era poco flexible y desperdiciaba direcciones. Esto se desarrolla en el <a href="10-vlsm-cidr.html">Cap. 10</a>.</p>
+  </div>
+
+  <h2 class="section" id="ipv6">IPv6</h2>
+  <p>Sucesor de IPv4 que resuelve el agotamiento de direcciones. Cambios principales:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Aspecto</th><th>IPv4</th><th>IPv6</th></tr></thead>
+      <tbody>
+        <tr><td>Tamaño de dirección</td><td>32 bits</td><td><strong>128 bits</strong></td></tr>
+        <tr><td>Notación</td><td>Decimal con puntos</td><td>Hexadecimal con ":" (8 grupos de 16 bits)</td></tr>
+        <tr><td>Tipos de dirección</td><td>Unicast, multicast, broadcast</td><td>Unicast, multicast, <strong>anycast</strong> (sin broadcast)</td></tr>
+        <tr><td>Header</td><td>Más complejo</td><td>Simplificado (menor procesamiento)</td></tr>
+        <tr><td>Extras</td><td>—</td><td>Etiquetado de flujos (QoS), autenticación y privacidad</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Notación IPv6 (RFC 3513)</span>
+    <p class="mb0">El <span class="mono">::</span> reemplaza uno o más grupos de ceros y <strong>solo puede aparecer una vez</strong>. Ej.: <span class="mono">1080:0:0:0:8:800:200C:417A</span> → <span class="mono">1080::8:800:200C:417A</span>. Loopback = <span class="mono">::1</span> (equivale a 127.0.0.1).</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 8 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+
+  function toBin(n){ return n.toString(2).padStart(8,'0'); }
+  function calcIP() {
+    const out = document.getElementById('out-ip');
+    const ip = document.getElementById('ipin').value.trim();
+    const parts = ip.split('.');
+    if (parts.length !== 4 || parts.some(p => !/^\d+$/.test(p) || +p < 0 || +p > 255)) {
+      out.innerHTML = '<span class="cmt"># IPv4 inválida (4 octetos 0–255)</span>'; return;
+    }
+    const o = parts.map(Number);
+    let cls, split;
+    if (o[0] <= 126) { cls = 'A'; split = 'RED.host.host.host'; }
+    else if (o[0] === 127) { cls = 'A (loopback reservado)'; split = '—'; }
+    else if (o[0] <= 191) { cls = 'B'; split = 'RED.RED.host.host'; }
+    else if (o[0] <= 223) { cls = 'C'; split = 'RED.RED.RED.host'; }
+    else if (o[0] <= 239) { cls = 'D (multicast)'; split = '—'; }
+    else { cls = 'E (experimental)'; split = '—'; }
+    const priv = (o[0]===10) || (o[0]===172 && o[1]>=16 && o[1]<=31) || (o[0]===192 && o[1]===168);
+    out.innerHTML =
+      `<span class="k">dirección</span> = <span class="v">${ip}</span>\n` +
+      `<span class="k">binario</span>   = ${o.map(toBin).join('.')}\n` +
+      `<span class="k">clase</span>     = <span class="hl">${cls}</span>\n` +
+      `<span class="k">estructura</span> = ${split}\n` +
+      `<span class="k">tipo</span>      = <span class="v">${priv ? 'PRIVADA (no rutea en Internet)' : 'pública'}</span>`;
+  }
+  calcIP();
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['08'], { chapter: '08' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['08'], { chapter: '08' });
+</script>
+</body>
+</html>

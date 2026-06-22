@@ -1,4 +1,4 @@
-# Comunicaciones · Study Suite
+# Redes y Comunicaciones · Suite de Estudio
 
 Interactive study material for the **Networks and Communications** course in the Cybersecurity program at Universidad de Palermo, Buenos Aires.
 
@@ -12,38 +12,47 @@ Interactive study material for the **Networks and Communications** course in the
 
 ### About
 
-Eleven self-contained HTML mini-apps covering the full course syllabus. Each one runs without a server, needs no internet beyond the first load, and can be shared as a single HTML file.
+Thirteen self-contained interactive HTML modules, plus a practice app and a mock-exam app, covering the full course syllabus. Each module runs without a server, needs no external dependencies, and can be shared as a single HTML file. A shared `assets/` folder (`app.js`, `data.js`, `styles.css`) drives all of them, and a common navigation bar links each module to the previous and next one.
 
-The modules go in order, from abstract concepts down to the physical medium, back up through the OSI model, and finally to the tools. Each one picks up where the last left off.
+The modules go in order: from the evolution of data networks, up through the OSI model and each layer in detail (link, network, transport and application), closing with addressing, routing and the application protocols.
 
 ### Modules
 
 | # | Module | Key topics |
 |---|--------|------------|
-| 01 | **Concepts and Definitions** | Core vocabulary, communication primitives, CIA triad |
-| 02 | **Physical media and signal processing** | Coaxial, twisted pair, fiber optics, modulation, the 8 stages of data transmission |
-| 03 | **Topologies, transmission and coverage** | Star, mesh, ring, bus; simplex/duplex; PAN, LAN, MAN, WAN; hierarchical model |
-| 04 | **Data networks and evolution** | TDM, SDH, ATM, IP dominance; why IP won over technically superior alternatives |
-| 05 | **Protocols and the OSI model** | The 7 layers, MAC and LLC sublayers, TCP/IP comparison, TCP vs UDP, encapsulation per layer |
-| 06 | **Circuit and packet switching** | PSTN vs packets, datagrams vs virtual circuits, routing strategies |
-| 07 | **ALOHA, CSMA/CD, Ethernet and WiFi** | Evolution of media access control, Ethernet frame, CSMA/CA, hidden node problem, WPA |
-| 08 | **Flow and error control** | Stop-and-Wait, sliding window, CRC, parity, FEC, ARQ mechanisms |
-| 09 | **IP addressing** | IPv4, IPv6, classes, masks, subnetting, CIDR, NAT, IPSec |
-| 10 | **Physical equipment** | Hub, bridge, switch, router, and firewall ordered by OSI layer; collision and broadcast domains |
-| 11 | **Tools and cybersecurity** | Ping, traceroute, Wireshark, nmap, aircrack-ng, Burp Suite; each tool mapped to its OSI layer |
+| 01 | **Evolution of data networks** | History and development of data networks, why IP prevailed |
+| 02 | **Network classification by coverage** | PAN, LAN, MAN, WAN; topologies; simplex/duplex; hierarchical model |
+| 03 | **Protocols and the OSI model** | The 7 layers, MAC and LLC sublayers, TCP/IP comparison, encapsulation |
+| 04 | **Circuit and packet switching** | PSTN vs packets, datagrams vs virtual circuits, routing strategies |
+| 05 | **Flow and error control** | Stop-and-Wait, sliding window, CRC, parity, FEC, ARQ |
+| 06 | **ALOHA, CSMA/CD, Ethernet and wireless** | Media access, Ethernet frame, CSMA/CA, hidden node, WLAN and WPA |
+| 07 | **Equipment: hub, bridge, switch** | Devices by OSI layer, collision and broadcast domains |
+| 08 | **IP addressing** | Datagram, classes A–E, special and private addresses, classless, IPv6 |
+| 09 | **Subnetting** | Masks, logical AND, the bit rule, `2^s` and `2^h − 2` formulas |
+| 10 | **VLSM, CIDR, ARP and ICMP** | Variable-length subnets, summarization, routing tables, longest match, ARP, ICMP |
+| 11 | **TCP** | Ports, sockets, three-way handshake, sliding window |
+| 12 | **UDP** | Datagram service, TCP vs UDP trade-offs |
+| 13 | **Application layer** | DNS, DHCP (DORA), email (SMTP/POP/IMAP), HTTP, FTP/TFTP |
+
+Plus two companion apps:
+
+- **[Práctica](practica.html):** calculators and simulators in one place (conversions, subnetting, VLSM, summarization, longest match, ARP, three-way handshake, sliding window, DORA and DNS).
+- **[Parciales](parciales.html):** a question bank (multiple choice, true/false, fill-in, matching and flashcards) and a timed mock exam with explained feedback.
 
 #### Thread through the syllabus
 
 ```
-Fundamentals -> Physical layer -> Architecture -> Evolution -> OSI model
-    -> Switching -> Layer 2 (MAC) -> Layer 2 (LLC) -> Layer 3 (IP) -> Equipment -> Tools
+Evolution -> Classification -> OSI model -> Switching -> Flow & error control
+    -> LAN access -> Equipment -> IP addressing -> Subnetting -> VLSM/CIDR
+    -> TCP -> UDP -> Application layer
 ```
 
 ### Tech
 
 - Pure HTML/CSS/JS, no dependencies or frameworks
 - No build step and no server; every file opens directly in the browser
-- Automatic dark mode via `prefers-color-scheme`
+- Shared `assets/` (engine, content and styles) reused across all modules
+- Automatic dark mode via `prefers-color-scheme`, progress saved with `localStorage`
 - Mobile responsive
 
 ### Local use
@@ -64,38 +73,47 @@ Material interactivo para la materia **Redes y Comunicaciones** de la carrera de
 
 ### Sobre el proyecto
 
-Once mini-aplicaciones HTML independientes que cubren el temario completo de la materia. Cada una es autocontenida: no necesita servidor, no requiere conexión más allá de la primera carga, y se puede compartir como un único archivo local.
+Trece módulos HTML interactivos y autocontenidos, más una app de práctica y otra de simulacros de parcial, que cubren el temario completo de la materia. Cada módulo abre directo en el navegador, sin servidor ni dependencias externas, y se puede compartir como un único archivo. Una carpeta `assets/` compartida (`app.js`, `data.js`, `styles.css`) los alimenta a todos, y una barra de navegación común enlaza cada módulo con el anterior y el siguiente.
 
-Los módulos van en orden, desde los conceptos abstractos hasta las herramientas concretas, con un hilo conductor que conecta cada uno con el anterior y el siguiente.
+Los módulos van en orden: desde la evolución de las redes de datos, suben por el modelo OSI y cada capa en detalle (enlace, red, transporte y aplicación), y cierran con direccionamiento, enrutamiento y los protocolos de aplicación.
 
 ### Módulos
 
 | # | Módulo | Temas principales |
 |---|--------|-------------------|
-| 01 | **Conceptos y Definiciones** | Vocabulario base, primitivas de comunicación, tríada CIA |
-| 02 | **Medios físicos y procesamiento de la señal** | Coaxial, par trenzado, fibra óptica, modulación, las 8 etapas del viaje de la información |
-| 03 | **Topologías, transmisión y cobertura** | Estrella, malla, anillo, bus; simplex/duplex; PAN, LAN, MAN, WAN; modelo jerárquico |
-| 04 | **Redes de datos y evolución** | TDM, SDH, ATM, dominio de IP; por qué IP ganó sobre alternativas técnicamente superiores |
-| 05 | **Protocolos y modelo OSI** | Las 7 capas, subcapas MAC y LLC, TCP/IP comparado, TCP vs UDP, encapsulación por capa |
-| 06 | **Conmutación de circuitos y paquetes** | PSTN vs paquetes, datagramas vs circuitos virtuales, estrategias de encaminamiento |
-| 07 | **ALOHA, CSMA/CD, Ethernet y WiFi** | Evolución del acceso al medio, trama Ethernet, CSMA/CA, nodo escondido, WPA |
-| 08 | **Control de flujo y errores** | Stop-and-Wait, ventana deslizante, CRC, paridad, FEC, mecanismos ARQ |
-| 09 | **Direccionamiento IP** | IPv4, IPv6, clases, máscaras, subnetting, CIDR, NAT, IPSec |
-| 10 | **Equipos físicos** | Hub, bridge, switch, router y firewall ordenados por capa OSI; dominios de colisión y broadcast |
-| 11 | **Herramientas y ciberseguridad** | Ping, traceroute, Wireshark, nmap, aircrack-ng, Burp Suite; cada herramienta mapeada a su capa OSI |
+| 01 | **Evolución de las redes de datos** | Historia y desarrollo de las redes, por qué se impuso IP |
+| 02 | **Clasificación según cobertura** | PAN, LAN, MAN, WAN; topologías; simplex/duplex; modelo jerárquico |
+| 03 | **Protocolos y modelo OSI** | Las 7 capas, subcapas MAC y LLC, TCP/IP comparado, encapsulación |
+| 04 | **Conmutación de circuitos y paquetes** | PSTN vs paquetes, datagramas vs circuitos virtuales, encaminamiento |
+| 05 | **Control de flujo y de errores** | Stop-and-Wait, ventana deslizante, CRC, paridad, FEC, ARQ |
+| 06 | **ALOHA, CSMA/CD, Ethernet e inalámbricas** | Acceso al medio, trama Ethernet, CSMA/CA, nodo escondido, WLAN y WPA |
+| 07 | **Equipamiento: hub, bridge, switch** | Equipos por capa OSI, dominios de colisión y broadcast |
+| 08 | **Direccionamiento IP** | Datagrama, clases A–E, direcciones especiales y privadas, classless, IPv6 |
+| 09 | **Subnetting** | Máscaras, AND lógico, regla del bit, fórmulas `2^s` y `2^h − 2` |
+| 10 | **VLSM, CIDR, ARP e ICMP** | Subredes de tamaño variable, sumarización, tablas de ruteo, longest match, ARP, ICMP |
+| 11 | **Protocolo TCP** | Puertos, sockets, three-way handshake, ventana deslizante |
+| 12 | **Protocolo UDP** | Servicio de datagramas, TCP vs UDP |
+| 13 | **Capa de aplicación** | DNS, DHCP (DORA), correo (SMTP/POP/IMAP), HTTP, FTP/TFTP |
 
-#### Hilo conductor
+Más dos apps complementarias:
+
+- **[Práctica](practica.html):** calculadoras y simuladores en un solo lugar (conversores, subnetting, VLSM, sumarización, longest match, ARP, three-way handshake, ventana deslizante, DORA y DNS).
+- **[Parciales](parciales.html):** un banco de preguntas (multiple choice, verdadero/falso, completar, unir conceptos y flashcards) y un simulacro de examen cronometrado con corrección explicada.
+
+#### Hilo conductor del temario
 
 ```
-Fundamentos -> Capa física -> Arquitectura -> Evolución -> Modelo OSI
-     -> Conmutación -> Capa 2 (MAC) -> Capa 2 (LLC) -> Capa 3 (IP) -> Equipos -> Herramientas
+Evolución -> Clasificación -> Modelo OSI -> Conmutación -> Control de flujo y errores
+    -> Acceso al medio -> Equipamiento -> Direccionamiento IP -> Subnetting -> VLSM/CIDR
+    -> TCP -> UDP -> Capa de aplicación
 ```
 
 ### Tecnología
 
 - HTML/CSS/JS puro, sin dependencias ni frameworks
 - Sin build step y sin servidor; cada archivo abre directo en el navegador
-- Dark mode automático vía `prefers-color-scheme`
+- `assets/` compartida (motor, contenido y estilos) reutilizada por todos los módulos
+- Dark mode automático vía `prefers-color-scheme`, progreso guardado con `localStorage`
 - Responsive para móvil
 
 ### Uso local

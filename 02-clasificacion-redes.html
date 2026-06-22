@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 2 · Clasificación de las redes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="02">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 2 · Primer parcial</p>
+    <h1>Clasificación de las redes según área de cobertura</h1>
+    <p class="lead">De la PAN a la WAN, topologías físicas, los medios de transmisión (cobre, par trenzado y fibra) y cómo se organiza la capa de enlace en las subcapas MAC y LLC.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#cobertura">Cobertura: PAN/LAN/MAN/WAN</a></li>
+      <li><a href="#tipos">Tipos de redes y transmisión</a></li>
+      <li><a href="#topologias">Topologías</a></li>
+      <li><a href="#medios">Medios de transmisión</a></li>
+      <li><a href="#fibra">Fibra óptica</a></li>
+      <li><a href="#enlace">Subcapas MAC y LLC</a></li>
+      <li><a href="#jerarquico">Modelo jerárquico</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="cobertura">Clasificación por área de cobertura</h2>
+  <p>Las redes se clasifican según el área geográfica que abarcan. De menor a mayor: <strong>PAN → LAN → MAN → WAN</strong>.</p>
+
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  PAN["PAN<br/>~10 m<br/>Bluetooth 802.15"] --> LAN["LAN<br/>edificio/campus<br/>Ethernet, WiFi"]
+  LAN --> MAN["MAN<br/>ciudad<br/>MetroEthernet"]
+  MAN --> WAN["WAN<br/>país/mundo<br/>X.25, Frame Relay, ATM"]
+    </pre>
+    <div class="cap">A mayor cobertura, menor control propio y (en general) menor velocidad</div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Tipo</th><th>Cobertura</th><th>Características</th><th>Tecnologías</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PAN</strong></td><td>~10 m (espacio personal)</td><td>Bajo costo/consumo, hasta 8 dispositivos, &lt;1 Mbps. WPAN = inalámbrica.</td><td class="mono">Bluetooth 802.15.1, USB, FireWire</td></tr>
+        <tr><td><strong>LAN</strong></td><td>Edificio o campus</td><td>Corto alcance, una sola organización, gestión del dueño, altas velocidades.</td><td class="mono">Ethernet, Token Ring, FDDI, WiFi</td></tr>
+        <tr><td><strong>MAN</strong></td><td>Ciudad o área de ella</td><td>Entre LAN y WAN; altas velocidades a menor costo en áreas grandes.</td><td class="mono">MetroEthernet, Wireless</td></tr>
+        <tr><td><strong>WAN</strong></td><td>Extensa / país-mundo</td><td>Largo alcance vía carriers, tradicionalmente punto a punto; une LANs y MANs. Puede tener límites de velocidad/retardo.</td><td class="mono">X.25, Frame Relay, ATM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="tipos">Tipos de redes y de transmisión</h2>
+  <p>Según la forma de conectar los nodos:</p>
+  <ul>
+    <li><strong>Punto a punto:</strong> el canal une dos nodos iguales en el proceso (puede ser simplex, half o full duplex).</li>
+    <li><strong>Multipunto:</strong> varios elementos comparten el mismo medio y se ven entre sí; cada uno transmite y recibe.</li>
+    <li><strong>Conmutadas (nodos intermedios):</strong> hay nodos de conmutación que no miran el contenido; la info atraviesa la red pasando por ellos. Se clasifican en conmutación de <em>circuitos</em> y de <em>paquetes</em> (<a href="04-conmutacion.html">Cap. 4</a>).</li>
+  </ul>
+
+  <h4>Tipos de transmisión</h4>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Modo</th><th>Dirección</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Simplex</strong></td><td>Una sola dirección (receptor no responde).</td><td>Radio, televisor</td></tr>
+        <tr><td><strong>Half duplex</strong></td><td>Ambas direcciones, una a la vez.</td><td>Walkie-talkie, GPS, fax</td></tr>
+        <tr><td><strong>Full duplex</strong></td><td>Ambas direcciones simultáneamente, mismo canal.</td><td>Celular, notebook</td></tr>
+        <tr><td><strong>Full full duplex</strong></td><td>Transmite y recibe a la vez, no necesariamente entre las mismas ubicaciones.</td><td>Internet, videoconferencia</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="topologias">Topologías físicas</h2>
+  <p>La topología física es el "mapa" de cómo se unen físicamente las estaciones.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  subgraph Estrella
+    H((HUB)) --- A1[PC] & A2[PC] & A3[PC]
+  end
+  subgraph Bus
+    B1[PC] --- BUS[===== BUS =====] --- B2[PC]
+    BUS --- B3[PC]
+  end
+    </pre>
+    <div class="cap">Estrella (central) y bus (cable único compartido)</div>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Topología</th><th>Cómo se conecta</th><th>Nota</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Malla</strong></td><td>Todas las estaciones se conectan entre sí.</td><td>Muy robusta pero difícil de escalar.</td></tr>
+        <tr><td><strong>Anillo</strong></td><td>Nodos en círculo lógico; los mensajes van de nodo a nodo en una dirección.</td><td>El cable forma un bucle cerrado.</td></tr>
+        <tr><td><strong>Estrella</strong></td><td>Todas pasan por un dispositivo central (hub/switch).</td><td>La más usada hoy; si cae el central, cae la red.</td></tr>
+        <tr><td><strong>Bus</strong></td><td>Un único cable (BUS) al que se conecta cada equipo.</td><td>Histórica; una rotura afecta a todos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="medios">Medios de transmisión</h2>
+  <p>Para transmitir, las computadoras deben estar conectadas físicamente. El medio se elige según <strong>velocidad deseada, costo y ubicación física/geográfica</strong>.</p>
+
+  <h3>Cable coaxial</h3>
+  <p>Dos elementos conductores: un conductor de cobre central rodeado por aislante, y sobre él un <strong>blindaje trenzado</strong> que actúa como segundo conductor y reduce la interferencia. Tipos: <strong>Thick</strong> (grueso, "cable amarillo", mayor velocidad/distancia pero caro y poco flexible) y <strong>Thin</strong> (delgado, más barato, menor distancia).</p>
+
+  <h3>Par trenzado</h3>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Tipo</th><th>Blindaje</th><th>Características</th></tr></thead>
+      <tbody>
+        <tr><td><strong>UTP</strong> (Unshielded)</td><td>Sin blindaje</td><td>Bajo costo, fácil manejo; mayor tasa de error y límites a gran distancia. El más usado del mercado.</td></tr>
+        <tr><td><strong>STP</strong> (Shielded)</td><td>Malla metálica + lámina por par</td><td>Menor tasa de error (evita interferencias) pero alto costo de fabricación.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Las categorías del par trenzado definen el ancho de banda y la velocidad: <span class="mono">Cat 3</span> (16 MHz, 10 Mbps), <span class="mono">Cat 5/5e</span> (100 MHz, hasta 1–10 Gbps), <span class="mono">Cat 6/6a</span> (200–500 MHz), <span class="mono">Cat 7</span> (600 MHz).</p>
+
+  <div class="box">
+    <span class="tag">Atenuación, NEXT y ACR</span>
+    <p><strong>Atenuación:</strong> pérdida de potencia de la señal con la distancia (en dB). <em>Se busca pequeña.</em></p>
+    <p><strong>NEXT</strong> (Near End Crosstalk): ruido inducido por un par sobre otro. <em>Se busca grande</em> (más NEXT = menos ruido relativo).</p>
+    <p class="mb0"><strong>ACR</strong> = NEXT − Atenuación (también "headroom"). Debe ser de varios dB para que el cable funcione; una pequeña mejora de ACR reduce drásticamente la tasa de error de bit.</p>
+  </div>
+
+  <h2 class="section" id="fibra">Fibra óptica</h2>
+  <p>Uno o más hilos de cuarzo fundido o plástico tratado. La luz (de un LED o láser) no se escapa del núcleo porque núcleo y cubierta (cladding) tienen <strong>distintos índices de refracción</strong>, lo que produce reflexión total interna. Ventajas: gran ancho de banda, baja atenuación, inmunidad a interferencias, alta seguridad; desventaja: alto costo.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Clase</th><th>Núcleo</th><th>Alcance</th><th>Uso típico</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Multimodo</strong></td><td>50 / 62.5 µm</td><td>Hasta ~2 km (λ=850 nm)</td><td>Comunicación de datos. Sufre <em>dispersión modal</em>.</td></tr>
+        <tr><td><strong>Monomodo</strong></td><td>8 a 10 µm</td><td>Hasta ~40 km (λ=1300 nm)</td><td>Telefonía y TV por cable. Sin dispersión modal.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Dato útil <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Multimodo se especifica con un producto <strong>ancho de banda × longitud</strong> (ej. 200 MHz·km = 200 MHz a 1 km o 100 MHz a 2 km). Monomodo no tiene dispersión modal, por eso no se especifica ese producto. Gigabit por fibra usa <strong>láser</strong>, no LED.</p>
+  </div>
+
+  <h2 class="section" id="enlace">Subcapas MAC y LLC</h2>
+  <p>Los medios y topologías vistos forman la <strong>capa física</strong>. Por encima está la <strong>capa de enlace de datos</strong>, dividida en dos subcapas:</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  subgraph ENLACE["Capa de enlace de datos"]
+    LLC["LLC — Control de Enlace Lógico (802.2)<br/>Entramado · Control de flujo · Control de errores<br/>Independiente de la tecnología"]
+    MAC["MAC — Control de Acceso al Medio<br/>Acceso a la capa física · depende de topología y tecnología"]
+    LLC --> MAC
+  end
+  MAC --> FIS["Capa física (medios y topologías)"]
+    </pre>
+    <div class="cap">LLC arriba (lógica), MAC abajo (acceso al medio)</div>
+  </div>
+  <ul>
+    <li><strong>LLC</strong> (802.2): maneja el enlace y define los <strong>SAPs</strong> (puntos de acceso al servicio). Hace entramado, checksum/CRC, recuperación entre fallos y control de flujo. <em>Independiente de la tecnología.</em></li>
+    <li><strong>MAC</strong>: la más baja; da acceso compartido a las NIC en medios compartidos (LANs), difunde tramas libres de colisiones. <em>Depende de la tecnología/topología.</em></li>
+  </ul>
+  <h4>Métodos de acceso al medio</h4>
+  <ul>
+    <li><strong>Estático:</strong> <span class="mono">FDM</span> (divide el ancho de banda en frecuencias) y <span class="mono">TDM</span> (asigna slots de tiempo). Pueden desperdiciar ancho de banda.</li>
+    <li><strong>Dinámico:</strong> mejor aprovechamiento; gestiona envío de tramas, medio compartido, colisión, tiempo (continuo o ranurado) y portadora (con o sin detección). Esto es la base de <a href="06-aloha-csma-ethernet.html">ALOHA/CSMA (Cap. 6)</a>.</li>
+  </ul>
+
+  <h2 class="section" id="jerarquico">Modelo jerárquico de tres capas</h2>
+  <p>Diseño jerárquico de red en tres niveles:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Capa</th><th>Función</th><th>Equipos típicos</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Acceso</strong></td><td>Conecta a los usuarios finales: filtrado MAC, segmentación, servicios de capa 2, bajo costo y alta densidad de puertos.</td><td>Switches de acceso</td></tr>
+        <tr><td><strong>Distribución</strong></td><td>Políticas: ruteo inter-VLAN, listas de acceso, sumarización de rutas, seguridad, QoS, agregación.</td><td>Routers/switches de capa 3</td></tr>
+        <tr><td><strong>Core (núcleo)</strong></td><td>Backbone de alta velocidad, baja latencia y redundancia. <em>No</em> filtra, comprime ni encripta (para no agregar latencia).</td><td>Switches de alta velocidad</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Regla de oro</span>
+    <p class="mb0">El <strong>core</strong> solo transporta rápido — nunca le pongas filtrado, ACLs ni encripción. Esas tareas van en <strong>distribución</strong>. Se desarrolla con el equipamiento del <a href="07-equipamiento.html">Cap. 7</a>.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 2 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['02'], { chapter: '02' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['02'], { chapter: '02' });
+</script>
+</body>
+</html>

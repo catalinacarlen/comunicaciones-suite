@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 5 · Control de flujo y de errores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="05">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 5 · Primer parcial</p>
+    <h1>Técnicas de control de flujo y de errores</h1>
+    <p class="lead">Cómo evitar que un emisor sature al receptor (parada y espera, ventana deslizante) y cómo detectar/corregir los errores que mete el canal (paridad, CRC, Hamming, ARQ).</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#flujo">Control de flujo</a></li>
+      <li><a href="#stopwait">Parada y espera</a></li>
+      <li><a href="#ventana">Ventana deslizante</a></li>
+      <li><a href="#calc-ventana">Calculadora de ventana</a></li>
+      <li><a href="#errores">Detección y corrección de errores</a></li>
+      <li><a href="#hamming">Distancia de Hamming</a></li>
+      <li><a href="#crc">Paridad y CRC</a></li>
+      <li><a href="#arq">ARQ</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="flujo">Control de flujo</h2>
+  <p>El <strong>control de flujo</strong> coordina el intercambio de datos para que el <strong>emisor no sature al receptor</strong>. Es una de las funciones más importantes de la capa de enlace. Dice al transmisor cuántos datos puede enviar antes de esperar un <strong>ACK</strong> (acuse de recibo). Como el receptor procesa más lento de lo que llega, usa un <strong>buffer</strong>; si se llena, debe avisar al emisor para que frene o pare — si no, descarta tramas aunque lleguen sin errores.</p>
+  <div class="box">
+    <span class="tag">Dos tiempos clave</span>
+    <p class="mb0"><strong>Tiempo de transmisión:</strong> lo que tarda el emisor en poner todos los bits de la trama en el medio (proporcional a la longitud de la trama). <strong>Tiempo de propagación:</strong> lo que tarda un bit en viajar de origen a destino (depende de la distancia).</p>
+  </div>
+
+  <h2 class="section" id="stopwait">Parada y espera (Stop &amp; Wait)</h2>
+  <p>El emisor envía <strong>una sola trama</strong> y espera el ACK antes de enviar la siguiente. Mantiene una copia hasta recibir el ACK e inicia un <strong>timeout</strong>: si no llega el ACK, reenvía. Las tramas y los ACK se numeran alternadamente <strong>0 y 1</strong> para identificarlas.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant A as Emisor
+  participant B as Receptor
+  A->>B: Trama 0
+  B->>A: ACK 1 (listo para trama 1)
+  A->>B: Trama 1
+  B->>A: ACK 0 (listo para trama 0)
+    </pre>
+    <div class="cap">El ACK indica el número de la PRÓXIMA trama esperada</div>
+  </div>
+  <div class="box warn">
+    <span class="tag">Desventaja</span>
+    <p class="mb0">Solo hay una trama "en vuelo" a la vez → <strong>uso ineficiente del medio</strong>, sobre todo en redes rápidas o de larga distancia. El <strong>piggybacking</strong> (meter el ACK dentro de una trama de datos de vuelta) ahorra ancho de banda, pero no resuelve el problema de fondo.</p>
+  </div>
+
+  <h2 class="section" id="ventana">Ventana deslizante (Sliding Window)</h2>
+  <p>Permite enviar <strong>varias tramas a la vez</strong> antes de recibir un ACK. Requiere enlaces <strong>full-duplex</strong> y buffers ("ventanas") en ambos extremos. Las tramas se numeran en <strong>módulo 2<sup>k</sup></strong> usando un campo de secuencia de <strong>k bits</strong>.</p>
+  <div class="box catedra">
+    <span class="tag">Fórmula clave</span>
+    <p class="mb0">Con un campo de secuencia de <strong>k bits</strong>: la numeración es <strong>módulo n = 2<sup>k</sup></strong> y el <strong>tamaño máximo de ventana = n − 1 = 2<sup>k</sup> − 1</strong>.<br>Ejemplo de cátedra: k=3 → módulo 8 → ventana = 2³−1 = <strong>7</strong>.</p>
+  </div>
+  <ul>
+    <li>La <strong>ventana de envío</strong> se mueve a la derecha al enviar una trama y al recibir un ACK.</li>
+    <li>El ACK (tipo <strong>RR</strong> = Receive Ready) incluye el número de la próxima trama esperada: "RR 3" = recibí todo hasta F2, mandame desde F3.</li>
+    <li>El receptor puede frenar con <strong>RNR</strong> (Receive Not Ready) y reanudar con un RR normal.</li>
+  </ul>
+
+  <div class="calc" id="calc-ventana">
+    <h4>🧮 Calculadora de ventana deslizante</h4>
+    <p class="muted" style="font-size:0.88rem;margin:0">Ingresá los bits del campo de secuencia (k) y obtené el módulo y el tamaño máximo de ventana.</p>
+    <div class="calc-row">
+      <div>
+        <label for="kbits">Bits del campo de secuencia (k)</label>
+        <input type="number" id="kbits" min="1" max="16" value="3">
+      </div>
+      <button class="btn btn-primary" onclick="calcWindow()">Calcular</button>
+    </div>
+    <div class="calc-out" id="out-ventana"><span class="cmt"># el resultado aparecerá acá</span></div>
+  </div>
+
+  <h2 class="section" id="errores">Detección y corrección de errores</h2>
+  <p>El canal introduce errores (más en radio móvil). Hay dos grandes enfoques:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Enfoque</th><th>Idea</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FEC</strong> (Forward Error Correction)</td><td>El emisor agrega redundancia suficiente para que el receptor <em>corrija</em> el error sin retransmitir.</td></tr>
+        <tr><td><strong>ARQ</strong> (Automatic Repeat Request)</td><td>El receptor <em>detecta</em> el error y pide <em>retransmisión</em>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Para detectar/corregir hay que <strong>agregar redundancia</strong>: cada bloque de k bits se codifica en una palabra de (k+r) bits llamada <strong>palabra código (codeword)</strong>. La <strong>tasa del código</strong> es k/(k+r) y mide el ancho de banda extra.</p>
+
+  <h2 class="section" id="hamming">Distancia de Hamming</h2>
+  <p>La <strong>distancia de Hamming</strong> entre dos palabras es el <strong>número de bits en que difieren</strong> (se calcula con XOR y se cuentan los 1). Define cuántos errores se pueden detectar o corregir:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Objetivo</th><th>Distancia de Hamming mínima necesaria</th></tr></thead>
+      <tbody>
+        <tr><td>Detectar <strong>d</strong> errores</td><td class="mono">d + 1</td></tr>
+        <tr><td>Corregir <strong>d</strong> errores</td><td class="mono">2d + 1</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Ejemplo de cátedra</span>
+    <p class="mb0">Código con d<sub>mín</sub> = 5 → detecta <strong>d−1 = 4</strong> errores y corrige <strong>(d−1)/2 = 2</strong> errores.</p>
+  </div>
+
+  <div class="calc">
+    <h4>🧮 Calculadora de distancia de Hamming</h4>
+    <p class="muted" style="font-size:0.88rem;margin:0">Ingresá dos palabras binarias de igual longitud.</p>
+    <div class="calc-row">
+      <div><label for="w1">Palabra 1</label><input type="text" id="w1" value="011011" placeholder="ej. 011011"></div>
+      <div><label for="w2">Palabra 2</label><input type="text" id="w2" value="110001" placeholder="ej. 110001"></div>
+      <button class="btn btn-primary" onclick="calcHamming()">Calcular</button>
+    </div>
+    <div class="calc-out" id="out-hamming"><span class="cmt"># XOR y conteo de diferencias</span></div>
+  </div>
+
+  <h2 class="section" id="crc">Bit de paridad y CRC</h2>
+  <h3>Bit de paridad</h3>
+  <p>Agrega un bit al final del bloque para que el total de unos sea <strong>par (paridad par)</strong> o <strong>impar (paridad impar)</strong>. Es <strong>simple</strong> pero <strong>no detecta un número par de errores</strong> (se compensan).</p>
+  <h3>CRC (Chequeo Cíclico Redundante)</h3>
+  <p>Función que toma un flujo de datos de cualquier longitud y devuelve un valor fijo. El emisor genera una <strong>FCS</strong> (Frame Check Sequence) de r bits tal que la trama de k+r bits sea <strong>divisible exactamente</strong> por un divisor P. El receptor divide por P: <strong>si el resto es 0, no hay error</strong>.</p>
+  <div class="box tip">
+    <span class="tag">Clave conceptual <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">El CRC sirve para <strong>integridad</strong>, no para confidencialidad: <em>no es cifrado</em>. Detecta errores de 1 bit, ráfagas menores que el FCS, número impar de errores (si P contiene el factor x+1) y la mayoría de las ráfagas largas. Por eso en ciberseguridad un CRC válido <strong>no garantiza</strong> que el mensaje no haya sido alterado intencionalmente — para eso se usan hashes criptográficos (MAC/HMAC).</p>
+  </div>
+
+  <h2 class="section" id="arq">ARQ — Automatic Repeat Request</h2>
+  <p>Mecanismos de retransmisión ante errores. Tres variantes normalizadas:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Variante</th><th>Cómo funciona</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Parada y espera</strong></td><td>Una trama por vez; numera ACK0/ACK1 para evitar duplicados.</td></tr>
+        <tr><td><strong>Vuelta atrás N (Go-Back-N)</strong></td><td>Envía varias tramas; ante error envía <span class="mono">REJ</span> y <strong>retransmite la errónea y todas las posteriores</strong>.</td></tr>
+        <tr><td><strong>Rechazo selectivo (Selective Reject)</strong></td><td>Envía <span class="mono">SREJ</span> y <strong>retransmite solo la trama errónea</strong>; conserva las demás. Más eficiente, más complejo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Conexión <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Estas técnicas son la base del comportamiento confiable de <a href="11-tcp.html">TCP (Cap. 11)</a>, que usa números de secuencia, ACK acumulativos y retransmisión — esencialmente una ventana deslizante con control de errores sobre IP.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 5 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+
+  function calcWindow() {
+    const k = parseInt(document.getElementById('kbits').value, 10);
+    const out = document.getElementById('out-ventana');
+    if (!k || k < 1) { out.innerHTML = '<span class="cmt"># ingresá un k válido (≥1)</span>'; return; }
+    const mod = Math.pow(2, k);
+    const win = mod - 1;
+    out.innerHTML =
+      `<span class="k">k (bits de secuencia)</span> = <span class="v">${k}</span>\n` +
+      `<span class="k">módulo de numeración</span> = 2^${k} = <span class="v">${mod}</span>\n` +
+      `<span class="k">tamaño máx. de ventana</span> = 2^${k} − 1 = <span class="hl">${win} tramas</span>`;
+  }
+
+  function calcHamming() {
+    const a = document.getElementById('w1').value.trim();
+    const b = document.getElementById('w2').value.trim();
+    const out = document.getElementById('out-hamming');
+    if (!/^[01]+$/.test(a) || !/^[01]+$/.test(b)) { out.innerHTML = '<span class="cmt"># solo 0 y 1, sin espacios</span>'; return; }
+    if (a.length !== b.length) { out.innerHTML = '<span class="cmt"># las dos palabras deben tener la misma longitud</span>'; return; }
+    let xor = '', d = 0;
+    for (let i = 0; i < a.length; i++) { const bit = a[i] !== b[i] ? '1' : '0'; xor += bit; if (bit === '1') d++; }
+    out.innerHTML =
+      `<span class="k">v1</span> = <span class="v">${a}</span>\n` +
+      `<span class="k">v2</span> = <span class="v">${b}</span>\n` +
+      `<span class="k">XOR</span> = ${xor}\n` +
+      `<span class="k">distancia de Hamming</span> = <span class="hl">${d}</span>\n` +
+      `<span class="cmt"># detecta hasta ${d-1} errores · corrige hasta ${Math.floor((d-1)/2)} errores</span>`;
+  }
+
+  calcWindow(); calcHamming();
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['05'], { chapter: '05' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['05'], { chapter: '05' });
+</script>
+</body>
+</html>

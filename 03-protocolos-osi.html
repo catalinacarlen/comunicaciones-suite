@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 3 · Protocolos y modelo OSI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="03">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 3 · Primer parcial</p>
+    <h1>Protocolos y el modelo OSI</h1>
+    <p class="lead">Qué es un protocolo, las 7 capas de OSI con sus funciones, el encapsulamiento de datos y cómo se relaciona con la pila TCP/IP. El capítulo más preguntado del parcial.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#protocolos">Qué es un protocolo</a></li>
+      <li><a href="#funciones">Funciones de un protocolo</a></li>
+      <li><a href="#osi">El modelo OSI (7 capas)</a></li>
+      <li><a href="#capas">Función de cada capa</a></li>
+      <li><a href="#tcpip">OSI vs. TCP/IP</a></li>
+      <li><a href="#encap">Encapsulamiento</a></li>
+      <li><a href="#primitivas">Primitivas</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="protocolos">¿Qué es un protocolo?</h2>
+  <p>Un <strong>protocolo</strong> es un conjunto de reglas que gobiernan el intercambio de datos entre dos entidades. Así como los humanos seguimos protocolos ("¿qué hora es?" → respuesta), las máquinas necesitan reglas acordadas y estandarizadas para interconectarse, sin importar el fabricante.</p>
+  <p>Todo protocolo define cuatro cosas:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Elemento</th><th>Define</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sintaxis</strong></td><td>El formato del mensaje y los procedimientos de transmisión.</td></tr>
+        <tr><td><strong>Semántica</strong></td><td>La información de control: coordinación y manejo de errores.</td></tr>
+        <tr><td><strong>Tiempos (timing)</strong></td><td>Ajuste de velocidad y armado de secuencias.</td></tr>
+        <tr><td><strong>Acciones</strong></td><td>Qué hacer al transmitir o recibir cada mensaje.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Por qué se estandariza</span>
+    <p class="mb0"><strong>Compatibilidad e interoperabilidad:</strong> que equipos de distintos fabricantes se comuniquen con éxito en una red. Sin estándares, cada marca hablaría su propio idioma.</p>
+  </div>
+
+  <h2 class="section" id="funciones">Funciones que cumple un protocolo</h2>
+  <div class="grid">
+    <div class="card"><strong>Segmentación y ensamblado</strong><p class="muted mb0">Partir y rearmar los datos.</p></div>
+    <div class="card"><strong>Encapsulamiento</strong><p class="muted mb0">Agregar cabeceras de control.</p></div>
+    <div class="card"><strong>Control de conexión</strong><p class="muted mb0">Abrir, mantener y cerrar.</p></div>
+    <div class="card"><strong>Entrega en orden</strong><p class="muted mb0">Reordenar en destino.</p></div>
+    <div class="card"><strong>Control de flujo</strong><p class="muted mb0">No saturar al receptor.</p></div>
+    <div class="card"><strong>Control de errores</strong><p class="muted mb0">Detectar y corregir.</p></div>
+    <div class="card"><strong>Direccionamiento</strong><p class="muted mb0">Identificar origen y destino.</p></div>
+  </div>
+
+  <h2 class="section" id="osi">El modelo OSI: 7 capas</h2>
+  <p><strong>OSI (Open Systems Interconnection)</strong> divide la comunicación en 7 capas apiladas verticalmente. Cada capa reúne funciones similares, confía a la capa inferior las tareas más primitivas, da servicio a la superior y se comunica con su <strong>capa par</strong> (peer) del otro extremo usando un protocolo. <strong>Cambiar una capa no afecta a las demás.</strong></p>
+
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  A7["7 · Aplicación — servicios de red al usuario (HTTP, FTP, SMTP)"]
+  A6["6 · Presentación — formato y representación (SSL/TLS)"]
+  A5["5 · Sesión — abre, mantiene y cierra sesiones"]
+  A4["4 · Transporte — entrega de 'mensajes' (TCP, UDP)"]
+  A3["3 · Red — entrega 'paquetes' y enruta (IP, ICMP)"]
+  A2["2 · Enlace — transfiere 'frames', chequea errores (Ethernet, ARP)"]
+  A1["1 · Física — bits sobre el medio (cables, tensiones)"]
+  A7-->A6-->A5-->A4-->A3-->A2-->A1
+    </pre>
+    <div class="cap">Las capas altas miran los hosts; las bajas, la red</div>
+  </div>
+
+  <div class="box tip">
+    <span class="tag">Mnemotecnia <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">De arriba a abajo (7→1): <strong>A</strong>plicación, <strong>P</strong>resentación, <strong>S</strong>esión, <strong>T</strong>ransporte, <strong>R</strong>ed, <strong>E</strong>nlace, <strong>F</strong>ísica → <em>"<strong>A</strong>nita <strong>P</strong>uso <strong>S</strong>u <strong>T</strong>raje <strong>R</strong>ojo <strong>E</strong>sta <strong>F</strong>iesta"</em>. Y recordá la unidad de datos por capa: <em>bits → frames → paquetes → segmentos</em>.</p>
+  </div>
+
+  <h2 class="section" id="capas">Función de cada capa</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>#</th><th>Capa</th><th>Función</th><th>Unidad / PDU</th><th>Protocolos ej.</th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td><strong>Aplicación</strong></td><td>Aplicaciones de red: transferencia de archivos, web, mail.</td><td>Datos</td><td class="mono">HTTP, FTP, SMTP, POP3, IMAP</td></tr>
+        <tr><td>6</td><td><strong>Presentación</strong></td><td>Formato y representación de datos (cifrado, compresión).</td><td>Datos</td><td class="mono">SSL, TLS</td></tr>
+        <tr><td>5</td><td><strong>Sesión</strong></td><td>Establece, mantiene y cierra sesiones.</td><td>Datos</td><td class="mono">NetBIOS, L2TP, SAP</td></tr>
+        <tr><td>4</td><td><strong>Transporte</strong></td><td>Entrega confiable/no confiable de "mensajes"; divide en fragmentos y ordena.</td><td>Segmento</td><td class="mono">TCP, UDP, SPX</td></tr>
+        <tr><td>3</td><td><strong>Red</strong></td><td>Entrega "paquetes" y hace enrutamiento entre segmentos de red.</td><td>Paquete</td><td class="mono">IPv4, IPv6, ICMP, IPSec</td></tr>
+        <tr><td>2</td><td><strong>Enlace</strong></td><td>Organiza "frames", chequea errores; cómo llegan a la red.</td><td>Trama (frame)</td><td class="mono">ARP, Ethernet 802.3, PPP, ATM</td></tr>
+        <tr><td>1</td><td><strong>Física</strong></td><td>Transmite bits sobre el medio: tensiones, cables, distancias, velocidades, codificación.</td><td>Bits</td><td class="mono">DSL, IEEE 802, 10BaseT</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Capa física: estándares Ethernet (cátedra)</span>
+    <p class="mb0"><span class="mono">10BaseT</span> (10 Mbps, par trenzado, 100 m) · <span class="mono">100BaseTx</span> (100 Mbps, Cat 5, 100 m) · <span class="mono">1000BaseT</span> (1 Gbps, Cat 5/6, 100 m) · <span class="mono">1000BaseLx</span> (fibra mono/multimodo, hasta 5000 m). Regla: <strong>"Base"</strong> = banda base; el número = Mbps; la letra = medio (T = par trenzado, F/x = fibra).</p>
+  </div>
+
+  <h2 class="section" id="tcpip">OSI vs. modelo TCP/IP</h2>
+  <p>El modelo <strong>TCP/IP</strong> es el que realmente usa Internet. Agrupa las 7 capas de OSI en 4:</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  subgraph OSI
+    O7[7 Aplicación]:::a --> O6[6 Presentación]:::a --> O5[5 Sesión]:::a
+    O4[4 Transporte]:::b
+    O3[3 Red]:::c
+    O2[2 Enlace]:::d --> O1[1 Física]:::d
+  end
+  subgraph TCPIP["TCP/IP"]
+    T4["Aplicación"]:::a
+    T3["Transporte (TCP)"]:::b
+    T2["Internet (IP)"]:::c
+    T1["Acceso a red"]:::d
+  end
+  O5 -.-> T4
+  O4 -.-> T3
+  O3 -.-> T2
+  O1 -.-> T1
+  classDef a fill:#EAEFFE,stroke:#2D5BE3;
+  classDef b fill:#F0ECFF,stroke:#6C47FF;
+  classDef c fill:#E6F6EE,stroke:#1FA463;
+  classDef d fill:#FFF3E0,stroke:#C77700;
+    </pre>
+    <div class="cap">Aplicación/Presentación/Sesión → Aplicación · Red → Internet · Enlace/Física → Acceso a red</div>
+  </div>
+
+  <h2 class="section" id="encap">Encapsulamiento de datos</h2>
+  <p>Cada capa de la pila <strong>agrega su propia cabecera (header)</strong> con información de control para asegurar la entrega. Al recibir, cada capa <strong>retira</strong> su cabecera correspondiente (desencapsulamiento). El nombre de la unidad cambia en cada capa:</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  D["DATOS (capa aplicación)"] --> S["SEGMENTO<br/>+ puertos origen/destino (ej. 1024 → 80)"]
+  S --> P["PAQUETE<br/>+ IP origen/destino (223.1.2.3 → 198.1.45.1)"]
+  P --> T["TRAMA<br/>+ MAC origen/destino (AABBCC → 123456)"]
+  T --> B["BITS en el medio físico"]
+    </pre>
+    <div class="cap">Ejemplo de encapsulado TCP/IP de la cátedra</div>
+  </div>
+  <div class="box tip">
+    <span class="tag">Clave para el parcial <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Fijate qué direcciones aparecen en cada capa: <strong>puertos</strong> (transporte), <strong>IP</strong> (red) y <strong>MAC</strong> (enlace). Es exactamente lo que se "encapsula" en cada nivel. Pregunta típica: "¿en qué capa se agregan las direcciones MAC?" → <strong>Enlace (capa 2)</strong>.</p>
+  </div>
+
+  <h2 class="section" id="primitivas">Primitivas, interfaz y algoritmos</h2>
+  <p>Una <strong>primitiva</strong> es un servicio definido por operaciones más sencillas; sirve para ejecutar una acción o informar un suceso a una entidad par. Los 4 tipos básicos:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Primitiva</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">REQUEST</td><td>Petición: solicitud de realizar una acción.</td></tr>
+        <tr><td class="mono">INDICATION</td><td>Notificación de que ocurrió un suceso.</td></tr>
+        <tr><td class="mono">RESPONSE</td><td>Respuesta a un suceso.</td></tr>
+        <tr><td class="mono">CONFIRM</td><td>Confirmación de que llegó la respuesta a una acción anterior.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Interfaz:</strong> conexión física (LAN) y/o lógica (entre capas OSI) entre dispositivos o sistemas. Un <strong>algoritmo</strong> es una secuencia de instrucciones que resuelve un problema, independiente del lenguaje de programación.</p>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 3 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['03'], { chapter: '03' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['03'], { chapter: '03' });
+</script>
+</body>
+</html>

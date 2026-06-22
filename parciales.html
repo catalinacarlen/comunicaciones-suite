@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parciales · Redes y Comunicaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <p class="eyebrow">Simulacros de examen</p>
+    <h1>Parciales UP</h1>
+    <p class="lead">Probate como en el aula. Cada simulacro arma un examen aleatorio con preguntas de los capítulos de ese parcial y cronómetro. Aprobás con 60%.</p>
+  </section>
+
+  <div class="grid">
+    <!-- Primer parcial -->
+    <div class="card">
+      <span class="badge parcial">Capítulos 1–7</span>
+      <h3 style="margin:10px 0 6px;font-family:var(--font-display)">Primer parcial</h3>
+      <p class="muted" style="font-size:0.92rem">Fundamentos, clasificación de redes, modelo OSI, conmutación, control de flujo/errores, ALOHA/CSMA/Ethernet y equipamiento.</p>
+      <div class="row">
+        <button class="btn btn-primary" data-parcial="1">Comenzar simulacro</button>
+        <span class="timer" id="timer-1" style="display:none">60:00</span>
+      </div>
+    </div>
+
+    <!-- Segundo parcial -->
+    <div class="card">
+      <span class="badge parcial">Capítulos 8–13</span>
+      <h3 style="margin:10px 0 6px;font-family:var(--font-display)">Segundo parcial</h3>
+      <p class="muted" style="font-size:0.92rem">Direccionamiento IP, subnetting, VLSM/CIDR, ARP/ICMP, capa de transporte (TCP/UDP) y capa de aplicación.</p>
+      <div class="row">
+        <button class="btn btn-primary" data-parcial="2">Comenzar simulacro</button>
+        <span class="timer" id="timer-2" style="display:none">60:00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="box tip" style="margin-top:24px">
+    <span class="tag">Cómo se arma</span>
+    <p class="mb0">Cada simulacro toma todas las preguntas de los capítulos del parcial, las mezcla y te presenta hasta <strong>25 preguntas</strong> con <strong>60 minutos</strong>. Al corregir vas a ver tu puntaje y la explicación de cada respuesta.</p>
+  </div>
+
+  <h2 class="section" id="examen-titulo" style="display:none"></h2>
+  <div id="parcial-quiz" class="quiz" style="margin-top:8px"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Simulacros de parcial · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const D = RC_DATA;
+  let timer = null;
+
+  function poolForParcial(p) {
+    const ids = D.chapters.filter(c => c.parcial === p).map(c => c.id);
+    let pool = [];
+    ids.forEach(ch => D.quizzes[ch].forEach(q => pool.push(Object.assign({ ch }, q))));
+    return pool;
+  }
+
+  function startTimer(elId, seconds) {
+    const t = document.getElementById(elId);
+    t.style.display = 'inline-block';
+    t.classList.remove('danger');
+    let rem = seconds;
+    t.textContent = RC.fmtTime(rem);
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => {
+      rem--;
+      t.textContent = RC.fmtTime(rem);
+      if (rem <= 300) t.classList.add('danger');
+      if (rem <= 0) { clearInterval(timer); alert('¡Tiempo! Corregí para ver tu resultado.'); }
+    }, 1000);
+  }
+
+  document.querySelectorAll('[data-parcial]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = +btn.dataset.parcial;
+      const qs = RC.shuffle(poolForParcial(p)).slice(0, 25);
+      const title = document.getElementById('examen-titulo');
+      title.style.display = 'block';
+      title.className = 'section';
+      title.textContent = `Simulacro ${p === 1 ? 'Primer' : 'Segundo'} Parcial · ${qs.length} preguntas`;
+      // ocultar el otro timer
+      document.getElementById('timer-' + (p === 1 ? 2 : 1)).style.display = 'none';
+      startTimer('timer-' + p, 60 * 60);
+      RC.mountQuiz('parcial-quiz', qs, { onDone: () => { if (timer) clearInterval(timer); } });
+      document.getElementById('parcial-quiz').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

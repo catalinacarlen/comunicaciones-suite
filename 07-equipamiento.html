@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 7 · Hub, Bridge y Switches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="07">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 7 · Primer parcial</p>
+    <h1>Equipamiento: Hub, Bridge y Switches</h1>
+    <p class="lead">Cómo se extienden y segmentan las LAN. De los "tontos" repetidores y hubs de capa 1 a los bridges y switches que aprenden direcciones MAC, dividen dominios de colisión y arman VLANs.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#extender">Extender la LAN</a></li>
+      <li><a href="#nic">NIC y dirección MAC</a></li>
+      <li><a href="#repetidor">Repetidor y hub</a></li>
+      <li><a href="#bridge">Bridge (puente)</a></li>
+      <li><a href="#switch">Switch</a></li>
+      <li><a href="#dominios">Dominios de colisión y broadcast</a></li>
+      <li><a href="#router">Router y firewall</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="extender">¿Cómo extender una LAN?</h2>
+  <p>Las señales eléctricas <strong>se debilitan con la distancia</strong>, lo que limita el largo máximo de un segmento. Además, cuanto más se extiende la red, mayores son los tiempos de propagación y <strong>baja la utilización del canal</strong>. Opciones para extender: extensión por fibra óptica, repetidores, bridges (puentes) y switches.</p>
+
+  <h2 class="section" id="nic">NIC y dirección MAC</h2>
+  <p>La <strong>NIC</strong> (Network Interface Card) da al host acceso al medio y opera en las <strong>capas 1 y 2</strong>. Se identifica con una dirección física única, la <strong>MAC</strong> (48 bits):</p>
+  <div class="box catedra">
+    <span class="tag">Estructura de la MAC</span>
+    <p class="mb0"><span class="mono">MAC = OUI (24 bits) + UAA (24 bits)</span><br>El <strong>OUI</strong> (Organizationally Unique Identifier) identifica al fabricante; el <strong>UAA</strong> es el número de serie único de la tarjeta. Ej.: <span class="mono">e4-8c-23-6c-77-9b</span>.</p>
+  </div>
+
+  <h2 class="section" id="repetidor">Repetidor y hub</h2>
+  <p>El <strong>repetidor</strong> amplifica y regenera la señal para superar los 100 m de un segmento, pero solo conecta <strong>dos</strong> dispositivos (hoy obsoleto). El <strong>hub</strong> es un "repetidor multipuerto": conecta varias PCs, pero es un dispositivo <strong>"tonto" de capa 1</strong>.</p>
+  <div class="box warn">
+    <span class="tag">Problemas del hub</span>
+    <p class="mb0">Comparte el ancho de banda entre todos, no distingue tráfico y reenvía todo a todos los puertos (<strong>broadcast / topología de difusión</strong>), generando tormentas de tráfico. Es un <strong>problema de seguridad</strong> (cualquiera puede "escuchar" el tráfico ajeno — relevante en ciberseguridad).</p>
+  </div>
+
+  <h2 class="section" id="bridge">Bridge (puente)</h2>
+  <p>Conecta dos segmentos de una LAN y, a diferencia del repetidor, procesa la trama hasta la <strong>capa de enlace (capa 2)</strong>. No retransmite colisiones ni tramas con error, y <strong>no retransmite una trama salvo que sea necesario</strong>: observa la MAC destino y la compara con su tabla. Es <strong>transparente</strong> para las estaciones.</p>
+  <div class="box tip">
+    <span class="tag">Cómo aprende (árbol de expansión) <span class="enriched-badge">+ Ampliado</span></span>
+    <p>El bridge <strong>aprende direcciones</strong> en forma adaptativa: cuando llega una trama por el puerto X, usa la <strong>dirección de origen</strong> para asociar esa MAC al puerto X en su tabla (con un temporizador que la refresca).</p>
+    <p class="mb0">Al reenviar: si la MAC destino no está en la tabla, <strong>inunda</strong> por todos los puertos menos por el que llegó; si está, la envía solo por el puerto correcto. El protocolo es <strong>IEEE 802.1D (Spanning Tree)</strong>, que <strong>resuelve loops</strong> manteniendo conectividad sin circuitos cerrados (teoría de grafos).</p>
+  </div>
+  <p>Ventajas de usar bridges: <strong>fiabilidad, rendimiento, seguridad y geografía</strong> (segmentar la red).</p>
+
+  <h2 class="section" id="switch">Switch</h2>
+  <p>Un <strong>switch es un puente multipuerto</strong>: filtra el tráfico por dirección MAC en cada puerto y da <strong>ancho de banda dedicado</strong> a cada segmento. Mientras el hub simula un único medio compartido, el switch simula una LAN donde hay <strong>un solo equipo por segmento</strong>, así varias máquinas transmiten simultáneamente.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th></th><th>Hub</th><th>Bridge</th><th>Switch</th></tr></thead>
+      <tbody>
+        <tr><td>Capa OSI</td><td>1 (física)</td><td>2 (enlace)</td><td>2 (enlace; L3 los multicapa)</td></tr>
+        <tr><td>Ancho de banda</td><td>Compartido</td><td>Por segmento</td><td>Dedicado por puerto</td></tr>
+        <tr><td>Reenvío</td><td>A todos (broadcast)</td><td>Selectivo por MAC</td><td>Selectivo por MAC</td></tr>
+        <tr><td>Implementación</td><td>—</td><td>Software</td><td>Hardware (más rápido)</td></tr>
+        <tr><td>Extra</td><td>—</td><td>Spanning Tree</td><td>VLANs, cut-through</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Tipos de switching</span>
+    <p class="mb0"><strong>Cut-through:</strong> reenvía apenas lee la MAC destino (rápido, puede reenviar tramas malas). <strong>Store-and-forward:</strong> revisa toda la trama antes de reenviar (más seguro). <strong>Fragment-free:</strong> espera los primeros 64 bytes (intermedio). El switch permite crear <strong>VLANs</strong> para mejorar rendimiento y confidencialidad.</p>
+  </div>
+
+  <h2 class="section" id="dominios">Dominios de colisión y de broadcast <span class="enriched-badge">+ Ampliado</span></h2>
+  <p>Concepto central que las slides tocan en partes — acá unificado:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Dispositivo</th><th>Dominios de colisión</th><th>Dominios de broadcast</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hub / Repetidor</strong></td><td>1 (todos comparten)</td><td>1</td></tr>
+        <tr><td><strong>Bridge / Switch</strong></td><td>1 por puerto (los divide)</td><td>1 (no lo dividen)</td></tr>
+        <tr><td><strong>Router</strong></td><td>1 por puerto</td><td>1 por puerto (los divide)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Regla de oro para el parcial</span>
+    <p class="mb0"><strong>Switch divide dominios de colisión</strong> pero <strong>NO de broadcast</strong>. Para dividir broadcast necesitás un <strong>router</strong> (o VLANs en un switch de capa 3). Esto enlaza con el <a href="02-clasificacion-redes.html">modelo jerárquico de 3 capas (Cap. 2)</a>.</p>
+  </div>
+
+  <h2 class="section" id="router">Router y firewall</h2>
+  <p>El <strong>router</strong> comunica equipos de <strong>redes diferentes</strong> (capa 3) y busca la mejor ruta para los paquetes. Tareas: control de broadcast y multicast, determinación óptima de rutas, administración del tráfico, <strong>direccionamiento lógico (IP)</strong> y conexión a servicios WAN. Es el puente hacia el <a href="08-direccionamiento-ip.html">direccionamiento IP (Cap. 8)</a> y el <a href="09-enrutamiento-subnetting.html">enrutamiento (Cap. 9–10)</a>.</p>
+  <p>El <strong>firewall</strong> es un dispositivo de <strong>seguridad perimetral</strong>: filtra tráfico, protege contra denegación de servicio, hace filtrado de contenido y detección de intrusos. Puede basarse en routers, equipos dedicados o una PC con software.</p>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 7 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['07'], { chapter: '07' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['07'], { chapter: '07' });
+</script>
+</body>
+</html>

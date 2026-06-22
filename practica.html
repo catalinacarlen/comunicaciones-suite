@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Práctica · Redes y Comunicaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <p class="eyebrow">Zona de práctica</p>
+    <h1>Entrenamiento intensivo</h1>
+    <p class="lead">Modo examen con cronómetro, práctica por capítulo, todas las flashcards mezcladas y ronda de verdadero/falso. Elegí tu modo y a darle. 🦈</p>
+  </section>
+
+  <!-- Selector de modo -->
+  <div class="chips" id="mode-chips">
+    <button class="chip active" data-mode="examen">⏱️ Modo examen</button>
+    <button class="chip" data-mode="capitulo">📚 Por capítulo</button>
+    <button class="chip" data-mode="flashcards">🃏 Flashcards</button>
+    <button class="chip" data-mode="vf">✓✗ Verdadero/Falso</button>
+  </div>
+
+  <!-- ===== MODO EXAMEN ===== -->
+  <section id="panel-examen" class="panel">
+    <div class="card">
+      <h3 class="mt0">Modo examen — 20 preguntas · 40 minutos</h3>
+      <p class="muted">Preguntas aleatorias de toda la materia, con cronómetro. Como un parcial real.</p>
+      <div class="row">
+        <button class="btn btn-primary" id="start-examen">Comenzar examen</button>
+        <span class="timer" id="examen-timer" style="display:none">40:00</span>
+      </div>
+    </div>
+    <div id="examen-quiz" class="quiz" style="margin-top:18px"></div>
+  </section>
+
+  <!-- ===== POR CAPÍTULO ===== -->
+  <section id="panel-capitulo" class="panel hidden">
+    <div class="card">
+      <h3 class="mt0">Práctica por capítulo</h3>
+      <p class="muted">Elegí un capítulo y resolvé su quiz.</p>
+      <label for="cap-select" style="font-size:0.85rem;font-weight:600">Capítulo</label><br>
+      <select id="cap-select" class="mono" style="font-family:var(--font-mono);padding:9px 12px;border-radius:8px;border:1px solid var(--border);margin-top:6px;max-width:420px;width:100%"></select>
+      <div style="margin-top:12px"><button class="btn btn-primary" id="start-cap">Cargar quiz</button></div>
+    </div>
+    <div id="cap-quiz" class="quiz" style="margin-top:18px"></div>
+  </section>
+
+  <!-- ===== FLASHCARDS ===== -->
+  <section id="panel-flashcards" class="panel hidden">
+    <div class="card">
+      <h3 class="mt0">Flashcards consolidadas</h3>
+      <p class="muted">Todas las tarjetas de los 13 capítulos, mezcladas.</p>
+      <button class="btn btn-primary" id="start-flash">Mezclar y empezar</button>
+    </div>
+    <div id="flash-all" class="flashdeck" style="margin-top:18px"></div>
+  </section>
+
+  <!-- ===== VERDADERO / FALSO ===== -->
+  <section id="panel-vf" class="panel hidden">
+    <div class="card">
+      <h3 class="mt0">Ronda rápida: Verdadero / Falso</h3>
+      <p class="muted">Afirmaciones de toda la materia. Respondé rápido.</p>
+      <button class="btn btn-primary" id="start-vf">Empezar ronda</button>
+    </div>
+    <div id="vf-area" style="margin-top:18px"></div>
+  </section>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Zona de práctica · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  const D = RC_DATA;
+
+  // ---- Selector de modo ----
+  const panels = { examen: 'panel-examen', capitulo: 'panel-capitulo', flashcards: 'panel-flashcards', vf: 'panel-vf' };
+  document.getElementById('mode-chips').addEventListener('click', e => {
+    const btn = e.target.closest('.chip'); if (!btn) return;
+    document.querySelectorAll('#mode-chips .chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    Object.values(panels).forEach(id => document.getElementById(id).classList.add('hidden'));
+    document.getElementById(panels[btn.dataset.mode]).classList.remove('hidden');
+  });
+
+  // ---- Pool de todas las preguntas con su capítulo ----
+  function allQuestions() {
+    const all = [];
+    Object.keys(D.quizzes).forEach(ch => D.quizzes[ch].forEach(q => all.push(Object.assign({ ch }, q))));
+    return all;
+  }
+
+  // ---- MODO EXAMEN ----
+  let examTimer = null, examRemaining = 40 * 60;
+  document.getElementById('start-examen').addEventListener('click', () => {
+    const qs = RC.shuffle(allQuestions()).slice(0, 20);
+    RC.mountQuiz('examen-quiz', qs, { onDone: stopExamTimer });
+    const t = document.getElementById('examen-timer');
+    t.style.display = 'inline-block';
+    examRemaining = 40 * 60;
+    t.textContent = RC.fmtTime(examRemaining);
+    t.classList.remove('danger');
+    if (examTimer) clearInterval(examTimer);
+    examTimer = setInterval(() => {
+      examRemaining--;
+      t.textContent = RC.fmtTime(examRemaining);
+      if (examRemaining <= 300) t.classList.add('danger');
+      if (examRemaining <= 0) { stopExamTimer(); alert('¡Se acabó el tiempo! Corregí para ver tu resultado.'); }
+    }, 1000);
+    document.getElementById('examen-quiz').scrollIntoView({ behavior: 'smooth' });
+  });
+  function stopExamTimer() { if (examTimer) clearInterval(examTimer); }
+
+  // ---- POR CAPÍTULO ----
+  const sel = document.getElementById('cap-select');
+  sel.innerHTML = D.chapters.map(c => `<option value="${c.id}">Cap. ${c.n} — ${c.short}</option>`).join('');
+  document.getElementById('start-cap').addEventListener('click', () => {
+    const ch = sel.value;
+    RC.mountQuiz('cap-quiz', D.quizzes[ch], { chapter: ch });
+    document.getElementById('cap-quiz').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ---- FLASHCARDS CONSOLIDADAS ----
+  document.getElementById('start-flash').addEventListener('click', () => {
+    let all = [];
+    Object.keys(D.flashcards).forEach(ch => all = all.concat(D.flashcards[ch]));
+    RC.mountFlashcards('flash-all', RC.shuffle(all), {});
+    document.getElementById('flash-all').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // ---- VERDADERO / FALSO ----
+  document.getElementById('start-vf').addEventListener('click', () => {
+    const area = document.getElementById('vf-area');
+    const items = RC.shuffle(D.vf.slice());
+    let idx = 0, correct = 0;
+    function render() {
+      if (idx >= items.length) {
+        area.innerHTML = `<div class="quiz-result show ${correct >= items.length*0.6 ? 'pass':'fail'}">${correct}/${items.length} correctas · ${Math.round(correct/items.length*100)}%</div>
+          <div class="center" style="margin-top:12px"><button class="btn btn-ghost" onclick="document.getElementById('start-vf').click()">Repetir ronda</button></div>`;
+        return;
+      }
+      const it = items[idx];
+      area.innerHTML = `
+        <div class="q-block">
+          <div class="muted mono" style="font-size:0.75rem">Cap. ${it.ch} · ${idx+1}/${items.length}</div>
+          <div class="q-text" style="font-size:1.05rem">${it.s}</div>
+          <div class="row">
+            <button class="btn btn-primary" data-ans="true">Verdadero</button>
+            <button class="btn btn-ghost" data-ans="false">Falso</button>
+          </div>
+          <div class="q-explain" id="vf-exp"></div>
+        </div>`;
+      area.querySelectorAll('[data-ans]').forEach(b => b.addEventListener('click', () => {
+        const ans = b.dataset.ans === 'true';
+        const exp = document.getElementById('vf-exp');
+        exp.classList.add('show');
+        if (ans === it.v) { correct++; exp.innerHTML = '✅ <strong>Correcto.</strong> ' + (it.explain||''); }
+        else { exp.innerHTML = `❌ <strong>Era ${it.v ? 'Verdadero':'Falso'}.</strong> ` + (it.explain||''); }
+        area.querySelectorAll('[data-ans]').forEach(x => x.disabled = true);
+        setTimeout(() => { idx++; render(); }, 1400);
+      }));
+    }
+    render();
+    area.scrollIntoView({ behavior: 'smooth' });
+  });
+})();
+</script>
+</body>
+</html>

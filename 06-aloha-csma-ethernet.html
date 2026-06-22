@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 6 · ALOHA, CSMA, Ethernet y WLAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="06">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 6 · Primer parcial</p>
+    <h1>ALOHA, CSMA/CD, Ethernet y redes inalámbricas</h1>
+    <p class="lead">Cómo varias estaciones comparten un mismo medio sin pisarse: de ALOHA a CSMA/CD, la trama Ethernet completa, los dominios de colisión y el mundo Wi-Fi 802.11 con CSMA/CA.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#aloha">ALOHA</a></li>
+      <li><a href="#csma">CSMA y sus variantes</a></li>
+      <li><a href="#csmacd">CSMA/CD</a></li>
+      <li><a href="#ethernet">Ethernet</a></li>
+      <li><a href="#trama">La trama Ethernet</a></li>
+      <li><a href="#colisiones">Colisiones y backoff</a></li>
+      <li><a href="#wifi">802.11 (Wi-Fi)</a></li>
+      <li><a href="#csmaca">CSMA/CA y RTS/CTS</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="aloha">ALOHA</h2>
+  <p>El primer protocolo de acceso aleatorio (paquetes de radio, Hawái). Cuando una estación tiene una trama, <strong>la envía sin chequear el medio</strong>; luego escucha esperando una confirmación. Si no llega (por colisión o ruido), retransmite tras un tiempo aleatorio. Cualquier solapamiento de tramas produce <strong>colisión</strong>.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Variante</th><th>Cómo funciona</th><th>Utilización máx.</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ALOHA puro</strong></td><td>Transmite en cualquier momento.</td><td class="mono">~18%</td></tr>
+        <tr><td><strong>ALOHA ranurado</strong></td><td>El tiempo se divide en ranuras; solo se transmite al inicio de una ranura (necesita reloj central).</td><td class="mono">~37%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box warn">
+    <span class="tag">Número de parcial</span>
+    <p class="mb0">Memorizá: <strong>ALOHA puro = 18%</strong>, <strong>ALOHA ranurado = 37%</strong> (el doble, gracias a la sincronización en ranuras).</p>
+  </div>
+
+  <h2 class="section" id="csma">CSMA — Carrier Sense Multiple Access</h2>
+  <p>Mejora ALOHA: la estación <strong>escucha primero el medio</strong> (detección de portadora). Si está libre, transmite; si dos transmiten a la vez, hay colisión. La utilización mejora cuanto <strong>mayor sea la longitud de la trama</strong> o <strong>menor el tiempo de propagación</strong>.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Variante</th><th>Comportamiento si el medio está ocupado</th></tr></thead>
+      <tbody>
+        <tr><td><strong>No persistente</strong></td><td>Espera un tiempo aleatorio y vuelve a chequear. Reduce colisiones pero desaprovecha el canal (queda libre un rato).</td></tr>
+        <tr><td><strong>1-persistente</strong></td><td>Escucha continuamente y transmite <em>apenas</em> se libera ("egoísta"). Si dos esperan, colisión segura.</td></tr>
+        <tr><td><strong>p-persistente</strong></td><td>Compromiso: al liberarse transmite con probabilidad <em>p</em> y espera con (1−p). Busca reducir colisiones y tiempo ocioso.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">¿Qué valor de p? <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Si <strong>np &gt; 1</strong> (n estaciones listas) habrá colisión en promedio → el rendimiento puede caer a cero. Por eso se busca <strong>np &lt; 1</strong>. Pero si p es muy chico, en baja carga las estaciones esperan de más. Es un equilibrio.</p>
+  </div>
+
+  <h2 class="section" id="csmacd">CSMA/CD — con detección de colisiones</h2>
+  <p>La analogía clásica: <em>una conversación en un cuarto oscuro</em>. Antes de hablar, escuchás (Carrier Sense); cualquiera puede hablar (Multiple Access); si dos empiezan a la vez, se dan cuenta y callan (Collision Detection). Es el método de acceso de <strong>Ethernet en half duplex</strong>.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  A[¿Medio libre?] -->|Sí| T[Transmitir y seguir escuchando]
+  A -->|No| W[Esperar hasta que se libere] --> T
+  T --> C{¿Colisión?}
+  C -->|No| OK[Transmisión exitosa]
+  C -->|Sí| J[Enviar señal JAM] --> B[Backoff: esperar tiempo aleatorio] --> A
+    </pre>
+    <div class="cap">Algoritmo CSMA/CD</div>
+  </div>
+  <div class="box">
+    <span class="tag">IFG (Interframe Gap)</span>
+    <p class="mb0">Tras cada transmisión, todas esperan el <strong>IFG = 96 bit times</strong> antes de poder transmitir: 9.6 µs en 10 Mbps, 960 ns en 100 Mbps, 96 ns en Gigabit.</p>
+  </div>
+
+  <h2 class="section" id="ethernet">Ethernet</h2>
+  <p>Desarrollada por <strong>Robert Metcalfe</strong> en Xerox PARC (1972, "Alto Aloha Network", 2.94 Mbps; renombrada Ethernet en 1973 por el "éter"). Es una tecnología de LAN abierta y no propietaria. Velocidades: <strong>10 Mbps</strong> (Ethernet), <strong>100 Mbps</strong> (Fast), <strong>1000 Mbps</strong> (Gigabit), y luego 10/40/100/200/400 GbE.</p>
+  <div class="box catedra">
+    <span class="tag">Nomenclatura de cátedra</span>
+    <p class="mb0"><span class="mono">10Base5</span>: coaxial grueso, 500 m. <span class="mono">10Base2</span>: coaxial fino, 185 m. <span class="mono">10Base-T</span>: par trenzado ("ten base tee"). <span class="mono">100Base-TX</span>: Fast Ethernet, Cat 5, codif. 4B/5B. <span class="mono">1000Base-SX</span> (corto/multimodo) y <span class="mono">1000Base-LX</span> (largo/monomodo), codif. 8B/10B. Regla: número = Mbps · "Base" = banda base · letra = medio.</p>
+  </div>
+
+  <h2 class="section" id="trama">La trama Ethernet</h2>
+  <p>Hay dos formatos. La diferencia está en el campo que sigue al origen: si vale &gt; 1500 (0x05DC) es el <strong>Tipo/EtherType</strong> (Ethernet V2); si vale ≤ 1500 es la <strong>Longitud</strong> (IEEE 802.3).</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  P["Preámbulo<br/>8 B"] --> D["Destino MAC<br/>6 B"] --> O["Origen MAC<br/>6 B"] --> T["Tipo/Long<br/>2 B"] --> DA["Datos<br/>46–1500 B"] --> F["FCS<br/>4 B"]
+    </pre>
+    <div class="cap">Trama Ethernet V2 (DIX)</div>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Campo</th><th>Tamaño</th><th>Función</th></tr></thead>
+      <tbody>
+        <tr><td>Preámbulo</td><td>8 B (V2) / 7 B + 1 SFD (802.3)</td><td>Sincronización.</td></tr>
+        <tr><td>Destino</td><td>6 B</td><td>Dirección MAC del nodo destino.</td></tr>
+        <tr><td>Origen</td><td>6 B</td><td>Dirección MAC del nodo origen.</td></tr>
+        <tr><td>Tipo / Longitud</td><td>2 B</td><td>EtherType (protocolo superior) o longitud de datos.</td></tr>
+        <tr><td>Datos</td><td>46 – 1500 B</td><td>Información de capas superiores (el MTU es 1500).</td></tr>
+        <tr><td>FCS (Chequeo)</td><td>4 B</td><td>Frame Check Sequence (CRC) para detección de errores.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">PDU y MTU</span>
+    <p class="mb0"><strong>PDU</strong> (Protocol Data Unit): unidad transmitida entre entidades pares (control + datos). <strong>MTU</strong> (Maximum Transmission Unit): la PDU más grande en una transacción de capa de red. En Ethernet, <strong>MTU = 1500 bytes</strong> de datos; la trama completa (DA+SA+Long+Datos+FCS) llega a <strong>1518 bytes</strong>.</p>
+  </div>
+  <div class="box warn">
+    <span class="tag">Ethernet es "best effort"</span>
+    <p class="mb0">Ethernet <strong>no garantiza entrega confiable</strong> (para mantener bajo costo). Tras 16 colisiones consecutivas descarta la trama. La confiabilidad la asegura una capa superior como <a href="11-tcp.html">TCP</a>.</p>
+  </div>
+
+  <h2 class="section" id="colisiones">Colisiones, backoff y dominios</h2>
+  <p>Al detectar colisión, la estación envía una <strong>señal de JAM (32 bits)</strong> para reforzarla, y todas reprograman con el algoritmo <strong>truncated binary exponential backoff</strong>: cada una elige un intervalo aleatorio múltiplo de 512 bit times. Tras <strong>16 intentos</strong>, se descarta la trama. <em>Una colisión normal no implica pérdida de datos</em>: es el protocolo funcionando.</p>
+  <div class="box catedra">
+    <span class="tag">Dominio de colisión</span>
+    <p class="mb0">Una red CSMA/CD donde, si dos nodos transmiten a la vez, <strong>habrá colisión</strong>. Un segmento Ethernet (o varios unidos por <strong>repetidores/hubs</strong>) forma <strong>un solo dominio de colisión</strong>. Esto se rompe con bridges y switches → <a href="07-equipamiento.html">Cap. 7</a>.</p>
+  </div>
+
+  <h2 class="section" id="wifi">Redes inalámbricas: IEEE 802.11 (Wi-Fi)</h2>
+  <p>El estándar <strong>802.11 / Wi-Fi</strong> define los <strong>dos niveles más bajos de OSI</strong> (física y enlace) para una WLAN. Terminología clave:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Término</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">AP</td><td>Access Point: da acceso al sistema de distribución a las estaciones asociadas.</td></tr>
+        <tr><td class="mono">BSS</td><td>Basic Service Set: estaciones controladas por una sola función de coordinación.</td></tr>
+        <tr><td class="mono">ESS</td><td>Extended Service Set: varios BSS interconectados que aparecen como uno solo.</td></tr>
+        <tr><td class="mono">DS</td><td>Distribution System: interconecta los BSS.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Topología</th><th>Descripción</th><th>Direcciones</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ad-hoc (peer-to-peer)</strong></td><td>Equipos forman red sin AP; para grupos, reuniones.</td><td>2 (origen, destino)</td></tr>
+        <tr><td><strong>Infraestructura</strong></td><td>Extensión de la red cableada vía AP; permite <em>roaming</em>.</td><td>4 (origen, destino, transmisor, receptor)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="csmaca">CSMA/CA y el problema del nodo oculto</h2>
+  <p>En inalámbrico <strong>no se pueden detectar colisiones</strong> bien (el nodo no puede escuchar mientras transmite). Por eso se usa <strong>CSMA/CA</strong> (Collision <em>Avoidance</em>): <em>evita</em> colisiones en lugar de detectarlas. Si el canal está libre, igual espera un tiempo aleatorio antes de transmitir.</p>
+  <p>Para el <strong>problema del nodo oculto</strong> (dos estaciones que no se oyen entre sí pero ambas llegan al AP) se usa el handshake <strong>RTS/CTS</strong>:</p>
+  <div class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+  participant E as Estación
+  participant AP as Access Point
+  E->>AP: RTS (Request To Send) + NAV
+  AP->>E: CTS (Clear To Send)
+  E->>AP: DATOS
+  AP->>E: ACK
+    </pre>
+    <div class="cap">Intercambio de 4 vías: el NAV avisa a los demás cuánto durará la transmisión</div>
+  </div>
+  <div class="box tip">
+    <span class="tag">Diferencia clave para el parcial <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0"><strong>Ethernet (802.3) cableada → CSMA/CD</strong> (detecta colisiones). <strong>Wi-Fi (802.11) → CSMA/CA</strong> (las evita). Es la confusión más común; el motivo es que en radio no se puede escuchar mientras se transmite.</p>
+  </div>
+  <p>802.11 también ofrece servicios de <strong>autenticación</strong> (abierta o de llave compartida), <strong>privacidad</strong> (WEP, opcional), y de <strong>asociación/reasociación/desasociación</strong> y <strong>distribución</strong> provistos por el DS.</p>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 6 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['06'], { chapter: '06' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['06'], { chapter: '06' });
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 1 · Evolución de las redes de datos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="01">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 1 · Primer parcial</p>
+    <h1>Evolución y desarrollo de las redes de datos</h1>
+    <p class="lead">Qué es comunicar, cómo funciona un sistema de comunicaciones, la historia que va del cobre y la conmutación telefónica hasta el backbone IP, y qué es realmente Internet.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#comunicacion">Comunicación y telecomunicaciones</a></li>
+      <li><a href="#sistema">Sistema de comunicaciones</a></li>
+      <li><a href="#tareas">Tareas de un sistema</a></li>
+      <li><a href="#networking">Networking y redes de datos</a></li>
+      <li><a href="#ip">La tecnología IP</a></li>
+      <li><a href="#internet">Internet y organismos</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="comunicacion">Comunicación y telecomunicaciones</h2>
+  <p><strong>Comunicación</strong> es, esencialmente, transmitir información desde un punto a otro a través de una sucesión de procesos. Telefonía, radio, TV, videoconferencia, chats o el propio habla tienen algo en común: todos <em>transmiten información</em>.</p>
+  <p><strong>Telecomunicación</strong> es comunicación <em>a distancia</em>: transmitir un mensaje de un punto a otro, normalmente con el atributo típico de ser <strong>bidireccional</strong>. Abarca radio, telegrafía, televisión, telefonía, transmisión de datos e interconexión de computadoras a nivel de enlace.</p>
+
+  <div class="box catedra">
+    <span class="tag">Por qué importa</span>
+    <p class="mb0">Casi toda pregunta de parcial sobre "definiciones generales" sale de acá. La palabra clave que la cátedra busca en telecomunicaciones es <strong>bidireccional</strong> y "a distancia".</p>
+  </div>
+
+  <h2 class="section" id="sistema">El sistema de comunicaciones</h2>
+  <p>El procesamiento de la señal en un sistema digital de comunicaciones atraviesa varias etapas. Visto como flujo, la información nace en la fuente, se adapta al medio, viaja por el canal y se reconstruye en el destino.</p>
+
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  F[Fuente de\ninformación] --> FMT[Formato\nA/D]
+  FMT --> CF[Codificación\nde fuente]
+  CF --> CIF[Cifrado]
+  CIF --> CC[Codificación\nde canal]
+  CC --> MOD[Modulación]
+  MOD --> CAN(((Canal de\ntransmisión)))
+  CAN --> DEMOD[Demodulación]
+  DEMOD --> DCC[Decodif.\nde canal]
+  DCC --> DCF[Decodif.\nde fuente]
+  DCF --> D[Usuario\ndestino]
+    </pre>
+    <div class="cap">Cadena de procesos de un sistema digital de comunicaciones</div>
+  </div>
+
+  <p>Tres ideas que conviene no confundir:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Etapa</th><th>Qué hace</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Codificación de fuente</strong></td><td>Elimina información redundante o innecesaria (compresión) y hace la conversión A/D si la fuente es analógica.</td></tr>
+        <tr><td><strong>Cifrado</strong></td><td>Evita que el mensaje sea entendido por usuarios no autorizados y previene mensajes falsos.</td></tr>
+        <tr><td><strong>Codificación de canal</strong></td><td>Agrega redundancia controlada para reducir la probabilidad de error (a costa de ancho de banda o complejidad).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Tip ciberseguridad <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Ojo con la trampa clásica: <strong>codificación de fuente</strong> <em>quita</em> redundancia (para comprimir), mientras que <strong>codificación de canal</strong> <em>agrega</em> redundancia (para detectar/corregir errores). Y el <strong>cifrado</strong> es lo único que aporta confidencialidad — no la compresión.</p>
+  </div>
+
+  <h2 class="section" id="tareas">Tareas de un sistema de comunicaciones</h2>
+  <p>Stallings enumera las funciones que cualquier sistema de comunicaciones debe resolver:</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Tarea</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>Utilización del sistema de transmisión</td><td>Uso eficaz de los recursos: multiplexación y control de flujo.</td></tr>
+        <tr><td>Interfaz</td><td>Conexión entre el dispositivo y el medio de transmisión.</td></tr>
+        <tr><td>Generación de la señal</td><td>Producir la señal electromagnética que se propaga por el medio.</td></tr>
+        <tr><td>Sincronismo</td><td>Coordinar transmisor y receptor.</td></tr>
+        <tr><td>Gestión del intercambio</td><td>Reglas y requisitos que ambas partes deben cumplir.</td></tr>
+        <tr><td>Detección y corrección de errores</td><td>Cuando es necesario, detectar y reparar.</td></tr>
+        <tr><td>Control de flujo</td><td>Regular el flujo para no perder información por congestión.</td></tr>
+        <tr><td>Direccionamiento</td><td>Identificar fuentes y destinos.</td></tr>
+        <tr><td>Enrutamiento</td><td>Encaminar los datos hacia un destino específico.</td></tr>
+        <tr><td>Recuperación</td><td>Recuperarse ante una falla.</td></tr>
+        <tr><td>Formato de mensajes</td><td>Acuerdo de formato entre fuente y destino.</td></tr>
+        <tr><td>Seguridad y gestión de red</td><td>Asegurar que solo el receptor reciba; monitorear y configurar recursos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Conexión con otros capítulos <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Esta lista es el mapa de toda la materia: <em>control de flujo y errores</em> → <a href="05-control-flujo.html">Cap. 5</a>; <em>direccionamiento</em> → <a href="08-direccionamiento-ip.html">Cap. 8</a>; <em>enrutamiento</em> → <a href="09-enrutamiento-subnetting.html">Cap. 9–10</a>; <em>gestión del intercambio</em> → protocolos y <a href="03-protocolos-osi.html">modelo OSI (Cap. 3)</a>.</p>
+  </div>
+
+  <h2 class="section" id="networking">Networking y redes de datos</h2>
+  <p>El objetivo básico de una red es <strong>permitir que la información se comparta</strong> entre personas y/o máquinas. Una red de computadoras es "dos o más computadoras conectadas de alguna manera por la cual son capaces de intercambiar información". No importa el tipo de computadora: <strong>lo esencial es que todas hablen el mismo idioma, el mismo protocolo</strong>.</p>
+  <p>La comunicación se realiza transmitiendo datos a través de <strong>nodos de conmutación</strong>, a los que no les importa el contenido. Los dispositivos extremos se llaman <strong>estaciones</strong> (computadoras, terminales, teléfonos); se conectan a un nodo, y el conjunto de nodos forma la red.</p>
+  <div class="box catedra">
+    <span class="tag">Ejemplo de cátedra</span>
+    <p class="mb0">Las LAN redujeron costos al compartir periféricos y archivos. Al crecer, se necesitó vincular varias LAN entre sí → nacieron las <strong>WAN</strong>, que permitieron que empresas geográficamente alejadas se comunicaran.</p>
+  </div>
+
+  <h2 class="section" id="ip">La tecnología IP</h2>
+  <p>El protocolo <strong>IP</strong> es la base sobre la que funciona Internet. Sus características definen cómo se comporta y por qué necesita de otras capas para ser confiable:</p>
+  <ul>
+    <li>Protocolo <strong>no orientado a conexión</strong>.</li>
+    <li>División de paquetes (fragmentación) en caso necesario.</li>
+    <li>Direcciones de Internet de <strong>32 bits</strong> (IPv4).</li>
+    <li>Tamaño máximo de paquete: <strong>65535 bytes</strong>.</li>
+    <li>Tiempo de vida finito de los paquetes (<strong>TTL</strong>).</li>
+    <li>Entrega de acuerdo al <strong>"mejor esfuerzo"</strong> (best effort).</li>
+  </ul>
+  <div class="box warn">
+    <span class="tag">Trampa de parcial</span>
+    <p class="mb0">"Mejor esfuerzo" significa que IP <strong>no garantiza</strong> entrega, orden ni ausencia de errores. Esa confiabilidad la aporta <strong>TCP</strong> (<a href="11-tcp.html">Cap. 11</a>), una capa más arriba.</p>
+  </div>
+
+  <h2 class="section" id="internet">Internet y organismos de estandarización</h2>
+  <p><strong>Internet es una red de redes</strong>: redes conectadas entre sí de forma continua y simultánea. Es una plataforma mundial de comunicaciones multimedia basada en el <strong>protocolo IP</strong> y en el direccionamiento por <strong>DNS</strong> (Domain Name System).</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Organismo</th><th>Rol</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">IETF</td><td>Evolución de la arquitectura de Internet. Publica las <strong>RFC</strong> (Requests for Comments).</td></tr>
+        <tr><td class="mono">ISO</td><td>Organización internacional de normalización (modelo OSI, entre miles de normas).</td></tr>
+        <tr><td class="mono">IEEE</td><td>Estándares de redes: <strong>802</strong> LAN/MAN, <strong>802.3</strong> Ethernet, <strong>802.11</strong> Wi-Fi, <strong>802.15</strong> WPAN.</td></tr>
+        <tr><td class="mono">ICANN / IANA</td><td>Coordinan la raíz del DNS, el direccionamiento IP y los recursos del protocolo.</td></tr>
+        <tr><td class="mono">LACNIC</td><td>Registro regional de direcciones IP para Latinoamérica y el Caribe.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Mnemotecnia <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0"><strong>IETF → RFC</strong> (software de Internet) · <strong>IEEE → 802.x</strong> (hardware/LAN) · <strong>ISO → OSI</strong> (modelo de referencia) · <strong>ICANN/IANA → nombres y números</strong>. Si la pregunta dice "802" pensá IEEE; si dice "RFC" pensá IETF.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Repasá los conceptos clave. Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+
+<footer class="site-footer">Capítulo 1 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['01'], { chapter: '01' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['01'], { chapter: '01' });
+</script>
+</body>
+</html>

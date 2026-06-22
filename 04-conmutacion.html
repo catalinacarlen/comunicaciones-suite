@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 4 · Conmutación de circuitos y paquetes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="04">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 4 · Primer parcial</p>
+    <h1>Conmutación de circuitos y de paquetes</h1>
+    <p class="lead">Las dos grandes formas de mover información por una red conmutada: el circuito dedicado del teléfono vs. los paquetes independientes de Internet. Datagramas, circuitos virtuales y orientación a conexión.</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#que-es">Qué es la conmutación</a></li>
+      <li><a href="#circuitos">Conmutación de circuitos</a></li>
+      <li><a href="#paquetes">Conmutación de paquetes</a></li>
+      <li><a href="#comparacion">Comparación</a></li>
+      <li><a href="#datagramas">Datagramas vs. circuitos virtuales</a></li>
+      <li><a href="#conexion">Orientado o no a conexión</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="que-es">¿Qué es la conmutación?</h2>
+  <p>La <strong>conmutación (switching)</strong> es la acción de establecer un camino de extremo a extremo entre un emisor (Tx) y un receptor (Rx) a través de nodos de transmisión. Permite entregar la señal del origen al destino, descongestionar la red y, en los modelos modernos, asignar direcciones y adjuntar datos a la señal (capa 2).</p>
+
+  <h2 class="section" id="circuitos">Conmutación de circuitos</h2>
+  <p>Establece una <strong>vía dedicada, exclusiva y temporal</strong> entre dos puntos durante toda la sesión, con ancho de banda fijo reservado. Cuando termina, la vía se libera. <strong>Ejemplo clásico: la red telefónica pública conmutada (PSTN).</strong></p>
+
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  A[Estación A] --- N4((Nodo 4)) --- N5((Nodo 5)) --- N6((Nodo 6)) --- E[Estación E]
+  linkStyle 0,1,2,3 stroke:#2D5BE3,stroke-width:4px;
+    </pre>
+    <div class="cap">Circuito dedicado: el camino completo queda reservado mientras dure la llamada</div>
+  </div>
+
+  <p>La comunicación tiene <strong>3 fases</strong>:</p>
+  <ol>
+    <li><strong>Establecimiento</strong> del circuito (hay un retardo previo).</li>
+    <li><strong>Transferencia</strong> de datos a velocidad fija.</li>
+    <li><strong>Desconexión</strong> y liberación de recursos.</li>
+  </ol>
+
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Ventajas</th><th>Inconvenientes</th></tr></thead>
+      <tbody>
+        <tr><td>Alta disponibilidad una vez establecido (camino garantizado).</td><td>Consume muchos recursos aunque no se transmita nada.</td></tr>
+        <tr><td>Red transparente: la transmisión es a velocidad constante.</td><td>Tiempo de establecimiento prolongado (retardo inicial).</td></tr>
+        <tr><td>Ideal para voz (alta utilización del canal).</td><td>Ineficiente para datos: la línea está sin uso la mayor parte del tiempo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box catedra">
+    <span class="tag">Señalización de control (PSTN)</span>
+    <p class="mb0">Cuatro categorías: <strong>supervisión</strong> (binaria, on/off), <strong>direccionamiento</strong> (localizar el destino), <strong>información sobre la llamada</strong> (estado, apertura/cierre) y <strong>gestión de red</strong> (mantenimiento). Las centrales se organizan en red jerárquica (local → primaria → secundaria → terciaria) para encaminar y dar redundancia.</p>
+  </div>
+
+  <h2 class="section" id="paquetes">Conmutación de paquetes</h2>
+  <p>La información se divide en <strong>paquetes</strong> de tamaño específico. Cada paquete lleva, además de datos, un <strong>encabezado con información de control</strong> (prioridad, direcciones de origen y destino). Los paquetes viajan por la red — posiblemente por caminos distintos — y se <strong>reensamblan en el destino</strong>. En cada nodo se almacenan brevemente (<em>store and forward</em>) y se encaminan según la cabecera.</p>
+  <div class="box">
+    <span class="tag">Dato de cátedra</span>
+    <p class="mb0">Se limita el tamaño de los mensajes para evitar grandes esperas. El límite superior mencionado es de ~<strong>1000 octetos (mil bytes)</strong>; si el mensaje es mayor, se fragmenta en varios paquetes. Es <strong>más adecuada para datos</strong> que la conmutación de circuitos.</p>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Ventajas</th><th>Desventajas</th></tr></thead>
+      <tbody>
+        <tr><td>Mayor eficiencia de línea: el enlace se comparte dinámicamente entre muchos paquetes.</td><td><strong>Retardo (delay)</strong> variable por procesamiento y encolado.</td></tr>
+        <tr><td>Conversión de tasa de datos: cada estación se conecta a su velocidad; los nodos amortiguan.</td><td><strong>Jitter</strong> (variación del retardo) → no es lo mejor para tiempo real.</td></tr>
+        <tr><td>Acepta paquetes incluso con tráfico pesado (los de circuitos bloquearían conexiones).</td><td><strong>Overhead</strong>: cabeceras reducen la capacidad útil.</td></tr>
+        <tr><td>Permite usar prioridades.</td><td>Requiere más procesamiento en cada nodo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="comparacion">Circuitos vs. paquetes</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Aspecto</th><th>Circuitos</th><th>Paquetes</th></tr></thead>
+      <tbody>
+        <tr><td>Camino</td><td>Dedicado, reservado</td><td>Compartido dinámicamente</td></tr>
+        <tr><td>Ancho de banda</td><td>Fijo, garantizado</td><td>Variable, según disponibilidad</td></tr>
+        <tr><td>Retardo</td><td>Constante (tras establecer)</td><td>Variable (jitter)</td></tr>
+        <tr><td>Eficiencia con datos</td><td>Baja (línea ociosa)</td><td>Alta</td></tr>
+        <tr><td>Pensado para</td><td>Voz (PSTN)</td><td>Datos (Internet)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="datagramas">Técnicas: datagramas vs. circuitos virtuales</h2>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+  PS["Conmutación de paquetes"] --> DG["DATAGRAMAS<br/>sin conexión previa"]
+  PS --> VC["CIRCUITOS VIRTUALES<br/>conexión lógica previa"]
+    </pre>
+  </div>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th></th><th>Datagramas</th><th>Circuitos virtuales</th></tr></thead>
+      <tbody>
+        <tr><td>Establecimiento</td><td><strong>No</strong> hay fase de llamada.</td><td><strong>Sí</strong>: petición de llamada + llamada aceptada + liberación.</td></tr>
+        <tr><td>Ruta de los paquetes</td><td>Cada paquete elige su camino (independiente).</td><td>Todos siguen la misma ruta preestablecida.</td></tr>
+        <tr><td>Orden de llegada</td><td>Pueden llegar desordenados.</td><td>Llegan en el mismo orden enviado.</td></tr>
+        <tr><td>Identificación</td><td>Dirección de destino en cada paquete.</td><td>Identificador de circuito virtual.</td></tr>
+        <tr><td>Si falla un nodo</td><td>Los siguientes paquetes se re-rutean.</td><td>Caen todos los circuitos que pasaban por él.</td></tr>
+        <tr><td>Ejemplo</td><td>IP</td><td><strong>TCP</strong> (citado por la cátedra)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box tip">
+    <span class="tag">Ojo <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">La cátedra usa <strong>TCP como ejemplo de circuito virtual</strong> porque establece una conexión lógica ordenada y confiable, aunque por debajo viaje sobre IP (datagramas). Esto conecta directo con el <a href="11-tcp.html">Cap. 11 (TCP)</a> y <a href="12-udp.html">Cap. 12 (UDP)</a>.</p>
+  </div>
+
+  <h2 class="section" id="conexion">Orientado o no a la conexión</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Orientado a conexión</th><th>No orientado a conexión</th></tr></thead>
+      <tbody>
+        <tr><td>Usa un camino específico establecido (3 fases: establecer → transferir → finalizar).</td><td>No predetermina el camino; cada paquete viaja independiente.</td></tr>
+        <tr><td>Garantiza orden y reserva recursos/QoS.</td><td>No garantiza secuencia, tasa ni recursos.</td></tr>
+        <tr><td>Útil para voz y video (no toleran retardo ni reordenamiento).</td><td>Útil para datos que toleran retardo (mail, web). Es "sin estado".</td></tr>
+        <tr><td>Desventaja: reserva estática → un incidente en el camino tira la conexión y desperdicia ancho de banda.</td><td>Ventaja: selección dinámica de camino y uso eficiente del ancho de banda.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Estrategias de encaminamiento</h4>
+  <ul>
+    <li><strong>Estático:</strong> ruta fija por par origen-destino. Simple, pero sin reacción a fallos.</li>
+    <li><strong>Inundación (flooding):</strong> copia a todos los vecinos; garantiza llegar por el camino más corto pero genera mucho tráfico.</li>
+    <li><strong>Aleatorio:</strong> elige una salida al azar; mejor control de congestión que el estático.</li>
+    <li><strong>Adaptable:</strong> las decisiones cambian con el estado de la red (fallos, congestión). El más usado.</li>
+  </ul>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 4 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['04'], { chapter: '04' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['04'], { chapter: '04' });
+</script>
+</body>
+</html>

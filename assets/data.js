@@ -1,0 +1,382 @@
+/* ============================================================
+   Redes y Comunicaciones — Base de datos de contenido
+   Metadatos de capítulos + flashcards + quizzes + verdadero/falso
+   Fuente única de verdad para index.html, capítulos, practica y parciales.
+   ============================================================ */
+window.RC_DATA = {
+  // ---------------- Capítulos ----------------
+  chapters: [
+    { id: '01', file: '01-evolucion-redes.html', n: 1, parcial: 1,
+      title: 'Evolución y desarrollo de las redes de datos',
+      short: 'Evolución de las redes',
+      desc: 'Comunicación, telecomunicaciones, tareas de un sistema de comunicaciones, historia de la conmutación e Internet.',
+      tags: ['conceptos', 'historia', 'Internet'] },
+    { id: '02', file: '02-clasificacion-redes.html', n: 2, parcial: 1,
+      title: 'Clasificación de las redes según área de cobertura',
+      short: 'Clasificación de redes',
+      desc: 'PAN, LAN, MAN, WAN; topologías, medios de transmisión (cobre, par trenzado, fibra) y subcapas MAC/LLC.',
+      tags: ['LAN/WAN', 'topologías', 'medios'] },
+    { id: '03', file: '03-protocolos-osi.html', n: 3, parcial: 1,
+      title: 'Protocolos y el modelo OSI',
+      short: 'Protocolos y modelo OSI',
+      desc: 'Qué es un protocolo, las 7 capas de OSI, encapsulamiento y comparación con TCP/IP.',
+      tags: ['OSI', 'TCP/IP', 'capas'] },
+    { id: '04', file: '04-conmutacion.html', n: 4, parcial: 1,
+      title: 'Conmutación de circuitos y de paquetes',
+      short: 'Conmutación',
+      desc: 'Conmutación de circuitos vs. paquetes, datagramas, circuitos virtuales y comparación de desempeño.',
+      tags: ['circuitos', 'paquetes', 'datagramas'] },
+    { id: '05', file: '05-control-flujo.html', n: 5, parcial: 1,
+      title: 'Técnicas de control de flujo y de errores',
+      short: 'Control de flujo y errores',
+      desc: 'Parada y espera, ventana deslizante, ARQ, detección de errores (paridad, checksum, CRC) y corrección.',
+      tags: ['ventana deslizante', 'ARQ', 'CRC'] },
+    { id: '06', file: '06-aloha-csma-ethernet.html', n: 6, parcial: 1,
+      title: 'ALOHA, CSMA, Ethernet y LANs inalámbricas',
+      short: 'ALOHA · CSMA · Ethernet',
+      desc: 'Acceso al medio, ALOHA puro y ranurado, CSMA/CD, Ethernet, trama 802.3 y LANs inalámbricas 802.11.',
+      tags: ['CSMA/CD', '802.3', '802.11'] },
+    { id: '07', file: '07-equipamiento.html', n: 7, parcial: 1,
+      title: 'Equipamiento: Hub, Bridge y Switches',
+      short: 'Hub, Bridge y Switch',
+      desc: 'Dominios de colisión y broadcast, hub vs bridge vs switch, VLANs y el modelo jerárquico de 3 capas.',
+      tags: ['switch', 'VLAN', '3 capas'] },
+    { id: '08', file: '08-direccionamiento-ip.html', n: 8, parcial: 2,
+      title: 'Direccionamiento IP',
+      short: 'Direccionamiento IP',
+      desc: 'IPv4, clases A/B/C, máscara de subred, direcciones privadas, IPv6 y notación binaria/decimal.',
+      tags: ['IPv4', 'máscara', 'clases'] },
+    { id: '09', file: '09-enrutamiento-subnetting.html', n: 9, parcial: 2,
+      title: 'Enrutamiento I: subnetting y subredes',
+      short: 'Subnetting',
+      desc: 'Introducción a los protocolos de enrutamiento, subnetting paso a paso, cálculo de subredes y hosts.',
+      tags: ['subnetting', 'subredes', 'routing'] },
+    { id: '10', file: '10-vlsm-cidr.html', n: 10, parcial: 2,
+      title: 'Enrutamiento II: VLSM, CIDR, ARP e ICMP',
+      short: 'VLSM · CIDR · ARP · ICMP',
+      desc: 'Máscaras de longitud variable, sumarización CIDR, resolución ARP y mensajes ICMP.',
+      tags: ['VLSM', 'CIDR', 'ARP/ICMP'] },
+    { id: '11', file: '11-tcp.html', n: 11, parcial: 2,
+      title: 'Capa de transporte: TCP',
+      short: 'Protocolo TCP',
+      desc: 'Servicio orientado a la conexión, three-way handshake, segmento TCP, control de flujo y congestión.',
+      tags: ['TCP', 'handshake', 'puertos'] },
+    { id: '12', file: '12-udp.html', n: 12, parcial: 2,
+      title: 'Capa de transporte: UDP',
+      short: 'Protocolo UDP',
+      desc: 'Servicio no orientado a la conexión, datagrama UDP, comparación TCP vs UDP y casos de uso.',
+      tags: ['UDP', 'datagrama', 'tiempo real'] },
+    { id: '13', file: '13-capa-aplicacion.html', n: 13, parcial: 2,
+      title: 'Capa de aplicación y aplicaciones distribuidas',
+      short: 'Capa de aplicación',
+      desc: 'Modelo cliente-servidor y P2P, DNS, DHCP, HTTP/HTTPS, FTP, SMTP y correo electrónico.',
+      tags: ['DNS', 'HTTP', 'DHCP'] }
+  ],
+
+  // ---------------- Flashcards por capítulo ----------------
+  flashcards: {
+    '01': [
+      { q: '¿Qué es la comunicación?', a: 'Transmitir información desde un punto a otro a través de una sucesión de procesos.' },
+      { q: '¿Qué son las telecomunicaciones?', a: 'Comunicación <b>a distancia</b>: transmitir un mensaje de un punto a otro, normalmente de forma <b>bidireccional</b> (radio, telefonía, TV, datos, etc.).' },
+      { q: 'Nombrá 3 tareas de un sistema de comunicaciones', a: 'Utilización del sistema de transmisión, generación de la señal, sincronismo, gestión del intercambio, detección/corrección de errores, control de flujo, direccionamiento, enrutamiento, recuperación, formato de mensajes y seguridad.' },
+      { q: '¿Qué es una red de computadoras?', a: 'Dos o más computadoras conectadas de alguna manera por la cual son capaces de intercambiar información. Lo esencial es que <b>todas hablen el mismo protocolo</b>.' },
+      { q: 'Diferencia entre codificación de fuente y codificación de canal', a: '<b>Fuente</b>: elimina redundancia (comprime). <b>Canal</b>: agrega redundancia controlada para detectar/corregir errores. El <b>cifrado</b> es lo único que da confidencialidad.' },
+      { q: '¿Qué es Internet?', a: 'Una <b>red de redes</b>: redes conectadas entre sí de forma continua y simultánea, basada en el protocolo IP y el direccionamiento por DNS.' },
+      { q: 'Mencioná características de la tecnología IP', a: 'No orientada a conexión, divide paquetes si es necesario, direcciones de 32 bits, tamaño máx. 65535 bytes, tiempo de vida finito (TTL) y entrega de tipo "mejor esfuerzo".' },
+      { q: '¿Qué organismo publica las RFC y estandariza Internet?', a: 'La <b>IETF</b> (Internet Engineering Task Force). Las normas se publican como <b>RFC</b> (Requests for Comments).' },
+      { q: '¿Qué estandariza el IEEE 802? Ejemplos', a: 'Redes LAN/MAN. Ej.: <b>802.3</b> Ethernet, <b>802.11</b> Wi-Fi, <b>802.15</b> Wireless PAN (Bluetooth).' },
+      { q: '¿Qué hace la IANA / ICANN?', a: 'Coordinan globalmente la raíz del DNS, el direccionamiento IP y los recursos del protocolo. ICANN (1998) administra nombres y números; IANA ejecuta la asignación.' }
+    ],
+    '02': [
+      { q: 'Ordená de mayor a menor cobertura: LAN, PAN, WAN, MAN', a: '<b>WAN</b> &gt; <b>MAN</b> &gt; <b>LAN</b> &gt; <b>PAN</b>.' },
+      { q: '¿Qué es una WAN y qué tecnologías usa?', a: 'Red de gran alcance que cubre una extensa área geográfica usando servicios de carriers. Tecnologías: X.25, Frame Relay, ATM.' },
+      { q: '¿Qué alcance tiene una PAN y en qué norma se apoya?', a: 'Hasta ~10 metros, centrada en el espacio de una persona. Se apoya en <b>IEEE 802.15</b> (ej. Bluetooth 802.15.1).' },
+      { q: 'Diferencia entre Simplex, Half duplex y Full duplex', a: '<b>Simplex</b>: una sola dirección (radio, TV). <b>Half duplex</b>: ambas direcciones pero de a una por vez (walkie-talkie). <b>Full duplex</b>: ambas a la vez (celular).' },
+      { q: 'Nombrá las 4 topologías físicas vistas', a: 'Malla, anillo, estrella y bus.' },
+      { q: '¿Qué medios de transmisión guiados existen?', a: 'Cable coaxial, par trenzado (UTP/STP) y fibra óptica.' },
+      { q: 'Diferencia entre UTP y STP', a: '<b>UTP</b>: sin blindaje, bajo costo, mayor tasa de error. <b>STP</b>: con malla metálica que reduce interferencias (menor error) pero mayor costo.' },
+      { q: '¿Qué es la atenuación y el NEXT?', a: '<b>Atenuación</b>: pérdida de potencia de la señal con la distancia (se busca pequeña). <b>NEXT</b> (Near End Crosstalk): ruido inducido de un par sobre otro (se busca grande).' },
+      { q: 'Diferencia entre fibra monomodo y multimodo', a: '<b>Multimodo</b>: núcleo grande (50/62.5 µm), varios modos, hasta ~2 km, datos. <b>Monomodo</b>: núcleo chico (8-10 µm), un solo modo, hasta ~40 km, telefonía/CATV.' },
+      { q: '¿Qué dos subcapas componen la capa de enlace de datos?', a: '<b>MAC</b> (control de acceso al medio, depende de la tecnología/topología) y <b>LLC</b> (control de enlace lógico, entramado, control de flujo y errores; norma 802.2).' },
+      { q: 'Diferencia entre acceso estático y dinámico al medio', a: '<b>Estático</b>: reparte el canal fijo (FDM por frecuencia, TDM por tiempo). <b>Dinámico</b>: el medio se comparte y se gestiona colisión, portadora y tiempo (mejor aprovechamiento).' },
+      { q: '¿Cuáles son las 3 capas del modelo jerárquico?', a: '<b>Acceso</b> (conexión de usuarios), <b>Distribución</b> (políticas, ruteo inter-VLAN, seguridad) y <b>Core</b> (backbone de alta velocidad, sin filtrado).' }
+    ],
+    '03': [
+      { q: '¿Qué es un protocolo?', a: 'Un conjunto de reglas que gobiernan el intercambio de datos entre dos entidades, estandarizadas para que equipos de distintos fabricantes se comuniquen.' },
+      { q: '¿Qué define un protocolo? (4 elementos)', a: '<b>Sintaxis</b> (formato), <b>semántica</b> (control y errores), <b>tiempos</b> (velocidad/secuencia) y las <b>acciones</b> al transmitir/recibir.' },
+      { q: 'Nombrá las 7 capas de OSI (de 7 a 1)', a: 'Aplicación, Presentación, Sesión, Transporte, Red, Enlace, Física. <i>("Anita Puso Su Traje Rojo Esta Fiesta")</i>' },
+      { q: '¿Qué unidad de datos (PDU) corresponde a cada capa baja?', a: 'Transporte → <b>segmento</b>; Red → <b>paquete</b>; Enlace → <b>trama/frame</b>; Física → <b>bits</b>.' },
+      { q: '¿Qué hace la capa de Red (capa 3)?', a: 'Entrega los <b>paquetes</b> y hace el <b>enrutamiento</b> entre segmentos de red. Protocolos: IP, ICMP.' },
+      { q: '¿En qué capa trabaja TCP y UDP?', a: 'En la capa <b>4 (Transporte)</b>.' },
+      { q: '¿Cómo se mapea OSI al modelo TCP/IP?', a: 'Aplicación+Presentación+Sesión → <b>Aplicación</b>; Transporte → <b>Transporte</b>; Red → <b>Internet</b>; Enlace+Física → <b>Acceso a red</b>.' },
+      { q: '¿Qué es el encapsulamiento?', a: 'Cada capa agrega su propia <b>cabecera (header)</b> de control al bajar; al recibir, cada capa la retira (desencapsula).' },
+      { q: '¿Qué direcciones se agregan en transporte, red y enlace?', a: 'Transporte → <b>puertos</b>; Red → <b>IP</b>; Enlace → <b>MAC</b>.' },
+      { q: 'Nombrá las 4 primitivas de servicio', a: '<b>REQUEST</b> (petición), <b>INDICATION</b> (aviso de suceso), <b>RESPONSE</b> (respuesta) y <b>CONFIRM</b> (confirmación).' }
+    ],
+    '04': [
+      { q: '¿Qué es la conmutación de circuitos?', a: 'Establecer una vía <b>dedicada, exclusiva y temporal</b> con ancho de banda fijo entre emisor y receptor. Ej.: red telefónica (PSTN).' },
+      { q: '¿Cuáles son las 3 fases de la conmutación de circuitos?', a: '<b>Establecimiento</b> del circuito, <b>transferencia</b> de datos y <b>desconexión</b>/liberación.' },
+      { q: 'Principal inconveniente de la conmutación de circuitos', a: 'Consume muchos recursos durante toda la comunicación aunque no se transmita nada (ineficiente para datos).' },
+      { q: '¿Qué es la conmutación de paquetes?', a: 'Dividir la info en <b>paquetes</b> con cabecera de control; viajan por la red (posiblemente por distintos caminos) y se reensamblan en destino.' },
+      { q: '¿Qué es el jitter y por qué importa?', a: 'La <b>variación del retardo</b> entre paquetes. Por eso la conmutación de paquetes no es ideal para aplicaciones de tiempo real (voz/video).' },
+      { q: 'Diferencia entre datagramas y circuitos virtuales', a: '<b>Datagramas</b>: sin establecimiento, cada paquete elige ruta, pueden llegar desordenados. <b>Circuitos virtuales</b>: conexión previa, misma ruta, llegan en orden.' },
+      { q: '¿Qué ejemplo de circuito virtual da la cátedra?', a: '<b>TCP</b> — establece una conexión lógica ordenada y confiable.' },
+      { q: 'Si falla un nodo, ¿qué pasa en datagramas vs. circuitos virtuales?', a: 'Datagramas: los siguientes paquetes se <b>re-rutean</b>. Circuitos virtuales: <b>caen todos</b> los que pasaban por ese nodo.' },
+      { q: '¿Qué es un servicio orientado a conexión?', a: 'Usa un camino establecido (3 fases), garantiza orden y reserva recursos. Útil para voz y video.' },
+      { q: 'Nombrá estrategias de encaminamiento', a: '<b>Estático</b> (ruta fija), <b>inundación/flooding</b> (copia a vecinos), <b>aleatorio</b> y <b>adaptable</b> (según estado de la red, el más usado).' }
+    ],
+    '05': [
+      { q: '¿Para qué sirve el control de flujo?', a: 'Para que el <b>emisor no sature al receptor</b>: le dice cuántos datos puede enviar antes de esperar un ACK, evitando el desbordamiento del buffer.' },
+      { q: 'Diferencia entre tiempo de transmisión y de propagación', a: '<b>Transmisión</b>: poner todos los bits de la trama en el medio (depende de la longitud). <b>Propagación</b>: que un bit viaje de origen a destino (depende de la distancia).' },
+      { q: '¿Cómo funciona parada y espera (stop & wait)?', a: 'El emisor manda <b>una trama</b> y espera el ACK antes de la siguiente. Con timeout reenvía. Tramas y ACK se numeran 0/1.' },
+      { q: 'Principal desventaja de parada y espera', a: 'Solo una trama en vuelo a la vez → uso ineficiente del medio en redes rápidas o de larga distancia.' },
+      { q: '¿Qué es el piggybacking?', a: 'Incluir el ACK dentro de una trama de datos que va de vuelta, para ahorrar ancho de banda.' },
+      { q: 'Fórmula del tamaño de ventana deslizante con k bits', a: 'Numeración módulo 2^k; tamaño máx. de ventana = <b>2^k − 1</b>. Ej.: k=3 → ventana 7.' },
+      { q: '¿Qué es la distancia de Hamming?', a: 'El número de bits en que difieren dos palabras (XOR + conteo de 1).' },
+      { q: '¿Cuánta distancia de Hamming se necesita para detectar d errores? ¿Y para corregir d?', a: 'Detectar d → <b>d+1</b>. Corregir d → <b>2d+1</b>.' },
+      { q: '¿Qué limitación tiene el bit de paridad?', a: 'No detecta un <b>número par de errores</b> (se compensan).' },
+      { q: '¿Qué hace el CRC y qué NO es?', a: 'Genera una FCS para que la trama sea divisible por P; si el resto es 0, no hay error. Sirve para <b>integridad</b>, <b>no es cifrado</b>.' },
+      { q: 'Las 3 variantes de ARQ', a: '<b>Parada y espera</b>, <b>vuelta atrás N</b> (REJ: reenvía la errónea y las siguientes) y <b>rechazo selectivo</b> (SREJ: solo la errónea).' },
+      { q: 'Diferencia entre FEC y ARQ', a: '<b>FEC</b>: el receptor corrige sin retransmitir (redundancia). <b>ARQ</b>: el receptor detecta y pide retransmisión.' }
+    ],
+    '06': [
+      { q: '¿Cuál es la utilización máxima de ALOHA puro y ranurado?', a: 'ALOHA puro ≈ <b>18%</b>; ALOHA ranurado ≈ <b>37%</b> (el doble, por la sincronización en ranuras).' },
+      { q: '¿Qué significa CSMA?', a: 'Carrier Sense Multiple Access: la estación <b>escucha el medio</b> antes de transmitir.' },
+      { q: 'Diferencia entre CSMA 1-persistente y no persistente', a: '<b>1-persistente</b>: transmite apenas se libera el canal (egoísta, colisión segura si hay dos). <b>No persistente</b>: espera un tiempo aleatorio antes de re-chequear.' },
+      { q: '¿Qué es CSMA/CD?', a: 'CSMA con <b>detección de colisiones</b>: si dos transmiten a la vez, lo detectan, envían JAM y reintentan tras backoff. Es el acceso de Ethernet half-duplex.' },
+      { q: '¿Quién y cuándo inventó Ethernet?', a: '<b>Robert Metcalfe</b> en Xerox PARC (1972-73). Tecnología abierta, no propietaria.' },
+      { q: '¿Cuáles son los campos de la trama Ethernet V2?', a: 'Preámbulo (8), Destino MAC (6), Origen MAC (6), Tipo (2), Datos (46–1500), FCS (4).' },
+      { q: '¿Cuánto es el MTU de Ethernet y el tamaño máximo de trama?', a: 'MTU = <b>1500 bytes</b> de datos; trama completa = <b>1518 bytes</b>.' },
+      { q: '¿Cómo se distingue Ethernet V2 de IEEE 802.3?', a: 'Por el campo que sigue al origen: si vale &gt;1500 (0x05DC) es <b>Tipo</b> (V2); si es ≤1500 es <b>Longitud</b> (802.3).' },
+      { q: '¿Qué es un dominio de colisión?', a: 'Una red CSMA/CD donde si dos nodos transmiten a la vez hay colisión. Hubs/repetidores lo extienden; switches/bridges lo dividen.' },
+      { q: '¿Por qué Wi-Fi usa CSMA/CA y no CSMA/CD?', a: 'En radio no se puede escuchar mientras se transmite, así que no se detectan colisiones bien. CSMA/CA las <b>evita</b> esperando tiempos aleatorios y usando RTS/CTS.' },
+      { q: '¿Para qué sirve el handshake RTS/CTS?', a: 'Para el <b>problema del nodo oculto</b>: el AP avisa con CTS y el NAV cuánto durará la transmisión, así nadie más transmite.' },
+      { q: 'Diferencia entre red ad-hoc e infraestructura en 802.11', a: '<b>Ad-hoc</b>: sin AP, peer-to-peer, 2 direcciones. <b>Infraestructura</b>: con AP, extiende red cableada, permite roaming, 4 direcciones.' }
+    ],
+    '07': [
+      { q: '¿En qué capas opera la NIC y cómo se identifica?', a: 'Capas <b>1 y 2</b>. Se identifica por su dirección <b>MAC</b> de 48 bits = OUI (fabricante, 24 bits) + UAA (serie, 24 bits).' },
+      { q: '¿Qué es un hub y en qué capa trabaja?', a: 'Un "repetidor multipuerto" de <b>capa 1</b>, "tonto": comparte el ancho de banda y reenvía todo a todos (broadcast).' },
+      { q: '¿Por qué un hub es un problema de seguridad?', a: 'Reenvía el tráfico a todos los puertos, así cualquier equipo puede escuchar (sniffear) el tráfico ajeno.' },
+      { q: '¿En qué capa trabaja un bridge y qué hace distinto al repetidor?', a: 'Capa <b>2 (enlace)</b>: procesa la trama, filtra por MAC y no reenvía colisiones ni tramas con error.' },
+      { q: '¿Cómo aprende direcciones un bridge/switch?', a: 'Mira la <b>dirección de origen</b> de cada trama entrante y asocia esa MAC al puerto por el que llegó (tabla con temporizador).' },
+      { q: '¿Qué hace el protocolo Spanning Tree (802.1D)?', a: 'Resuelve <b>loops</b>: mantiene la conectividad sin formar circuitos cerrados, bloqueando puertos redundantes.' },
+      { q: '¿Qué es un switch?', a: 'Un <b>puente multipuerto</b> que filtra por MAC, da ancho de banda dedicado por puerto y conmuta en hardware (más rápido que un bridge).' },
+      { q: 'Tipos de switching', a: '<b>Cut-through</b> (rápido, puede reenviar tramas malas), <b>store-and-forward</b> (revisa toda la trama) y <b>fragment-free</b> (espera 64 bytes).' },
+      { q: '¿Qué divide un switch y qué divide un router?', a: 'El <b>switch divide dominios de colisión</b> (no de broadcast). El <b>router divide dominios de broadcast</b>.' },
+      { q: '¿Qué hace un router?', a: 'Comunica <b>redes diferentes</b> (capa 3), elige la mejor ruta, controla broadcast/multicast y hace direccionamiento lógico (IP).' }
+    ],
+    '08': [
+      { q: '¿Cuántos bits tiene una dirección IPv4?', a: '<b>32 bits</b> (4 octetos), en notación decimal con puntos.' },
+      { q: '¿Qué dos características define la cátedra para IP?', a: '<b>Connectionless</b> (sin handshake previo) y <b>unreliable</b> (no detecta ni corrige errores; lo hace TCP).' },
+      { q: '¿Para qué sirve el TTL en el datagrama?', a: 'Time To Live: se decrementa en cada salto; al llegar a 0 el paquete se descarta (evita loops infinitos).' },
+      { q: 'Rangos de primer octeto de las clases A, B y C', a: '<b>A</b>: 1–126 · <b>B</b>: 128–191 · <b>C</b>: 192–223. (127 = loopback; D: 224–239; E: 240+).' },
+      { q: '¿Cuántos hosts admite una red clase C?', a: '<b>254</b> hosts útiles (2⁸ − 2).' },
+      { q: 'Rangos de direcciones privadas', a: '<b>10.0.0.0/8</b>, <b>172.16.0.0 – 172.31.255.255</b> y <b>192.168.0.0/16</b>.' },
+      { q: '¿Qué es la dirección 127.0.0.1?', a: '<b>Loopback</b>: comunicación de procesos en la misma máquina; nunca se propaga a la red.' },
+      { q: '¿Qué representa una dirección con todos los bits de host en 0? ¿Y en 1?', a: 'Todos en 0 → la <b>red</b>. Todos en 1 → el <b>broadcast</b> de esa red.' },
+      { q: '¿Qué significan CIDR y VLSM?', a: '<b>CIDR</b>: los routers ya no asumen clases (/8, /16, /24). <b>VLSM</b>: las subredes pueden tener distinto tamaño.' },
+      { q: 'Diferencias clave entre IPv4 e IPv6', a: 'IPv6 usa <b>128 bits</b> (vs 32), notación hexadecimal con ":", agrega <b>anycast</b> y elimina broadcast, header simplificado. Loopback = ::1.' }
+    ],
+    '09': [
+      { q: '¿Qué es el subnetting y para qué sirve?', a: 'Dividir una red en subredes más pequeñas para usar mejor las direcciones, reducir dominios de broadcast y agregar jerarquía local.' },
+      { q: '¿Qué indica la máscara de subred?', a: 'Qué bits de la IP son red (bits en <b>1</b>) y cuáles son host (bits en <b>0</b>).' },
+      { q: '¿Cómo se obtiene la dirección de subred?', a: 'Con un <b>AND lógico</b> bit a bit entre la dirección IP y la máscara.' },
+      { q: 'Fórmula de número de subredes y de hosts', a: 'Subredes = 2^s (s = bits de subred). Hosts útiles = 2^h − 2 (h = bits de host).' },
+      { q: '¿Por qué se restan 2 al calcular hosts?', a: 'No se pueden usar el "todos 0" (la red) ni el "todos 1" (broadcast).' },
+      { q: 'Regla mental: ¿qué pasa al agregar un bit a la máscara?', a: 'El <b>doble de subredes</b> y la <b>mitad de hosts</b> (y viceversa).' },
+      { q: 'Con /27 (255.255.255.224) en una clase C: ¿cuántas subredes y hosts?', a: '3 bits de subred → 8 subredes; 5 bits de host → 30 hosts útiles.' },
+      { q: 'Truco del tamaño de bloque', a: '256 − (octeto de la máscara) = tamaño de bloque. Ej.: 256 − 224 = 32 → subredes saltan de a 32.' },
+      { q: '¿Cómo sé si dos IPs están en la misma subred?', a: 'Hago el AND de cada IP con la máscara y comparo las direcciones de red: si son iguales, misma subred.' },
+      { q: '¿Qué información usa el router para reenviar un datagrama?', a: 'La <b>dirección de destino</b> contra su <b>tabla de ruteo</b> (estática o dinámica).' }
+    ],
+    '10': [
+      { q: '¿Qué permite VLSM?', a: 'Usar <b>máscaras de longitud variable</b>: cada subred del tamaño justo para sus hosts. Extiende el prefijo hacia la derecha.' },
+      { q: 'Primer paso del algoritmo VLSM', a: '<b>Ordenar</b> las necesidades de mayor a menor cantidad de hosts, y asignar primero el bloque más grande.' },
+      { q: '¿Qué hace CIDR / supernetting?', a: 'Lo opuesto a VLSM: <b>reduce el prefijo</b> para resumir (agregar) varias rutas en una sola entrada de tabla.' },
+      { q: 'Diferencia entre classful y classless', a: 'Classful: prefijos fijos (clases), no se transmite la máscara. Classless: prefijos variables, se transmite la máscara y se usa <b>longest match</b>.' },
+      { q: '¿Qué hace ARP?', a: 'Traduce una <b>dirección IP a su MAC</b> (capa 3 → 2) mediante un broadcast "¿quién tiene esta IP?".' },
+      { q: '¿El paquete ARP viaja dentro de IP o de Ethernet?', a: 'Dentro de una <b>trama Ethernet</b>, no de un paquete IP.' },
+      { q: '¿Qué riesgo de seguridad tiene ARP?', a: 'El <b>ARP spoofing/poisoning</b>: un atacante responde falsamente para hacerse pasar por otra IP (Man-in-the-Middle).' },
+      { q: '¿Qué es ICMP y en qué campo de IP se identifica?', a: 'Protocolo de mensajes de control/error de la capa Internet; protocolo IP número <b>1</b>.' },
+      { q: '¿Qué mensaje ICMP usa el comando ping?', a: 'El mensaje <b>echo</b> (echo request / echo reply).' },
+      { q: '¿ICMP hace a IP confiable?', a: 'No. Solo <b>informa</b> errores y congestión; no los corrige.' }
+    ],
+    '11': [
+      { q: '¿Qué hace la capa de transporte?', a: 'Entrega datos extremo a extremo de forma que se puedan rearmar bien: segmenta, rastrea cada comunicación e identifica la aplicación (por puerto).' },
+      { q: '¿Qué es un socket?', a: 'El método de comunicación entre programas. <b>Socket = dirección IP + número de puerto</b>.' },
+      { q: 'Rangos de puertos', a: '<b>0–1023</b> well known (IANA), <b>1024–49151</b> registrados, <b>49152–65535</b> efímeros (cliente).' },
+      { q: 'Características de TCP', a: 'Orientado a conexión, bidireccional, <b>confiable</b>, de flujo de bytes, con ACK y control de flujo. Header de 20 bytes. Stateful.' },
+      { q: '¿Qué es PAR?', a: 'Positive Acknowledgment with Re-transmission: TCP reenvía los datos hasta recibir un ACK positivo de que llegaron bien.' },
+      { q: 'Pasos del three-way handshake', a: '1) Cliente → <b>SYN</b>; 2) Servidor → <b>SYN+ACK</b>; 3) Cliente → <b>ACK</b>. Conexión establecida.' },
+      { q: '¿Cómo se cierra una conexión TCP?', a: 'Con <b>4 segmentos</b>: FIN→ACK de un lado y FIN→ACK del otro (cierra cada sentido por separado), con TIME-WAIT final.' },
+      { q: '¿Cuánto mide el header TCP y por qué importa?', a: '<b>20 bytes</b> (parte fija) + hasta 40 opcionales. Más grande que UDP (8 bytes) por la sobrecarga de la confiabilidad.' },
+      { q: '¿Qué es el "tamaño de ventana" en TCP?', a: 'Campo de 16 bits que indica cuántos bytes puede aceptar el receptor; se ajusta para el control de flujo.' },
+      { q: '¿Qué significa que TCP sea "con estado" (stateful)?', a: 'Hace seguimiento del estado de la sesión (qué se envió y qué se confirmó), a diferencia de UDP.' }
+    ],
+    '12': [
+      { q: '¿Qué es UDP?', a: 'Protocolo de transporte liviano, <b>sin conexión</b> y de <b>máximo esfuerzo</b> (best effort). RFC 768.' },
+      { q: '¿Qué NO hace UDP?', a: 'No establece conexión, no garantiza entrega, no usa ACK, no retransmite, no ordena y no controla el flujo.' },
+      { q: '¿Cuánto mide el header UDP?', a: 'Solo <b>8 bytes</b>: puerto origen, puerto destino, longitud y checksum.' },
+      { q: '¿Por qué streaming y juegos usan UDP?', a: 'Toleran cierta pérdida pero NO la demora; los ACK y retransmisiones de TCP arruinarían el audio/video en vivo.' },
+      { q: '¿Qué significa que UDP sea "sin estado" (stateless)?', a: 'Ni cliente ni servidor hacen seguimiento de la sesión; está basado en transacciones.' },
+      { q: 'Nombrá protocolos que usan UDP', a: 'DNS (también TCP), DHCP, SNMP, RIP, TFTP, VoIP y juegos en línea.' },
+      { q: '¿Cómo se llama la PDU de UDP?', a: '<b>Datagrama</b>.' },
+      { q: 'Si una app necesita confiabilidad sobre UDP, ¿quién la provee?', a: 'La propia <b>aplicación</b> la implementa (ej. TFTP tiene sus propios ACK y control de errores).' },
+      { q: 'Diferencia clave de overhead entre TCP y UDP', a: 'TCP = 20 bytes de header y orientado a conexión; UDP = 8 bytes, sin conexión → más rápido.' },
+      { q: 'Regla mental para elegir TCP o UDP', a: 'Todo debe llegar exacto → <b>TCP</b>. Debe llegar rápido y se tolera pérdida → <b>UDP</b>.' }
+    ],
+    '13': [
+      { q: '¿Qué función cumple la capa de aplicación?', a: 'Es la capa 7: provee la <b>interfaz</b> entre las aplicaciones del usuario y la red. En TCP/IP agrupa aplicación, presentación y sesión de OSI.' },
+      { q: 'Puerto de HTTP, HTTPS y DNS', a: 'HTTP <b>80</b>, HTTPS <b>443</b>, DNS <b>53</b> (TCP/UDP).' },
+      { q: '¿Qué hace DHCP y sobre qué protocolo corre?', a: 'Asigna automáticamente IP, máscara, gateway y DNS. Cliente/servidor sobre <b>UDP</b>.' },
+      { q: '¿Cuál es el proceso DORA de DHCP?', a: '<b>D</b>iscover → <b>O</b>ffer → <b>R</b>equest → <b>A</b>ck.' },
+      { q: '¿Qué hace DNS?', a: 'Traduce nombres de dominio a IP y viceversa ("guía telefónica de Internet"); base de datos distribuida y jerárquica.' },
+      { q: 'Diferencia entre consulta DNS recursiva e iterativa', a: '<b>Recursiva</b>: el servidor debe dar la respuesta final (cliente→servidor). <b>Iterativa</b>: da la mejor que tiene (servidor→servidor).' },
+      { q: '¿Por qué HTTP usa cookies?', a: 'Porque HTTP es <b>sin estado</b>; las cookies guardan información en el navegador para mantener sesión/preferencias.' },
+      { q: 'Diferencia entre POP3 e IMAP', a: '<b>POP3</b> descarga (suele borrar del servidor). <b>IMAP</b> organiza en carpetas en el servidor y conserva el estado.' },
+      { q: '¿Qué protocolo se usa para enviar correo y en qué puerto?', a: '<b>SMTP</b>, puerto <b>25</b> (MUA→MTA y MTA→MTA).' },
+      { q: '¿Qué dos conexiones/puertos usa FTP?', a: '<b>21</b> para control y <b>20</b> para datos, ambas sobre TCP. (TFTP usa UDP/69).' }
+    ]
+  },
+
+  // ---------------- Quizzes por capítulo ----------------
+  quizzes: {
+    '01': [
+      { q: 'El atributo típico de las telecomunicaciones es que la comunicación es:', options: ['Unidireccional', 'Bidireccional', 'Siempre analógica', 'Siempre cableada'], answer: 1, explain: 'La telecomunicación es comunicación a distancia, normalmente con el atributo de ser bidireccional.' },
+      { q: '¿Cuál de estas etapas agrega redundancia para detectar/corregir errores?', options: ['Codificación de fuente', 'Codificación de canal', 'Cifrado', 'Formato A/D'], answer: 1, explain: 'La codificación de canal agrega redundancia; la de fuente la quita (comprime); el cifrado da confidencialidad.' },
+      { q: '¿Cuál NO es una característica del protocolo IP?', options: ['No orientado a conexión', 'Entrega garantizada y ordenada', 'Direcciones de 32 bits', 'Entrega de mejor esfuerzo'], answer: 1, explain: 'IP es de "mejor esfuerzo": no garantiza entrega ni orden. La confiabilidad la aporta TCP en la capa superior.' },
+      { q: 'Las normas de Internet se publican como:', options: ['ISO 9001', 'RFC', 'IEEE 802', 'DNS'], answer: 1, explain: 'La IETF publica sus estándares como RFC (Requests for Comments).' },
+      { q: 'El estándar IEEE para Wi-Fi es:', options: ['802.3', '802.11', '802.15', '802.5'], answer: 1, explain: '802.11 es Wi-Fi; 802.3 es Ethernet; 802.15 es Wireless PAN (Bluetooth).' }
+    ],
+    '02': [
+      { q: 'Una red restringida a un edificio o campus, de una sola organización y altas velocidades es una:', options: ['WAN', 'MAN', 'LAN', 'PAN'], answer: 2, explain: 'La LAN (Local Area Network) es de corto alcance, gestionada por su dueño y de alta velocidad.' },
+      { q: 'El estándar de las PAN inalámbricas (WPAN) es:', options: ['IEEE 802.3', 'IEEE 802.11', 'IEEE 802.15', 'IEEE 802.1Q'], answer: 2, explain: 'Las WPAN se apoyan en IEEE 802.15 (ej. Bluetooth 802.15.1).' },
+      { q: 'Un walkie-talkie es un ejemplo de transmisión:', options: ['Simplex', 'Half duplex', 'Full duplex', 'Full full duplex'], answer: 1, explain: 'Half duplex: ambos pueden transmitir pero solo uno a la vez.' },
+      { q: 'Para reducir el NEXT conviene:', options: ['Alargar el cable', 'Usar UTP en vez de STP', 'Asegurar buen trenzado y conectores, o pasar a STP', 'Aumentar la atenuación'], answer: 2, explain: 'El NEXT se reduce con buen trenzado, conectores correctos y, si hace falta, cambiando UTP por STP (blindado).' },
+      { q: '¿Qué subcapa de enlace se ocupa del control de flujo y de errores y es independiente de la tecnología?', options: ['MAC', 'LLC', 'Física', 'Red'], answer: 1, explain: 'La LLC (norma 802.2) hace entramado, control de flujo y de errores, independiente de la tecnología; la MAC depende del medio.' }
+    ],
+    '03': [
+      { q: 'El formato del mensaje y los procedimientos de transmisión que define un protocolo se llama:', options: ['Semántica', 'Sintaxis', 'Timing', 'Encapsulado'], answer: 1, explain: 'Sintaxis = formato. Semántica = control/errores. Timing = velocidad y secuencia.' },
+      { q: '¿En qué capa OSI trabaja el protocolo IP?', options: ['Capa 2 (Enlace)', 'Capa 3 (Red)', 'Capa 4 (Transporte)', 'Capa 7 (Aplicación)'], answer: 1, explain: 'IP es de capa de Red (3): entrega paquetes y enruta.' },
+      { q: 'La unidad de datos (PDU) de la capa de transporte es el:', options: ['Bit', 'Frame', 'Paquete', 'Segmento'], answer: 3, explain: 'Transporte → segmento; Red → paquete; Enlace → trama; Física → bits.' },
+      { q: 'En el modelo TCP/IP, las capas de Sesión, Presentación y Aplicación de OSI se agrupan en:', options: ['Acceso a red', 'Internet', 'Transporte', 'Aplicación'], answer: 3, explain: 'TCP/IP fusiona esas tres capas superiores en una sola: Aplicación.' },
+      { q: 'Las direcciones MAC se agregan durante el encapsulamiento en la capa:', options: ['Física', 'Enlace de datos', 'Red', 'Transporte'], answer: 1, explain: 'La capa 2 (Enlace) arma la trama agregando MAC origen y destino.' }
+    ],
+    '04': [
+      { q: 'El ejemplo clásico de conmutación de circuitos es:', options: ['Internet', 'La red telefónica (PSTN)', 'El correo electrónico', 'La web'], answer: 1, explain: 'La PSTN reserva un circuito dedicado durante toda la llamada.' },
+      { q: '¿Cuál es una desventaja de la conmutación de paquetes?', options: ['Camino dedicado', 'Retardo variable (jitter)', 'Velocidad constante', 'Reserva total de recursos'], answer: 1, explain: 'El retardo varía por procesamiento y encolado, generando jitter; mala para tiempo real.' },
+      { q: 'En la técnica de datagramas, los paquetes:', options: ['Siguen siempre la misma ruta', 'Pueden llegar desordenados', 'Requieren establecer la llamada', 'Llevan identificador de circuito virtual'], answer: 1, explain: 'Cada datagrama se trata independiente, puede tomar distinta ruta y llegar fuera de orden.' },
+      { q: '¿Qué protocolo cita la cátedra como ejemplo de circuito virtual?', options: ['UDP', 'IP', 'TCP', 'ICMP'], answer: 2, explain: 'TCP establece una conexión lógica ordenada y confiable = circuito virtual.' },
+      { q: 'La estrategia de encaminamiento que adapta sus decisiones al estado de la red es:', options: ['Estática', 'Inundación', 'Aleatoria', 'Adaptable'], answer: 3, explain: 'La adaptable reacciona a fallos y congestión; es la más utilizada.' }
+    ],
+    '05': [
+      { q: 'El objetivo principal del control de flujo es:', options: ['Cifrar los datos', 'Que el emisor no sature al receptor', 'Enrutar los paquetes', 'Asignar direcciones IP'], answer: 1, explain: 'Evita el desbordamiento del buffer del receptor.' },
+      { q: 'Con un campo de secuencia de k=4 bits, el tamaño máximo de ventana deslizante es:', options: ['8', '15', '16', '4'], answer: 1, explain: '2^4 − 1 = 16 − 1 = 15.' },
+      { q: 'La distancia de Hamming entre 1011 y 1110 es:', options: ['1', '2', '3', '4'], answer: 1, explain: 'XOR = 0101 → difieren en 2 bits.' },
+      { q: 'Para corregir 2 errores se necesita una distancia de Hamming mínima de:', options: ['3', '4', '5', '2'], answer: 2, explain: '2d+1 = 2·2+1 = 5.' },
+      { q: 'En ARQ vuelta-atrás-N, ante una trama errónea el emisor:', options: ['Reenvía solo la errónea', 'Reenvía la errónea y todas las posteriores', 'Ignora el error', 'Cierra la conexión'], answer: 1, explain: 'Go-Back-N retransmite la trama con error y todas las que le siguen; el rechazo selectivo solo la errónea.' }
+    ],
+    '06': [
+      { q: 'La utilización máxima del canal en ALOHA ranurado es aproximadamente:', options: ['18%', '37%', '50%', '100%'], answer: 1, explain: 'ALOHA ranurado ≈ 37%, el doble del ALOHA puro (18%).' },
+      { q: 'Ethernet cableada (802.3) usa como método de acceso al medio:', options: ['CSMA/CA', 'CSMA/CD', 'Token passing', 'ALOHA'], answer: 1, explain: 'CSMA/CD: detecta colisiones. Wi-Fi usa CSMA/CA.' },
+      { q: 'El MTU (datos) de una trama Ethernet es:', options: ['46 bytes', '1500 bytes', '1518 bytes', '64 bytes'], answer: 1, explain: 'El campo de datos llega a 1500 bytes; la trama completa a 1518.' },
+      { q: 'Si el campo posterior al origen vale 0x0800 (2048), la trama es:', options: ['IEEE 802.3 (es longitud)', 'Ethernet V2 (es tipo/EtherType)', 'Inválida', 'Una trama de control'], answer: 1, explain: 'Valor &gt;1500 → es EtherType → Ethernet V2.' },
+      { q: 'Las redes Wi-Fi usan CSMA/CA en lugar de CSMA/CD porque:', options: ['Es más barato', 'En radio no se pueden detectar bien las colisiones', 'Wi-Fi no tiene colisiones', 'CSMA/CD está prohibido'], answer: 1, explain: 'La estación no puede escuchar mientras transmite, así que evita colisiones en vez de detectarlas.' }
+    ],
+    '07': [
+      { q: 'Un hub es un dispositivo de:', options: ['Capa 1 (física)', 'Capa 2 (enlace)', 'Capa 3 (red)', 'Capa 4 (transporte)'], answer: 0, explain: 'El hub es un repetidor multipuerto "tonto" de capa 1.' },
+      { q: '¿Qué dispositivo divide los dominios de colisión pero NO los de broadcast?', options: ['Hub', 'Switch', 'Router', 'Repetidor'], answer: 1, explain: 'El switch divide colisión; el broadcast solo lo divide un router (o VLANs).' },
+      { q: 'Una dirección MAC se compone de:', options: ['Red + host', 'OUI (fabricante) + UAA (serie)', 'IP + puerto', 'Preámbulo + FCS'], answer: 1, explain: 'MAC de 48 bits = OUI 24 bits + UAA 24 bits.' },
+      { q: 'El protocolo Spanning Tree (802.1D) sirve para:', options: ['Cifrar tramas', 'Evitar loops en la red de bridges', 'Asignar IPs', 'Detectar colisiones'], answer: 1, explain: 'Mantiene conectividad sin circuitos cerrados, bloqueando enlaces redundantes.' },
+      { q: 'El tipo de switching que revisa toda la trama antes de reenviarla es:', options: ['Cut-through', 'Store-and-forward', 'Fragment-free', 'Broadcast'], answer: 1, explain: 'Store-and-forward verifica el frame completo (más seguro, algo más lento).' }
+    ],
+    '08': [
+      { q: 'La dirección 172.20.10.5 es de clase:', options: ['A', 'B', 'C', 'D'], answer: 1, explain: 'Primer octeto 172 está entre 128–191 → clase B. (Además es privada: 172.16–172.31).' },
+      { q: '¿Cuál de estas direcciones es privada?', options: ['8.8.8.8', '172.32.0.1', '192.168.0.10', '11.0.0.1'], answer: 2, explain: '192.168.0.0/16 es privada. 172.32 queda fuera del rango privado (que va hasta 172.31).' },
+      { q: 'La dirección de loopback es:', options: ['0.0.0.0', '255.255.255.255', '127.0.0.1', '192.168.1.1'], answer: 2, explain: '127.0.0.1: procesos en la misma máquina, no se propaga a la red.' },
+      { q: '¿Cuántos hosts útiles tiene una red clase C?', options: ['256', '254', '126', '65.534'], answer: 1, explain: '2⁸ − 2 = 254 (se restan red y broadcast).' },
+      { q: 'IPv6 utiliza direcciones de:', options: ['32 bits', '64 bits', '128 bits', '48 bits'], answer: 2, explain: '128 bits, frente a los 32 de IPv4.' }
+    ],
+    '09': [
+      { q: 'Para obtener la dirección de subred se hace, entre la IP y la máscara, un:', options: ['OR lógico', 'AND lógico', 'XOR', 'NOT'], answer: 1, explain: 'AND bit a bit: donde la máscara tiene 1 se conserva el bit de la IP.' },
+      { q: 'Con una máscara /27 sobre una clase C, ¿cuántos hosts útiles por subred?', options: ['32', '30', '14', '62'], answer: 1, explain: '5 bits de host → 2⁵ − 2 = 30.' },
+      { q: 'Al agregar un bit a la máscara de subred:', options: ['Se duplican los hosts', 'Se duplican las subredes y se reducen a la mitad los hosts', 'No cambia nada', 'Se reduce el número de subredes'], answer: 1, explain: 'Más bits de red = más subredes, menos hosts.' },
+      { q: 'El tamaño de bloque para la máscara 255.255.255.192 es:', options: ['32', '64', '128', '16'], answer: 1, explain: '256 − 192 = 64 direcciones por subred (es /26).' },
+      { q: '¿Por qué se restan 2 hosts en cada subred?', options: ['Por el router y el switch', 'Por la dirección de red y la de broadcast', 'Por seguridad', 'Por el gateway y el DNS'], answer: 1, explain: 'El "todos 0" es la red y el "todos 1" es el broadcast; no son asignables.' }
+    ],
+    '10': [
+      { q: 'VLSM permite:', options: ['Una sola máscara para toda la red', 'Subredes de distinto tamaño (máscaras variables)', 'Eliminar el ruteo', 'Direcciones de 128 bits'], answer: 1, explain: 'Cada subred del tamaño justo; mejor uso del espacio.' },
+      { q: 'El primer paso para resolver un ejercicio de VLSM es:', options: ['Asignar la subred más chica primero', 'Ordenar las necesidades de mayor a menor', 'Elegir la clase', 'Calcular el broadcast'], answer: 1, explain: 'Se asigna primero el bloque más grande para no fragmentar el espacio.' },
+      { q: 'CIDR (supernetting) sirve para:', options: ['Dividir en más subredes', 'Resumir varias rutas en una sola entrada', 'Cifrar el tráfico', 'Asignar MACs'], answer: 1, explain: 'Reduce el prefijo y agrega rutas, achicando las tablas de ruteo.' },
+      { q: 'ARP se utiliza para:', options: ['Traducir nombres a IP', 'Traducir IP a MAC', 'Enrutar entre redes', 'Detectar errores'], answer: 1, explain: 'ARP resuelve la dirección física (MAC) a partir de la IP.' },
+      { q: 'El comando ping se basa en el mensaje ICMP:', options: ['Redirect', 'Echo', 'Source quench', 'Destination unreachable'], answer: 1, explain: 'Ping usa echo request/reply de ICMP.' }
+    ],
+    '11': [
+      { q: 'Un socket se compone de:', options: ['IP + máscara', 'IP + número de puerto', 'MAC + puerto', 'Puerto + protocolo'], answer: 1, explain: 'Socket = dirección IP + número de puerto.' },
+      { q: 'El three-way handshake de TCP es:', options: ['SYN, ACK, FIN', 'SYN, SYN+ACK, ACK', 'ACK, SYN, ACK', 'FIN, ACK, FIN'], answer: 1, explain: 'Cliente SYN → servidor SYN+ACK → cliente ACK.' },
+      { q: 'El header TCP tiene una parte fija de:', options: ['8 bytes', '20 bytes', '40 bytes', '16 bytes'], answer: 1, explain: '20 bytes fijos (vs 8 de UDP), más hasta 40 opcionales.' },
+      { q: 'TCP garantiza la entrega gracias a:', options: ['No usar ACK', 'ACK y retransmisión (PAR)', 'Ser sin estado', 'No tener números de secuencia'], answer: 1, explain: 'Positive Acknowledgment with Re-transmission.' },
+      { q: 'El "tamaño de ventana" en TCP sirve para:', options: ['Cifrar datos', 'Controlar el flujo (cuántos bytes acepta el receptor)', 'Asignar puertos', 'Enrutar paquetes'], answer: 1, explain: 'Es el control de flujo por ventana, acordado en el handshake.' }
+    ],
+    '12': [
+      { q: 'UDP es un protocolo:', options: ['Orientado a conexión y confiable', 'Sin conexión y de máximo esfuerzo', 'Con control de flujo', 'Con números de secuencia'], answer: 1, explain: 'UDP es connectionless y best-effort, sin garantías.' },
+      { q: 'El header UDP mide:', options: ['8 bytes', '20 bytes', '16 bytes', '40 bytes'], answer: 0, explain: 'Solo 8 bytes: puertos origen/destino, longitud y checksum.' },
+      { q: '¿Cuál de estas aplicaciones es típica de UDP?', options: ['Transferencia de archivos FTP', 'Correo electrónico', 'VoIP / streaming de video', 'Navegación HTTP'], answer: 2, explain: 'Toleran pérdida pero no demora → UDP.' },
+      { q: 'A diferencia de TCP, UDP NO ofrece:', options: ['Puertos', 'Encapsulamiento', 'Control de flujo y retransmisión', 'Checksum'], answer: 2, explain: 'No tiene control de flujo, ACK ni retransmisión.' },
+      { q: '¿Cuál usa UDP?', options: ['HTTP', 'DNS / DHCP', 'FTP', 'SMTP'], answer: 1, explain: 'DNS (también TCP) y DHCP corren sobre UDP.' }
+    ],
+    '13': [
+      { q: 'El puerto estándar de HTTP es:', options: ['25', '53', '80', '443'], answer: 2, explain: 'HTTP = 80, HTTPS = 443, SMTP = 25, DNS = 53.' },
+      { q: 'DHCP sirve para:', options: ['Traducir nombres a IP', 'Asignar configuración de red (IP, máscara, gateway, DNS)', 'Transferir archivos', 'Enviar correo'], answer: 1, explain: 'Asigna automáticamente los parámetros de red a los clientes.' },
+      { q: 'DNS traduce:', options: ['IP a MAC', 'Nombres de dominio a IP y viceversa', 'Puertos a procesos', 'ASCII a binario'], answer: 1, explain: 'Es la "guía telefónica" de Internet.' },
+      { q: 'HTTP maneja la persistencia mediante:', options: ['Números de secuencia', 'Cookies', 'ACKs', 'Sockets RAW'], answer: 1, explain: 'HTTP es sin estado; las cookies guardan info en el navegador.' },
+      { q: 'FTP usa los puertos:', options: ['80 y 443', '20 (datos) y 21 (control)', '25 y 110', '53 y 69'], answer: 1, explain: 'Control en el 21, datos en el 20, sobre TCP.' }
+    ]
+  },
+
+  // ---------------- Banco Verdadero / Falso (transversal) ----------------
+  vf: [
+    { ch: '01', s: 'El protocolo IP garantiza la entrega ordenada y sin pérdidas de los paquetes.', v: false, explain: 'IP es de "mejor esfuerzo"; la confiabilidad la da TCP.' },
+    { ch: '01', s: 'La IETF publica sus estándares en documentos llamados RFC.', v: true, explain: 'Requests for Comments.' },
+    { ch: '02', s: 'En una topología en estrella todos los nodos se conectan a un dispositivo central.', v: true, explain: 'El concentrador/switch central.' },
+    { ch: '02', s: 'La fibra monomodo admite mayor distancia que la multimodo.', v: true, explain: 'Monomodo ~40 km; multimodo ~2 km.' },
+    { ch: '02', s: 'Una atenuación grande es deseable en un enlace.', v: false, explain: 'Se busca atenuación pequeña (menos pérdida) y NEXT grande (menos ruido).' },
+    { ch: '03', s: 'En OSI, la capa de Transporte está por encima de la capa de Red.', v: true, explain: 'Orden: ...Red (3) → Transporte (4)...' },
+    { ch: '03', s: 'El encapsulamiento agrega una cabecera en cada capa al descender la pila.', v: true, explain: 'Cada capa añade su header; al recibir se retiran.' },
+    { ch: '03', s: 'TCP y UDP trabajan en la capa de Red.', v: false, explain: 'Trabajan en la capa de Transporte (4).' },
+    { ch: '04', s: 'La conmutación de circuitos es más eficiente que la de paquetes para transmitir datos.', v: false, explain: 'Para datos es ineficiente: la línea queda ociosa. Mejor paquetes.' },
+    { ch: '04', s: 'En circuitos virtuales los paquetes llegan en el mismo orden en que se enviaron.', v: true, explain: 'Siguen la misma ruta preestablecida.' },
+    { ch: '04', s: 'Los datagramas requieren una fase de establecimiento de llamada.', v: false, explain: 'No la requieren; cada paquete viaja independiente.' },
+    { ch: '05', s: 'En parada y espera puede haber varias tramas en vuelo simultáneamente.', v: false, explain: 'Solo una a la vez; por eso es ineficiente.' },
+    { ch: '05', s: 'El CRC es un método de cifrado de datos.', v: false, explain: 'Es control de integridad, no cifrado.' },
+    { ch: '05', s: 'El bit de paridad no detecta un número par de errores.', v: true, explain: 'Los errores pares se compensan.' },
+    { ch: '05', s: 'Para detectar d errores se necesita una distancia de Hamming de d+1.', v: true, explain: 'Y 2d+1 para corregirlos.' },
+    { ch: '06', s: 'Wi-Fi (802.11) usa CSMA/CD igual que Ethernet.', v: false, explain: 'Wi-Fi usa CSMA/CA (collision avoidance).' },
+    { ch: '06', s: 'Un hub o repetidor extiende el dominio de colisión; un switch lo divide.', v: true, explain: 'Cada puerto de switch es su propio dominio de colisión.' },
+    { ch: '06', s: 'Ethernet garantiza la entrega confiable de las tramas.', v: false, explain: 'Ethernet es best-effort; la confiabilidad la da TCP.' },
+    { ch: '06', s: 'ALOHA ranurado duplica aproximadamente la utilización del ALOHA puro.', v: true, explain: '37% vs 18%.' },
+    { ch: '07', s: 'Un switch divide los dominios de broadcast.', v: false, explain: 'Divide los de colisión; el broadcast lo divide el router.' },
+    { ch: '07', s: 'El bridge aprende las direcciones mirando la dirección de origen de las tramas.', v: true, explain: 'Asocia esa MAC al puerto entrante.' },
+    { ch: '07', s: 'El hub trabaja en la capa de enlace de datos.', v: false, explain: 'Trabaja en la capa 1 (física).' },
+    { ch: '07', s: 'Un switch ofrece ancho de banda dedicado por puerto.', v: true, explain: 'A diferencia del hub que lo comparte.' },
+    { ch: '08', s: 'La dirección 192.168.1.1 es pública y rutea en Internet.', v: false, explain: '192.168.0.0/16 es privada.' },
+    { ch: '08', s: 'IP es un protocolo orientado a la conexión y confiable.', v: false, explain: 'IP es connectionless y unreliable.' },
+    { ch: '08', s: 'En IPv6 ya no existe la dirección de broadcast.', v: true, explain: 'Se reemplaza por multicast y anycast.' },
+    { ch: '08', s: 'Una dirección de clase C admite 254 hosts útiles.', v: true, explain: '2⁸ − 2 = 254.' },
+    { ch: '09', s: 'La dirección de subred se obtiene con un OR entre la IP y la máscara.', v: false, explain: 'Se obtiene con un AND lógico.' },
+    { ch: '09', s: 'Cada bit adicional en la máscara duplica la cantidad de subredes.', v: true, explain: 'Y reduce a la mitad los hosts.' },
+    { ch: '10', s: 'VLSM obliga a que todas las subredes tengan el mismo tamaño.', v: false, explain: 'Justamente permite tamaños variables.' },
+    { ch: '10', s: 'El paquete ARP viaja dentro de un paquete IP.', v: false, explain: 'Viaja dentro de una trama Ethernet.' },
+    { ch: '10', s: 'El comando ping utiliza mensajes ICMP de tipo echo.', v: true, explain: 'Echo request / echo reply.' },
+    { ch: '10', s: 'CIDR reduce el tamaño de las tablas de ruteo al resumir rutas.', v: true, explain: 'Sumarización / agregación.' },
+    { ch: '11', s: 'TCP establece la conexión con un three-way handshake (SYN, SYN+ACK, ACK).', v: true, explain: 'Tres segmentos antes de enviar datos.' },
+    { ch: '11', s: 'El header de TCP es más chico que el de UDP.', v: false, explain: 'TCP usa 20 bytes; UDP solo 8.' },
+    { ch: '11', s: 'Un socket es la combinación de IP más número de puerto.', v: true, explain: 'Identifica el extremo de la comunicación.' },
+    { ch: '12', s: 'UDP retransmite automáticamente los datos perdidos.', v: false, explain: 'UDP no retransmite; es best-effort.' },
+    { ch: '12', s: 'VoIP y streaming suelen usar UDP por su baja sobrecarga.', v: true, explain: 'Toleran pérdida pero no demora.' },
+    { ch: '12', s: 'UDP es un protocolo con estado (stateful).', v: false, explain: 'Es sin estado (stateless).' },
+    { ch: '13', s: 'DNS traduce nombres de dominio a direcciones IP.', v: true, explain: 'Y viceversa (consultas inversas).' },
+    { ch: '13', s: 'HTTP es un protocolo con estado que recuerda cada conexión.', v: false, explain: 'HTTP es sin estado; usa cookies para persistencia.' },
+    { ch: '13', s: 'SMTP se usa para enviar correo y POP/IMAP para recibirlo.', v: true, explain: 'SMTP salida; POP/IMAP entrada.' }
+  ]
+};

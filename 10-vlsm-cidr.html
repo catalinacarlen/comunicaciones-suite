@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap. 10 · VLSM, CIDR, ARP e ICMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-chapter="10">
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="dot"></span>redes<b>&amp;</b>comunicaciones<span class="full">_</span></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="practica.html">Práctica</a>
+      <a href="parciales.html">Parciales</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container narrow">
+
+  <section class="hero">
+    <p class="eyebrow">Capítulo 10 · Segundo parcial · Enrutamiento II</p>
+    <h1>VLSM, CIDR, ARP e ICMP</h1>
+    <p class="lead">Subredes de tamaño variable para no desperdiciar direcciones, sumarización de rutas con CIDR, y los dos protocolos auxiliares clave: ARP (IP→MAC) e ICMP (mensajes de control, el ping).</p>
+  </section>
+
+  <nav class="toc">
+    <strong>En este capítulo</strong>
+    <ul>
+      <li><a href="#ruteo">Conceptos de ruteo</a></li>
+      <li><a href="#classless">Classful vs classless</a></li>
+      <li><a href="#vlsm">VLSM</a></li>
+      <li><a href="#calc-vlsm">Planificador VLSM</a></li>
+      <li><a href="#cidr">CIDR y sumarización</a></li>
+      <li><a href="#arp">ARP</a></li>
+      <li><a href="#icmp">ICMP</a></li>
+      <li><a href="#flashcards">Flashcards</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </nav>
+
+  <h2 class="section" id="ruteo">Conceptos básicos de ruteo</h2>
+  <p>El ruteo es función del <strong>nivel IP</strong>. Para cada datagrama se decide, según su <strong>dirección de destino</strong>, hacia qué equipo enviarlo, usando <strong>tablas de ruteo</strong> (estáticas o dinámicas). Un equipo que solo es host no reenvía datagramas.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Campo de la tabla</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>Red de destino</td><td>Red a la que va el datagrama.</td></tr>
+        <tr><td>d/i</td><td>Si se entrega <strong>directo</strong> al destino o <strong>indirecto</strong> a un router intermedio.</td></tr>
+        <tr><td>Dir. router</td><td>Router por el cual se alcanza la red destino (próximo salto).</td></tr>
+        <tr><td>Interface</td><td>Salida física por la que se envía (ej. eth0).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Envío directo vs indirecto</span>
+    <p class="mb0"><strong>Directo:</strong> el destino está en la propia red física (mismo segmento). <strong>Indirecto:</strong> el destino está fuera → hace falta un router. El algoritmo busca: red conectada → ruta específica → ruta a la red → ruta por defecto → error.</p>
+  </div>
+
+  <h2 class="section" id="classless">Classful vs classless</h2>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Classful</th><th>Classless</th></tr></thead>
+      <tbody>
+        <tr><td>Los routers aceptan longitudes de prefijo fijas (clases A/B/C).</td><td>Aceptan <strong>longitudes de prefijo variables</strong>.</td></tr>
+        <tr><td>Los protocolos de ruteo no transmiten la máscara.</td><td>Transmiten la <strong>máscara</strong> junto con cada dirección.</td></tr>
+        <tr><td>Se busca coincidencia por clase.</td><td>Se usa el criterio de <strong>ruta más específica (longest match)</strong>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="section" id="vlsm">VLSM — Variable Length Subnet Masking</h2>
+  <p>VLSM (1987) permite dividir un espacio de direcciones con <strong>máscaras de longitud variable</strong>, diseñando cada subred del tamaño justo para los usuarios que necesita. Extiende el prefijo <strong>hacia la derecha</strong>. Soporta subredes no contiguas.</p>
+  <div class="box catedra">
+    <span class="tag">Algoritmo VLSM (paso a paso)</span>
+    <ol>
+      <li><strong>Ordená</strong> las necesidades de mayor a menor cantidad de hosts.</li>
+      <li>Para el bloque más grande, calculá los bits de host: <span class="mono">2ʰ − 2 ≥ hosts</span> requeridos.</li>
+      <li>Asigná esa subred desde el inicio del espacio libre.</li>
+      <li>Tomá el <strong>siguiente bloque libre</strong> y repetí con el próximo tamaño (tomando más bits).</li>
+      <li>Seguí hasta cubrir todas las necesidades sin solaparte.</li>
+    </ol>
+  </div>
+  <div class="box">
+    <span class="tag">Ejemplo de cátedra (red 190.52.1.0)</span>
+    <p class="mb0">Necesidades: 2 oficinas de 60 hosts + servidores/branches de 10. Solución: los de 60 hosts usan <span class="mono">/26</span> (62 hosts) → <span class="mono">.64/26</span> y <span class="mono">.128/26</span>; los de 10 hosts usan <span class="mono">/28</span> (14 hosts) tomados de la subred <span class="mono">.0/26</span> libre → <span class="mono">.0/28, .16/28, .32/28, .48/28</span>.</p>
+  </div>
+
+  <div class="calc" id="calc-vlsm">
+    <h4>🧮 Planificador VLSM</h4>
+    <p class="muted" style="font-size:0.88rem;margin:0">Red base + prefijo, y las necesidades de hosts separadas por coma. Te arma el plan de subredes.</p>
+    <div class="calc-row">
+      <div><label for="vlsmnet">Red base</label><input type="text" id="vlsmnet" value="192.168.1.0" placeholder="ej. 190.52.1.0"></div>
+      <div><label for="vlsmcidr">Prefijo /</label><input type="number" id="vlsmcidr" min="1" max="30" value="24"></div>
+    </div>
+    <label for="vlsmreqs">Hosts requeridos por subred (coma)</label>
+    <input type="text" id="vlsmreqs" value="60, 25, 25, 10" placeholder="ej. 60, 50, 25, 25" style="max-width:100%">
+    <div style="margin-top:12px"><button class="btn btn-primary" onclick="calcVLSM()">Planificar</button></div>
+    <div class="calc-out" id="out-vlsm"><span class="cmt"># el plan aparecerá acá</span></div>
+  </div>
+
+  <h2 class="section" id="cidr">CIDR y sumarización (supernetting)</h2>
+  <p><strong>CIDR</strong> (Classless Inter-Domain Routing, RFC 1519) surgió por el agotamiento de las clases B y el crecimiento de las tablas de ruteo. Hace lo opuesto a VLSM: <strong>reduce el prefijo hacia la izquierda</strong> para <strong>resumir (agregar)</strong> varias redes en una sola entrada de la tabla de ruteo.</p>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart LR
+  V["VLSM<br/>extiende prefijo →<br/>más subredes chicas"]:::a
+  C["CIDR / Supernetting<br/>← reduce prefijo<br/>resume rutas"]:::b
+  classDef a fill:#EAEFFE,stroke:#2D5BE3;
+  classDef b fill:#F0ECFF,stroke:#6C47FF;
+    </pre>
+    <div class="cap">VLSM divide; CIDR agrupa</div>
+  </div>
+  <div class="box tip">
+    <span class="tag">Beneficio de CIDR <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">Un router puede anunciar <strong>una sola ruta</strong> en vez de muchas: ej. <span class="mono">200.2.0.0/22</span> resume <span class="mono">200.2.0.0/24</span>, <span class="mono">200.2.1.0/24</span>, <span class="mono">200.2.2.0/24</span> y <span class="mono">200.2.3.0/24</span>. Esto reduce el tamaño de las tablas y el tráfico de ruteo. Lo soportan BGP-4, OSPF, etc.</p>
+  </div>
+
+  <h2 class="section" id="arp">ARP — Address Resolution Protocol</h2>
+  <p>ARP traduce una <strong>dirección IP a su dirección MAC</strong> (capa 3 → capa 2). Es imprescindible: para entregar un paquete dentro de una LAN se necesita la MAC del destino, no solo su IP.</p>
+  <div class="box catedra">
+    <span class="tag">Mecanismo</span>
+    <ol>
+      <li>A quiere enviar a B; busca la IP de B en su <strong>tabla ARP</strong>.</li>
+      <li>Si no la tiene, hace un <strong>broadcast</strong>: "¿Quién tiene 192.168.0.1?" (destino MAC <span class="mono">FF:FF:FF:FF:FF:FF</span>).</li>
+      <li>Todos reciben la trama, pero <strong>solo B responde</strong> con su MAC.</li>
+      <li>B aprovecha y guarda la IP+MAC de A; A guarda la de B. Las entradas tienen <strong>tiempo de vida limitado</strong>.</li>
+    </ol>
+  </div>
+  <div class="box warn">
+    <span class="tag">Pregunta de cátedra (¡y de ciberseguridad!) <span class="enriched-badge">+ Ampliado</span></span>
+    <p class="mb0">El paquete ARP viaja <strong>dentro de una trama Ethernet</strong>, <em>no</em> dentro de un paquete IP (ARP es un protocolo de capa de enlace/red auxiliar). En seguridad, este mecanismo de broadcast es el que habilita el <strong>ARP spoofing/poisoning</strong>: un atacante responde falsamente para hacerse pasar por otra IP (ataque Man-in-the-Middle).</p>
+  </div>
+
+  <h2 class="section" id="icmp">ICMP — Internet Control Message Protocol</h2>
+  <p>ICMP (RFC 792) está en la <strong>capa Internet</strong> y usa el datagrama IP (campo protocolo = <strong>1</strong>) para enviar mensajes de control y error. Lo genera quien detecta el problema (host o router) e informa al origen.</p>
+  <div class="table-wrap">
+    <table class="data">
+      <thead><tr><th>Función de ICMP</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Control de flujo</td><td>"Esperá un momento" (source quench).</td></tr>
+        <tr><td>Destinos inalcanzables</td><td>Destination Unreachable (tipo 3).</td></tr>
+        <tr><td>Redirección de rutas</td><td>Dentro de la misma red.</td></tr>
+        <tr><td>Chequeo de nodos remotos</td><td>El comando <span class="mono">ping</span> usa el mensaje <strong>echo</strong>.</td></tr>
+        <tr><td>Reportar timeouts</td><td>TTL expirado (lo usa <span class="mono">traceroute</span>).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="box">
+    <span class="tag">Importante</span>
+    <p class="mb0">ICMP <strong>informa</strong> errores pero <strong>no hace a IP confiable</strong>. No se generan ICMP sobre: errores producidos por ICMP, datagramas multicast/broadcast, ni fragmentos (solo el fragmento 0). El control de grupos multicast lo hace <strong>IGMP</strong>.</p>
+  </div>
+
+  <!-- Flashcards -->
+  <h2 class="section" id="flashcards">Flashcards</h2>
+  <p class="lead">Clic en la tarjeta para girarla.</p>
+  <div class="flashdeck" id="flashcards"></div>
+
+  <!-- Quiz -->
+  <h2 class="section" id="quiz">Quiz · 5 preguntas estilo parcial</h2>
+  <div class="quiz" id="quiz"></div>
+
+</main>
+
+<a class="back-fab" href="index.html">‹ Volver al índice</a>
+<footer class="site-footer">Capítulo 10 · Redes y Comunicaciones · Ciberseguridad UP</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#EAEFFE', primaryBorderColor: '#2D5BE3', primaryTextColor: '#1C1C1E', lineColor: '#6C47FF', secondaryColor: '#F0ECFF', tertiaryColor: '#E6F6EE', noteBkgColor: '#FFF3E0', noteBorderColor: '#C77700', fontFamily: 'JetBrains Mono, monospace' } });
+
+  function ipToInt(p){ return p.reduce((a,x)=>(a<<8>>>0)+(+x),0)>>>0; }
+  function intToIp(n){ return [(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255].join('.'); }
+
+  function calcVLSM() {
+    const out = document.getElementById('out-vlsm');
+    const netStr = document.getElementById('vlsmnet').value.trim();
+    const baseCidr = parseInt(document.getElementById('vlsmcidr').value,10);
+    const reqs = document.getElementById('vlsmreqs').value.split(',').map(s=>parseInt(s.trim(),10)).filter(n=>n>0);
+    const p = netStr.split('.');
+    if (p.length!==4 || p.some(x=>!/^\d+$/.test(x)||+x<0||+x>255)) { out.innerHTML='<span class="cmt"># red base inválida</span>'; return; }
+    if (!(baseCidr>=1&&baseCidr<=30)) { out.innerHTML='<span class="cmt"># prefijo base /1 a /30</span>'; return; }
+    if (!reqs.length) { out.innerHTML='<span class="cmt"># ingresá al menos una cantidad de hosts</span>'; return; }
+
+    const baseNet = (ipToInt(p) & ((0xFFFFFFFF<<(32-baseCidr))>>>0))>>>0;
+    const baseSize = Math.pow(2, 32-baseCidr);
+    // ordenar descendente, recordando índice original
+    const items = reqs.map((h,i)=>({h,i})).sort((a,b)=>b.h-a.h);
+    let cursor = baseNet;
+    const limit = (baseNet + baseSize)>>>0;
+    let lines = '', used = 0, ok = true;
+    items.forEach((it,k)=>{
+      let bits=0; while ((Math.pow(2,bits)-2) < it.h) bits++;
+      if (bits<1) bits=1;
+      const size = Math.pow(2,bits);
+      const cidr = 32-bits;
+      if (((cursor+size)>>>0) > limit || cursor < baseNet) { ok=false; lines += `<span class="cmt"># sin espacio para ${it.h} hosts</span>\n`; return; }
+      const netA = cursor>>>0;
+      const bcast = (netA+size-1)>>>0;
+      lines += `<span class="k">${it.h} hosts</span> → <span class="hl">${intToIp(netA)}/${cidr}</span>  ` +
+               `host ${intToIp((netA+1)>>>0)}–${intToIp((bcast-1)>>>0)}  bcast ${intToIp(bcast)}  (${size-2} útiles)\n`;
+      cursor = (cursor + size)>>>0; used += size;
+    });
+    const free = baseSize - used;
+    out.innerHTML =
+      `<span class="k">red base</span> = ${netStr}/${baseCidr}  (${baseSize} direcciones)\n` +
+      `<span class="cmt"># subredes ordenadas de mayor a menor:</span>\n` + lines +
+      `<span class="k">usadas</span> = ${used} · <span class="k">libres</span> = ${free}` + (ok?'':`\n<span class="cmt"># ¡no entra todo en la red base!</span>`);
+  }
+  calcVLSM();
+  RC.mountFlashcards('flashcards', RC_DATA.flashcards['10'], { chapter: '10' });
+  RC.mountQuiz('quiz', RC_DATA.quizzes['10'], { chapter: '10' });
+</script>
+</body>
+</html>
