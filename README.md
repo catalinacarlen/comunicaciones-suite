@@ -36,8 +36,8 @@ The modules go in order: from the evolution of data networks, up through the OSI
 
 Plus two companion apps:
 
-- **[Práctica](practica.html):** calculators and simulators in one place (conversions, subnetting, VLSM, summarization, longest match, ARP, three-way handshake, sliding window, DORA and DNS).
-- **[Parciales](parciales.html):** a question bank (multiple choice, true/false, fill-in, matching and flashcards) and a timed mock exam with explained feedback.
+- **[Práctica](modulos/practica.html):** calculators and simulators in one place (conversions, subnetting, VLSM, summarization, longest match, ARP, three-way handshake, sliding window, DORA and DNS).
+- **[Parciales](modulos/parciales.html):** a question bank (multiple choice, true/false, fill-in, matching and flashcards) and a timed mock exam with explained feedback.
 
 #### Thread through the syllabus
 
@@ -97,8 +97,8 @@ Los módulos van en orden: desde la evolución de las redes de datos, suben por 
 
 Más dos apps complementarias:
 
-- **[Práctica](practica.html):** calculadoras y simuladores en un solo lugar (conversores, subnetting, VLSM, sumarización, longest match, ARP, three-way handshake, ventana deslizante, DORA y DNS).
-- **[Parciales](parciales.html):** un banco de preguntas (multiple choice, verdadero/falso, completar, unir conceptos y flashcards) y un simulacro de examen cronometrado con corrección explicada.
+- **[Práctica](modulos/practica.html):** calculadoras y simuladores en un solo lugar (conversores, subnetting, VLSM, sumarización, longest match, ARP, three-way handshake, ventana deslizante, DORA y DNS).
+- **[Parciales](modulos/parciales.html):** un banco de preguntas (multiple choice, verdadero/falso, completar, unir conceptos y flashcards) y un simulacro de examen cronometrado con corrección explicada.
 
 #### Hilo conductor del temario
 
