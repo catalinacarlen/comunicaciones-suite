@@ -97,7 +97,7 @@
   function cardHTML(c) {
     const pct = RC.chapterPct(c.id);
     const done = pct >= 100;
-    return `<a class="card chap-card hoverable" href="${c.file}">
+    return `<a class="card chap-card hoverable" href="modulos/${c.file}">
       <span class="num">CAP. ${String(c.n).padStart(2,'0')}</span>
       <h3>${c.title}</h3>
       <p>${c.desc}</p>
